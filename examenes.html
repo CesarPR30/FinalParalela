@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Finales Paralela resueltos</title>
+<meta name="description" content="Los cuatro exámenes finales anteriores de CS4052 con la resolución oculta y una explicación de cómo resolver cada pregunta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script defer src="assets/app.js"></script>
+</head>
+<body>
+<div class="topbar"><div class="in">
+  <a class="brand" href="index.html">Final Paralela<small>CS4052 · 2026-II</small></a>
+  <nav class="nav" aria-label="Páginas">
+    <a href="index.html">Repaso</a>
+    <a class="on" href="examenes.html">Exámenes</a>
+    <a href="https://github.com/CesarPR30/FinalParalela">Repositorio</a>
+  </nav>
+</div></div>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">4 finales · 13 preguntas · 62 subpreguntas</div>
+  <h1>Finales anteriores resueltos</h1>
+  <p class="lead">Intenta cada subpregunta antes de abrir nada. "Ver resolución" muestra la respuesta del solucionario del profesor; "Cómo resolverlo" explica el razonamiento paso a paso. Donde el solucionario tiene un error o una tabla copiada de otra sección, está marcado con una nota.</p>
+  <div class="tools">
+    <button class="btn on" data-filter="all">Todas</button>
+    <button class="btn" data-filter="b1">Bloque 1 · GPU</button>
+    <button class="btn" data-filter="b2">Bloque 2 · PRAM</button>
+    <button class="btn" data-filter="b3">Bloque 3 · Escalabilidad</button>
+  </div>
+  <div class="tools">
+    <button class="btn" id="allSol">Mostrar todas las resoluciones</button>
+    <button class="btn" id="allHow">Mostrar todas las explicaciones</button>
+    <button class="btn" id="hideAll">Ocultar todo</button>
+  </div>
+  <div class="chips">
+    <a class="chip" href="#e1">2025-I</a><a class="chip" href="#e2">2025-II S1</a><a class="chip" href="#e3">2025-II S2</a><a class="chip" href="#e4">2026-I</a>
+  </div>
+</header>
+
+<!-- ========================================== 2025-I -->
+<div class="exam" id="e1">
+<div class="ehead"><h2>Final 2025-I</h2><span class="src">4 preguntas × 5 pts · 120 min · <a href="material/finales/CS4052-ExamenFinal-2025-I.pdf">PDF original</a></span></div>
+
+<div class="q" data-b="b1">
+  <div class="qh"><h3>P1. Filtro convolucional en CUDA (5 pts)</h3><span class="tag b1">Bloque 1</span></div>
+  <p>Filtro 3×3 sobre una imagen en blanco y negro de \(2^{13}\times2^{13}\) píxeles (1 byte por píxel). Un hilo por píxel; cada hilo necesita sus 8 vecinos. GPU NVIDIA H100: \(2^{10}\) hilos por bloque, hasta \(2^{31}\) bloques, 100 KB de shared memory por SM (no se comparte entre bloques).</p>
+
+  <div class="sub"><p class="st">1.1 Si cada bloque recibe 16×16 píxeles, ¿alcanzan los bloques? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q1a-s">Ver resolución</button><button class="btn" data-toggle="e1q1a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q1a-s"><div class="t">Resolución oficial</div><p>Bloques necesarios \(=2^{26}/2^8=2^{18}\). Sí alcanzan (para una imagen; el solucionario agrega que para dos no alcanzarían, aunque \(2\cdot2^{18}\) sigue siendo mucho menor que \(2^{31}\)).</p></div>
+    <div class="panel how" id="e1q1a-h"><div class="t">Cómo resolverlo</div><ol class="steps"><li>Píxeles totales: \(2^{13}\cdot2^{13}=2^{26}\).</li><li>Píxeles por bloque: \(16\cdot16=2^8\).</li><li>Divide: \(2^{18}=262\,144\) bloques y compáralo con el máximo \(2^{31}\).</li></ol><p>Trabaja en potencias de 2; las divisiones se vuelven restas de exponentes.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.2 ¿La forma del bloque (cuadrado vs rectangular) afecta el desempeño? Considere el halo. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q1b-s">Ver resolución</button><button class="btn" data-toggle="e1q1b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q1b-s"><div class="t">Resolución oficial</div><p>Un bloque 16×16 tiene un halo de 64 píxeles; uno rectangular (32×8 o 64×1) tiene mayor perímetro y ocupa más memoria. Bloques muy anchos también pueden afectar el acceso a memoria global: CUDA es eficiente cuando los 32 hilos de un warp acceden a direcciones contiguas (coalescencia).</p></div>
+    <div class="panel how" id="e1q1b-h"><div class="t">Cómo resolverlo</div><p>Compara perímetros para el mismo área (256 píxeles): 16×16 → \(4\cdot16=64\); 32×8 → \(2(32+8)=80\); 64×1 → \(2(64+1)=130\). El halo es proporcional al perímetro, así que el cuadrado minimiza memoria y lecturas redundantes. Cierra mencionando coalescencia y warps de 32.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.3 ¿Alcanza la shared memory para 16×16? ¿Se pueden usar bloques de 256×256? (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q1c-s">Ver resolución</button><button class="btn" data-toggle="e1q1c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q1c-s"><div class="t">Resolución oficial</div><p>16×16: \(4\cdot16+16\cdot16=320\) B &lt; 100 KB. 256×256: \(4\cdot256+256\cdot256=66\,560\) B &lt; 100 KB, también cabe; 512×512 ya no.</p></div>
+    <div class="panel how" id="e1q1c-h"><div class="t">Cómo resolverlo</div><ol class="steps"><li>Memoria del bloque = tile \(B^2\) + halo \(\approx4B\) (1 byte por píxel).</li><li>Compara con 100 KB = 102 400 B.</li><li>512×512: \(262\,144+2048\) B &gt; 100 KB.</li></ol><p>Comentario que suma: 256×256 píxeles cabe en memoria, pero un bloque solo puede tener 1024 hilos, así que cada hilo tendría que procesar 64 píxeles.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.4 Con \(10^{-7}\) s por píxel, ¿cuánto tarda un millón de convoluciones? ¿Y en secuencial? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q1d-s">Ver resolución</button><button class="btn" data-toggle="e1q1d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q1d-s"><div class="t">Resolución oficial</div><p>\(t_p=10^{-7}\cdot10^6=0.1\) s (para una imagen). \(t_s=0.1\cdot2^{18}\cdot2^8=6.71\cdot10^6\) s ≈ 78 días.</p></div>
+    <div class="panel how" id="e1q1d-h"><div class="t">Cómo resolverlo</div><p>En paralelo todos los píxeles se procesan a la vez, así que el tiempo es el de un hilo: \(10^6\) convoluciones × \(10^{-7}\) s. En secuencial se multiplica por el número de píxeles (\(2^{26}\approx6.7\cdot10^7\)). Convierte a días dividiendo entre 86 400.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b2">
+  <div class="qh"><h3>P2. Árbol 2-3 (5 pts)</h3><span class="tag b2">Bloque 2</span></div>
+  <p>Un árbol 2-3 tiene nodos internos con 2 o 3 hijos, todas las hojas a la misma distancia de la raíz y hojas ordenadas.</p>
+
+  <div class="sub"><p class="st">2.1 PRAM y span para buscar un elemento \(b\). (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q2a-s">Ver resolución</button><button class="btn" data-toggle="e1q2a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q2a-s"><div class="t">Resolución oficial</div>
+<pre><code>funcion postorden(i)
+  if i == null: return
+  else if i tiene 2 hijos:
+      postorden(left[i]) || postorden(right[i]); sync
+      if i == b: return True
+  else if i tiene 3 hijos:
+      postorden(left[i]) || postorden(mid[i]) || postorden(right[i]); sync
+      if i == b: return True
+  else return False</code></pre>
+      <p>Span \(O(\log n)\) por la recursión. Alternativa: búsqueda binaria paralela \(O(\log n/\log p)\).</p></div>
+    <div class="panel how" id="e1q2a-h"><div class="t">Cómo resolverlo</div><p>Lanza en paralelo la búsqueda en cada hijo (<code>||</code>) y sincroniza. La profundidad de la recursión es la altura del árbol, que en un 2-3 es \(\Theta(\log n)\) (entre \(\log_3 n\) y \(\log_2 n\)). Ese es el span. El trabajo es \(O(n)\) porque se visita todo.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.2 PRAM y span para insertar un elemento \(b\). (0.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q2b-s">Ver resolución</button><button class="btn" data-toggle="e1q2b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q2b-s"><div class="t">Resolución oficial</div>
+<pre><code>for i &lt; nh pardo
+  1. if a_i = b: return True            // ya existe
+  2. if a_i &lt; b &lt; a_{i+1}:
+       b es el siguiente hijo de v, luego de a_i
+       if v tenía 3 hijos (ahora 4):
+          insertar en el padre w un hijo v1 después de v
+          repartir los 4 hijos entre v y v1
+          repetir recursivamente para w
+     return True</code></pre>
+      <p>Span: (1) \(O(1)\), (2) \(O(\log n)\) por la recursión hacia la raíz.</p></div>
+    <div class="panel how" id="e1q2b-h"><div class="t">Cómo resolverlo</div><p>Ubicar la posición se hace comparando en paralelo contra todas las hojas (\(O(1)\)). Lo costoso es mantener la estructura: si un nodo queda con 4 hijos se parte en dos y eso puede propagarse hasta la raíz, una vez por nivel: \(O(\log n)\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.3 PRAM y span para insertar una secuencia \(b_0,\dots,b_{k-1}\). (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q2c-s">Ver resolución</button><button class="btn" data-toggle="e1q2c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q2c-s"><div class="t">Resolución oficial</div><p>Un bucle secuencial <code>for i &lt; k</code> que envuelve el PRAM de 2.2. Span \(O(k\log n)\).</p></div>
+    <div class="panel how" id="e1q2c-h"><div class="t">Cómo resolverlo</div><p>Cada inserción puede reestructurar el árbol, así que la siguiente depende del árbol actualizado: las \(k\) inserciones van en secuencia, cada una con span \(O(\log n)\). Si se pide optimizar, se puede mencionar insertar en paralelo elementos que caen en subárboles distintos.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.4 Expresión de \(T(n,p)\) en cada caso. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q2d-s">Ver resolución</button><button class="btn" data-toggle="e1q2d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q2d-s"><div class="t">Resolución oficial</div><p>Caso 1: \(O(\log n/p)\). Caso 2: \(O(\log n/p+\log n)\). Caso 3: \(O(k\log n/p+k\log n)\).</p></div>
+    <div class="panel how" id="e1q2d-h"><div class="t">Cómo resolverlo</div><p>Aplica Brent \(T_p=W/p+T_\infty\) con el trabajo y span de cada caso. Justifica qué tomaste como trabajo; el solucionario usa \(W=\log n\) por inserción. Si tomas la búsqueda post-orden completa, \(W=n\) y \(T_p=n/p+\log n\), y también es defendible si lo argumentas.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b3">
+  <div class="qh"><h3>P3. OpenMP: máximo de un arreglo (5 pts)</h3><span class="tag b3">Bloque 3</span></div>
+<pre><code>double A[N]; double maximo = -1;
+for (int i=0; i&lt;N; i++) A[i] = rand()%100/1000.0;
+double local_max;
+#pragma omp parallel for
+for (int i=0; i&lt;N; i++) {
+  if (A[i] &gt; local_max) {
+    #pragma omp atomic
+    local_max = A[i];
+  }
+}
+printf("Maximo: %f\n", local_max);</code></pre>
+
+  <div class="sub"><p class="st">3.1 Encuentre dos errores. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q3a-s">Ver resolución</button><button class="btn" data-toggle="e1q3a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q3a-s"><div class="t">Resolución oficial</div><p>(1) <code>if (A[i] &gt; local_max) local_max = A[i];</code> no es atómico en conjunto: atomic protege solo la escritura, no la condición. Es una condición de carrera <b>read-check-update</b>; atomic solo vale para operaciones simples como <code>+=</code> o <code>++</code>. (2) <code>local_max</code> no está inicializada.</p></div>
+    <div class="panel how" id="e1q3a-h"><div class="t">Cómo resolverlo</div><p>Busca tres cosas en cualquier código OMP: variables compartidas modificadas sin protección, directivas usadas fuera de su alcance (atomic sobre un bloque compuesto) y variables sin inicializar. Explica el escenario: dos hilos pasan el <code>if</code> con el mismo valor viejo y el que escribe último puede dejar un valor menor.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.2 Proponga una forma alternativa de paralelizar. Explique cómo corrige los errores. (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q3b-s">Ver resolución</button><button class="btn" data-toggle="e1q3b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q3b-s"><div class="t">Resolución oficial</div>
+<pre><code>double maximo = -1e9;
+#pragma omp parallel
+{
+  double local_max = -1e9;
+  #pragma omp for
+  for (int i = 0; i &lt; N; i++)
+    if (A[i] &gt; local_max) local_max = A[i];
+  #pragma omp critical
+  { if (local_max &gt; maximo) maximo = local_max; }
+}</code></pre>
+      <p>O, mucho más eficiente, <code>#pragma omp parallel for reduction(max:maximo)</code>.</p>
+      <p class="note">Nota: en el solucionario el cuerpo del bucle con reduction aparece como <code>maximo = A[i];</code>, que es incorrecto. Debe ser <code>if (A[i] &gt; maximo) maximo = A[i];</code>.</p></div>
+    <div class="panel how" id="e1q3b-h"><div class="t">Cómo resolverlo</div><p>Patrón general: cada hilo calcula un resultado <b>privado</b> sin sincronización y solo al final combina en una sección crítica (\(p\) entradas a critical en vez de \(N\)). La forma idiomática es <code>reduction(max:var)</code>: OpenMP crea las copias privadas, las inicializa con el neutro del máximo y las combina.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.3 Versión con tasks. ¿Es más eficiente? (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q3c-s">Ver resolución</button><button class="btn" data-toggle="e1q3c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q3c-s"><div class="t">Resolución oficial</div>
+<pre><code>#pragma omp parallel
+#pragma omp single
+for (int i = 0; i &lt; N; i++) {
+  #pragma omp task firstprivate(i)
+  {
+    #pragma omp critical
+    { if (A[i] &gt; maximo) maximo = A[i]; }
+  }
+}</code></pre>
+      <p>Otra versión: cada task escribe <code>maximos_locales[i]</code> y se reduce secuencialmente al final.</p></div>
+    <div class="panel how" id="e1q3c-h"><div class="t">Cómo resolverlo</div><p>Estructura obligada: <code>parallel</code> + <code>single</code> (un hilo crea las tareas) + <code>task firstprivate(i)</code>. Responde la comparación: una task por elemento con critical es <b>menos eficiente</b> que reduction, porque crear \(N\) tareas cuesta y critical serializa. Mejora: tareas por bloques de elementos con máximos locales.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b3">
+  <div class="qh"><h3>P4. Topologías en Quicksort (5 pts)</h3><span class="tag b3">Bloque 3</span></div>
+  <p>Quicksort paralelo de \(n\) elementos en \(p\) procesos. Comunicación: malla 2D \(\sqrt p\times\sqrt p\): \(T_{comm}=O(\alpha\sqrt p+\beta\frac{n}{\sqrt p})\); hipercubo de dimensión \(\log p\): \(T_{comm}=O(\alpha\log p+\beta\frac{n}{p\log p})\).</p>
+
+  <div class="sub"><p class="st">4.1 Complejidad del tiempo paralelo en cada caso. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q4a-s">Ver resolución</button><button class="btn" data-toggle="e1q4a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q4a-s"><div class="t">Resolución oficial</div><p>\(T^{malla}=O(\frac{n\log n}{p}+\alpha\sqrt p+\beta\frac{n}{\sqrt p})\); \(T^{hiper}=O(\frac{n\log n}{p}+\alpha\log p+\beta\frac{n}{p\log p})\).</p></div>
+    <div class="panel how" id="e1q4a-h"><div class="t">Cómo resolverlo</div><p>\(T_p=T_{comp}+T_{comm}\). El cómputo es el ordenamiento local repartido: \(T_s/p=n\log n/p\). Suma el costo de comunicación de cada topología.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">4.2 Speedup y función de overhead. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q4b-s">Ver resolución</button><button class="btn" data-toggle="e1q4b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q4b-s"><div class="t">Resolución oficial</div><p>\(S=\dfrac{n\log n}{T_p}\) en cada caso. \(T_0^{malla}=\alpha p\sqrt p+\beta n\sqrt p\); \(T_0^{hiper}=\alpha p\log p+\beta\frac{n}{\log p}\).</p></div>
+    <div class="panel how" id="e1q4b-h"><div class="t">Cómo resolverlo</div><p>\(T_0=pT_p-W\): multiplica cada término de comunicación por \(p\). Por ejemplo \(p\cdot\beta\frac{n}{\sqrt p}=\beta n\sqrt p\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">4.3 Condición de escalabilidad para \(E=0.7\) y \(E=0.8\). (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q4c-s">Ver resolución</button><button class="btn" data-toggle="e1q4c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q4c-s"><div class="t">Resolución oficial</div><p>\(W=\frac{E}{1-E}T_0\). Malla: término dominante \(n\log n=\frac{E}{1-E}\alpha p^{3/2}\). Hipercubo: \(n\log n=\frac{E}{1-E}\alpha p\log p\) (el solucionario escribe \(\beta\), pero el término \(p\log p\) viene de \(\alpha\)). El hipercubo es más escalable.</p></div>
+    <div class="panel how" id="e1q4c-h"><div class="t">Cómo resolverlo</div><ol class="steps"><li>\(K=E/(1-E)\): \(E=0.7\to K=2.33\); \(E=0.8\to K=4\).</li><li>Iguala \(n\log n=K\cdot\)(cada término de \(T_0\)).</li><li>Malla: el término \(\alpha p^{3/2}\) obliga a crecer más que el de \(\beta\) (que da \(\log n\propto\sqrt p\)).</li><li>Compara \(p^{3/2}\) contra \(p\log p\): crece más lento el hipercubo.</li></ol><p>Subir \(E\) solo cambia la constante \(K\), no la forma de la relación.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">4.4 Con \(n=10^6\), \(p=64\), \(\alpha=10^{-5}\), \(\beta=10^{-9}\): ¿cuántos procesos para un arreglo 10 veces mayor con \(E=0.8\)? (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e1q4d-s">Ver resolución</button><button class="btn" data-toggle="e1q4d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e1q4d-s"><div class="t">Resolución oficial</div><p>Malla: \(\frac{n_1\log n_1}{n_2\log n_2}=\frac{p_1^{3/2}}{p_2^{3/2}}\Rightarrow p_2\approx329\). Hipercubo: \(p_2\approx500\). Es redundante con 4.3; el factor \(E/(1-E)\) sirve para determinar la relación experimentalmente.</p></div>
+    <div class="panel how" id="e1q4d-h"><div class="t">Cómo resolverlo</div><ol class="steps"><li>Divide la relación de isoeficiencia del caso 2 entre la del caso 1: \(K\) y \(\alpha\) se cancelan.</li><li>\(\frac{n_2\log n_2}{n_1\log n_1}=\frac{10^7\cdot7}{10^6\cdot6}=11.67\).</li><li>Malla: \(p_2=64\cdot11.67^{2/3}=64\cdot5.14\approx329\).</li><li>Hipercubo: \(p_2\log_2p_2=64\cdot6\cdot11.67=4480\); probando, \(500\cdot\log_2500\approx500\cdot8.97\approx4483\Rightarrow p_2\approx500\).</li></ol><p>El hipercubo admite más procesos para el mismo crecimiento del problema: confirma que es más escalable.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ========================================== 2025-II S1 -->
+<div class="exam" id="e2">
+<div class="ehead"><h2>Final 2025-II · Sección 1</h2><span class="src">6 + 7 + 7 pts · 120 min · <a href="material/finales/CS4052-ExamenFinal-2025-II-S01.pdf">PDF original</a></span></div>
+
+<div class="q" data-b="b1">
+  <div class="qh"><h3>P1. Value at Risk en GPU (6 pts)</h3><span class="tag b1">Bloque 1</span></div>
+  <p>Un modelo VaR calcula \(N\) escenarios con \(M\) activos cada uno. Kernel por escenario: <code>for j&lt;M: dV += weights[p][j]*shocks[i][j];</code> (2 FLOP por iteración). \(N=2^8\) escenarios. H100: \(2^{10}\) hilos por bloque, hasta \(2^{31}\) bloques.</p>
+
+  <div class="sub"><p class="st">1.1 ¿Cuántos modelos se pueden simular si cada hilo resuelve un escenario? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q1a-s">Ver resolución</button><button class="btn" data-toggle="e2q1a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q1a-s"><div class="t">Resolución oficial</div><p>\(2^{31}\cdot2^{10}/2^8=2^{33}\) modelos.</p></div>
+    <div class="panel how" id="e2q1a-h"><div class="t">Cómo resolverlo</div><p>Hilos totales \(2^{41}\); cada modelo consume \(2^8\) hilos (uno por escenario). Modelos \(=2^{41}/2^8\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.2 Con \(M=2^8\) activos y \(10^{-8}\) s por suma/producto: tiempo paralelo y secuencial del total. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q1b-s">Ver resolución</button><button class="btn" data-toggle="e2q1b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q1b-s"><div class="t">Resolución oficial</div><p>\(t_p=2\cdot10^{-8}\cdot2^8=5.12\cdot10^{-6}\) s. \(t_s=5.12\cdot10^{-6}\cdot2^{41}=11.25\cdot10^6\) s ≈ 130 días.</p></div>
+    <div class="panel how" id="e2q1b-h"><div class="t">Cómo resolverlo</div><p>Un hilo hace \(M\) iteraciones de 2 FLOP: \(2M\) FLOP × \(10^{-8}\) s. Todos los hilos trabajan simultáneamente, así que \(t_p\) es el tiempo de uno. Secuencial: los \(2^{41}\) escenarios uno tras otro.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.3 Speedup, eficiencia y FLOP/s. ¿Por qué el speedup es proporcional a los FLOP/s? (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q1c-s">Ver resolución</button><button class="btn" data-toggle="e2q1c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q1c-s"><div class="t">Resolución oficial</div><p>\(S=11.25\cdot10^6/5.12\cdot10^{-6}=2.2\cdot10^{12}\); \(E=2.2\cdot10^{12}/2^{41}=1\); FLOP/s \(=2\cdot2^8\cdot2^{41}/5.12\cdot10^{-6}=2.19\cdot10^{18}\) ≈ 220 EFLOP/s. Son proporcionales porque ambos tienen en el numerador cantidades proporcionales (FLOP totales y tiempo secuencial) divididas entre el tiempo paralelo.</p></div>
+    <div class="panel how" id="e2q1c-h"><div class="t">Cómo resolverlo</div><p>\(S\) sale igual al número de hilos (\(2^{41}\)), así que \(E=1\). FLOP totales \(=2M\cdot\#\text{hilos}\), divididos entre \(t_p\). Para la justificación escribe \(t_s=\text{FLOP}\cdot t_{op}\Rightarrow S=\text{FLOP/s}\cdot t_{op}\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.4 Si los escenarios de un modelo deben compartir memoria (mismo bloque de \(2^{10}\) hilos): ¿cuántos modelos? Recalcule \(t_p\), \(S\), \(E\). (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q1d-s">Ver resolución</button><button class="btn" data-toggle="e2q1d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q1d-s"><div class="t">Resolución oficial</div><p>Un modelo por bloque: \(2^{31}\) modelos. \(t_s=5.12\cdot10^{-6}\cdot2^{31}=1.1\cdot10^4\) s, \(S=2.2\cdot10^9\), \(E=2.2\cdot10^9/2^{39}=0.004\). Speedup y eficiencia se reducen en un factor ~1000.</p>
+      <p class="note">Nota: el solucionario mezcla cantidades. Con \(2^{31}\) modelos de \(2^8\) escenarios trabajan \(2^{39}\) hilos: \(t_s=5.12\cdot10^{-6}\cdot2^{39}\approx2.8\cdot10^6\) s, \(S=2^{39}\approx5.5\cdot10^{11}\) y, respecto a la capacidad de \(2^{41}\) hilos, \(E=2^{39}/2^{41}=0.25\). La idea a defender es la misma: 768 de cada 1024 hilos quedan ociosos.</p></div>
+    <div class="panel how" id="e2q1d-h"><div class="t">Cómo resolverlo</div><ol class="steps"><li>Restricción: un modelo (\(2^8\) escenarios) ocupa un bloque entero de \(2^{10}\) hilos → caben tantos modelos como bloques, \(2^{31}\).</li><li>\(t_p\) no cambia (cada hilo sigue haciendo un escenario).</li><li>Hilos que trabajan: \(2^{31}\cdot2^8=2^{39}\); la eficiencia frente a la capacidad es \(2^8/2^{10}=1/4\).</li><li>Comenta: la restricción de memoria compartida desperdicia hilos; convendría empaquetar 4 modelos por bloque.</li></ol></div>
+  </div>
+</div>
+
+<div class="q" data-b="b2">
+  <div class="qh"><h3>P2. Parallel stack (7 pts)</h3><span class="tag b2">Bloque 2</span></div>
+  <p>Diseñe un stack paralelo donde los hilos almacenan o extraen información y además procesan información. Tiempo de cómputo no constante.</p>
+
+  <div class="sub"><p class="st">2.1 PRAM con: push de cualquier tamaño, pop, reconocer lleno/vacío y control de acceso en paralelo. (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q2a-s">Ver resolución</button><button class="btn" data-toggle="e2q2a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q2a-s"><div class="t">Resolución oficial</div>
+<pre><code>Input: n elementos, p hilos
+for i = 1 to n pardo
+    lock(); pop(); checkStackStatus(); unlock()
+    run()            // Tcomp
+    lock(); push(); checkStackStatus(); unlock()</code></pre></div>
+    <div class="panel how" id="e2q2a-h"><div class="t">Cómo resolverlo</div><p>Separa lo que toca la estructura compartida (siempre entre lock y unlock) de lo que es cómputo independiente (<code>run</code>, fuera del lock para que sea paralelo). Menciona que <code>top</code> es la variable compartida crítica y que check revisa <code>top == -1</code> (vacío) o <code>top == MAX-1</code> (lleno).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.2 Describa el overhead. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q2b-s">Ver resolución</button><button class="btn" data-toggle="e2q2b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q2b-s"><div class="t">Resolución oficial</div><p>\(T_p=n+p+T_{comp}(n)/p\): el almacenamiento es secuencial y el chequeo del stack es \(O(p)\). Overhead \(T_0=pT_p-W=np+p^2\).</p></div>
+    <div class="panel how" id="e2q2b-h"><div class="t">Cómo resolverlo</div><p>Las regiones críticas se ejecutan de a una: los \(n\) accesos suman \(n\) aunque haya \(p\) hilos. Multiplica por \(p\) y resta \(W=T_{comp}\): queda \(np+p^2\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.3 ¿En qué casos (función de \(n\) y \(p\)) escala? (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q2c-s">Ver resolución</button><button class="btn" data-toggle="e2q2c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q2c-s"><div class="t">Resolución oficial</div><p>\(W=KT_0\Rightarrow T_{comp}(n)=K(pn+p^2)\). El término dominante es proporcional a \(np\), lo que lo hace difícilmente escalable.</p></div>
+    <div class="panel how" id="e2q2c-h"><div class="t">Cómo resolverlo</div><p>Escala solo si el cómputo por elemento crece al menos como \(p\) (\(T_{comp}(n)/n\gtrsim Kp\)): tareas de grano grueso. Con tareas baratas, el stack serializado domina.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.4 Directivas OMP necesarias (sin código compilable). (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q2d-s">Ver resolución</button><button class="btn" data-toggle="e2q2d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q2d-s"><div class="t">Resolución oficial</div><p><code>#pragma omp critical</code> dentro de push, pop y checkStackStatus; en el main <code>#pragma omp parallel shared(stack, top)</code> con <code>#pragma omp sections</code> y una <code>section</code> por hilo que hace push/pop; <code>omp_set_num_threads</code> y <code>omp_get_thread_num</code> para identificar hilos.</p></div>
+    <div class="panel how" id="e2q2d-h"><div class="t">Cómo resolverlo</div><p>Responde por función: qué protege cada directiva y por qué. Alternativas que suman: locks (<code>omp_set_lock</code>) para un stack específico, o <code>critical(nombre)</code> si hubiera varios stacks independientes.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b3">
+  <div class="qh"><h3>P3. Floyd: filas vs bloques (7 pts)</h3><span class="tag b3">Bloque 3</span></div>
+  <p>\(T_s=O(n^3)\). Filas: \(T_p=O(t_c\frac{n^3}{p}+\alpha n\log p+\beta n^2)\). Bloques: \(T_p=O(t_c\frac{n^3}{p}+\alpha n\log\sqrt p+\beta\frac{n^2}{\sqrt p})\).</p>
+
+  <div class="sub"><p class="st">3.1 Overhead e isoeficiencia en cada caso. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q3a-s">Ver resolución</button><button class="btn" data-toggle="e2q3a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q3a-s"><div class="t">Resolución oficial</div><p>Filas: \(T_0=O(\alpha pn\log p+\beta pn^2)\). Bloques: \(T_0=O(\alpha pn\log\sqrt p+\beta p\frac{n^2}{\sqrt p})\).</p></div>
+    <div class="panel how" id="e2q3a-h"><div class="t">Cómo resolverlo</div><p>Multiplica los términos de comunicación por \(p\). Recuerda \(p/\sqrt p=\sqrt p\), así que el último término de bloques es \(\beta\sqrt p\,n^2\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.2 Analíticamente, ¿cuál escala mejor? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q3b-s">Ver resolución</button><button class="btn" data-toggle="e2q3b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q3b-s"><div class="t">Resolución oficial</div><p>Filas: \(n^3\propto pn^2\Rightarrow n\propto p\). Bloques: \(n^3\propto pn\log\sqrt p\Rightarrow n\propto\sqrt{p\log\sqrt p}\). Bloques escala mejor (menor dependencia de \(p\)).</p></div>
+    <div class="panel how" id="e2q3b-h"><div class="t">Cómo resolverlo</div><p>Para bloques revisa ambos términos: \(\beta\) da \(n\propto\sqrt p\) y \(\alpha\) da \(n\propto\sqrt{p\log\sqrt p}\); manda el más restrictivo (\(\alpha\)). Aun así crece más lento que \(n\propto p\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.3 Calcule \(E\) para \(n=10^4\), \(p\in\{1,\dots,16384\}\), \(\alpha=\beta=t_c=1\). (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q3c-s">Ver resolución</button><button class="btn" data-toggle="e2q3c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q3c-s"><div class="t">Resolución oficial</div>
+      <div class="tw"><table><thead><tr><th>p</th><th>filas</th><th>bloques</th></tr></thead><tbody>
+      <tr><td>1</td><td>0.9999</td><td>0.9999</td></tr><tr><td>4</td><td>0.9996</td><td>0.9998</td></tr><tr><td>16</td><td>0.9984</td><td>0.9996</td></tr><tr><td>64</td><td>0.9936</td><td>0.9992</td></tr><tr><td>256</td><td>0.9750</td><td>0.9984</td></tr><tr><td>1024</td><td>0.9071</td><td>0.9967</td></tr><tr><td>4096</td><td>0.7093</td><td>0.9933</td></tr><tr><td>16384</td><td>0.3788</td><td>0.9858</td></tr></tbody></table></div>
+      <p class="note">Verificado con \(E=n^3/(n^3+T_0)\) y logaritmo en base 2: los valores coinciden.</p></div>
+    <div class="panel how" id="e2q3c-h"><div class="t">Cómo resolverlo</div><p>\(E=\dfrac{n^3}{n^3+T_0}\). Para \(p=16384\): filas \(T_0\approx pn^2=1.64\cdot10^{12}\) (el término \(\alpha\) es despreciable) ⇒ \(E\approx1/2.64=0.38\). Bloques \(T_0\approx\sqrt p\,n^2=1.28\cdot10^{10}\) ⇒ \(E\approx0.986\). Calcula 2 o 3 filas a mano y describe la tendencia.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.4 ¿Qué pasa con la eficiencia si aumenta \(n\)? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q3d-s">Ver resolución</button><button class="btn" data-toggle="e2q3d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q3d-s"><div class="t">Resolución oficial</div><p>El cómputo domina sobre la comunicación y la eficiencia de ambos modelos se equipara (aunque sigue siendo mejor en bloques).</p></div>
+    <div class="panel how" id="e2q3d-h"><div class="t">Cómo resolverlo</div><p>\(T_0/W\) cae como \(p/n\) (filas) o \(\sqrt p/n\) (bloques): ambos tienden a 0 cuando \(n\) crece, y \(E\to1\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.5 ¿Se cumple \(W=C_p\) (costo máximo) en algún modelo? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q3e-s">Ver resolución</button><button class="btn" data-toggle="e2q3e-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q3e-s"><div class="t">Resolución oficial</div><p>No, por el overhead.</p></div>
+    <div class="panel how" id="e2q3e-h"><div class="t">Cómo resolverlo</div><p>\(C_p=pT_p=W+T_0\). Solo sería igual a \(W\) si \(T_0=0\), es decir, sin comunicación. Asintóticamente serían del mismo orden solo si \(T_0=O(W)\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.6 Si fuera \(W\propto p^3\), ¿qué consecuencia tendría? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e2q3f-s">Ver resolución</button><button class="btn" data-toggle="e2q3f-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e2q3f-s"><div class="t">Resolución oficial</div><p>Sería un modelo considerado altamente escalable (\(n\propto p\)).</p></div>
+    <div class="panel how" id="e2q3f-h"><div class="t">Cómo resolverlo</div><p>Como \(W=n^3\), \(W\propto p^3\) equivale a \(n\propto p\): el tamaño lineal del problema crece igual que los procesos.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ========================================== 2025-II S2 -->
+<div class="exam" id="e3">
+<div class="ehead"><h2>Final 2025-II · Sección 2</h2><span class="src">6 + 7 + 7 pts · 120 min · <a href="material/finales/CS4052-ExamenFinal-2025-II-S02.pdf">PDF original</a></span></div>
+
+<div class="q" data-b="b1">
+  <div class="qh"><h3>P1. KNN en GPU (6 pts)</h3><span class="tag b1">Bloque 1</span></div>
+  <p>Tesla T4: \(2^{31}\) bloques, \(2^{10}\) hilos por bloque. Cada hilo calcula una distancia query-train: <code>for j&lt;d: diff = q[j]-t[j]; dist += diff*diff;</code> (3 FLOP por dimensión).</p>
+
+  <div class="sub"><p class="st">1.1 Tamaño máximo de modelo por query (\(Q=1\)). ¿Qué problema observa? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q1a-s">Ver resolución</button><button class="btn" data-toggle="e3q1a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q1a-s"><div class="t">Resolución oficial</div><p>\(2^{31}\cdot2^{10}=2^{41}\) datos de entrenamiento.</p></div>
+    <div class="panel how" id="e3q1a-h"><div class="t">Cómo resolverlo</div><p>Un hilo por distancia, así que el máximo es el número total de hilos. Para el "problema": \(2^{41}\) puntos no caben en la memoria de la GPU (con \(d=64\) floats serían petabytes), y luego hay que ordenar \(2^{41}\) distancias para hallar los \(k\) vecinos.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.2 \(N=10^5\), \(Q=10^4\), \(d=64\); un bloque por query. Carga por hilo. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q1b-s">Ver resolución</button><button class="btn" data-toggle="e3q1b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q1b-s"><div class="t">Resolución oficial</div><p>Cada hilo resolvería ≈ 98 distancias.</p></div>
+    <div class="panel how" id="e3q1b-h"><div class="t">Cómo resolverlo</div><p>Un bloque (1024 hilos) atiende las \(10^5\) distancias de su query: \(\lceil10^5/1024\rceil=98\). Se usan \(10^4\) bloques, muy por debajo de \(2^{31}\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.3 Tiempo paralelo con \(10^{-8}\) s por operación. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q1c-s">Ver resolución</button><button class="btn" data-toggle="e3q1c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q1c-s"><div class="t">Resolución oficial</div><p>\(t_p=64\cdot3\cdot10^{-8}\cdot98=2\cdot10^{-4}\) s; \(t_s=2\cdot10^{-4}\cdot2^{10}\cdot10^4=2048\) s ≈ 34 min.</p></div>
+    <div class="panel how" id="e3q1c-h"><div class="t">Cómo resolverlo</div><p>FLOP por distancia \(=3d=192\); por hilo \(192\cdot98\). Todos los bloques corren a la vez, así que ese es \(t_p\). Secuencial: \(t_p\) × hilos usados (\(2^{10}\cdot10^4\)).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.4 Speedup, eficiencia y FLOP/s. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q1d-s">Ver resolución</button><button class="btn" data-toggle="e3q1d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q1d-s"><div class="t">Resolución oficial</div><p>\(S=2048/2\cdot10^{-4}=10^7\); \(E=10^7/(2^{10}\cdot10^4)\approx1\); FLOP/s \(=64\cdot3\cdot98\cdot2^{10}\cdot10^4/2\cdot10^{-4}=9.6\cdot10^{14}\) ≈ 0.96 PFLOP/s. Misma justificación de proporcionalidad que en VaR.</p></div>
+    <div class="panel how" id="e3q1d-h"><div class="t">Cómo resolverlo</div><p>El patrón se repite: \(S\) ≈ número de hilos usados y \(E\approx1\) porque no hay comunicación ni hilos ociosos (salvo los 352 que sobran en el último paso de cada bloque: \(98\cdot1024-10^5\)).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.5 ¿Ventaja de asignar más de una query por bloque? (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q1e-s">Ver resolución</button><button class="btn" data-toggle="e3q1e-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q1e-s"><div class="t">Resolución oficial</div><p>Aumentaría la carga por hilo. Como hay suficientes bloques, no habría ventaja.</p></div>
+    <div class="panel how" id="e3q1e-h"><div class="t">Cómo resolverlo</div><p>Razona con recursos: sobran bloques (\(10^4\ll2^{31}\)), así que concentrar queries solo alarga \(t_p\). Ventaja posible que puedes mencionar: reutilizar en shared memory los datos de entrenamiento cargados para varias queries.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b2">
+  <div class="qh"><h3>P2. Máximo en árbol k-ario, memoria distribuida (7 pts)</h3><span class="tag b2">Bloque 2</span></div>
+  <p>Buscar el máximo de \(n\) elementos en un árbol k-ario (cada nodo con hasta \(k\) hijos) con \(p\) procesos en memoria distribuida.</p>
+
+  <div class="sub"><p class="st">2.1 PRAM y span. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q2a-s">Ver resolución</button><button class="btn" data-toggle="e3q2a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q2a-s"><div class="t">Resolución oficial</div>
+<pre><code>for i = 0 to n-1 do B[i] = A[i]
+m = n
+while m &gt; 1 do
+    for i = 0 to ceil(m/k)-1 pardo
+        j = i*k; localMax = B[j]
+        for t = 1 to k-1 do
+            if j+t &lt; m and B[j+t] &gt; localMax then localMax = B[j+t]
+        B[i] = localMax
+    m = ceil(m/k)
+return B[0]</code></pre>
+      <p>\(T_\infty=\log_k n\) (el while).</p></div>
+    <div class="panel how" id="e3q2a-h"><div class="t">Cómo resolverlo</div><p>Generaliza la reducción binaria: en cada ronda los elementos se agrupan de a \(k\) y queda uno por grupo, así que \(m\) se divide entre \(k\). El número de rondas es \(\log_k n\). Cada ronda cuesta \(O(k)\) en rigor; el solucionario la toma como constante.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.2 Complete el PRAM con el overhead distribuido y las directivas MPI. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q2b-s">Ver resolución</button><button class="btn" data-toggle="e3q2b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q2b-s"><div class="t">Resolución oficial</div>
+<pre><code>MPI_Init; MPI_Comm_rank; MPI_Comm_size
+local_n = n/p     // bloque local (p.ej. con MPI_Scatter)
+local_max = max(local_A)                     // fase 1
+step = 1
+while step &lt; p do                            // fase 2: reducción k-aria
+    blockSize = step*k
+    if rank mod blockSize == 0:              // padre
+        for t = 1..k-1: child = rank + t*step
+            if child &lt; p: MPI_Recv(&amp;r, ..., child); local_max = max(local_max, r)
+    else if rank mod step == 0:              // hijo
+        MPI_Send(&amp;local_max, ..., rank - rank mod blockSize); break
+    step = step*k
+if rank == 0: imprimir local_max
+MPI_Finalize</code></pre></div>
+    <div class="panel how" id="e3q2b-h"><div class="t">Cómo resolverlo</div><p>Tres fases: repartir (Scatter), cómputo local \(O(n/p)\), reducción entre procesos en un árbol k-ario de profundidad \(\log_k p\). La alternativa corta es <code>MPI_Reduce(..., MPI_MAX, 0, ...)</code>, pero piden mostrar el árbol.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.3 Complejidad \(T_p(n,p)\). (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q2c-s">Ver resolución</button><button class="btn" data-toggle="e3q2c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q2c-s"><div class="t">Resolución oficial</div><p>\(T_p(n,p)=O(\frac np+k\log_k p\,(\alpha+\beta))\).</p></div>
+    <div class="panel how" id="e3q2c-h"><div class="t">Cómo resolverlo</div><p>En cada uno de los \(\log_k p\) niveles el padre recibe \(k-1\) mensajes de un dato (\(\alpha+\beta\) cada uno): \((k-1)\log_k p(\alpha+\beta)\approx k\log_k p(\alpha+\beta)\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.4 Escalabilidad. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q2d-s">Ver resolución</button><button class="btn" data-toggle="e3q2d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q2d-s"><div class="t">Resolución oficial</div><p>\(T_0=O(n+kp\log_k p)\); \(W=K(n+kp\log_k p)\); \(n=K\,kp\log_k p\).</p></div>
+    <div class="panel how" id="e3q2d-h"><div class="t">Cómo resolverlo</div><p>\(pT_p=n+kp\log_k p(\alpha+\beta)\), así que \(T_0=kp\log_k p(\alpha+\beta)\). Iguala \(W=n\) a \(K\) veces ese término: \(n=\Theta(kp\log_k p)\). Interpreta: casi lineal en \(p\), muy escalable.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.5 Tiempo del mejor árbol k-ario (\(k\) óptimo). (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q2e-s">Ver resolución</button><button class="btn" data-toggle="e3q2e-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q2e-s"><div class="t">Resolución oficial</div><p>Derivando \(T_p\) respecto a \(k\): \(T_p'=O(C\frac{\ln k-1}{\ln^2k})=0\) con \(C=\log_k p(\alpha+\beta)\), así que \(k=e\approx3\). \(T_{p,opt}=O(\frac np+e\log_k p(\alpha+\beta))\).</p></div>
+    <div class="panel how" id="e3q2e-h"><div class="t">Cómo resolverlo</div><ol class="steps"><li>Cambia de base: \(k\log_k p=\frac{k}{\ln k}\ln p\).</li><li>Deriva \(f(k)=k/\ln k\): \(f'(k)=\frac{\ln k-1}{\ln^2k}\).</li><li>\(f'(k)=0\Rightarrow\ln k=1\Rightarrow k=e\). Entero: \(k=3\).</li></ol><p>Intuición: con \(k\) pequeño hay muchos niveles; con \(k\) grande cada padre recibe muchos mensajes.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b3">
+  <div class="qh"><h3>P3. Matrices: filas vs bloques (7 pts)</h3><span class="tag b3">Bloque 3</span></div>
+  <p>Filas: \(T=O(\frac{n^3}{p}+\alpha\log p+\beta n^2)\). Bloques: \(T=O(\frac{n^3}{p}+\alpha\sqrt p+\beta\frac{n^2}{\sqrt p})\).</p>
+
+  <div class="sub"><p class="st">3.1 Overhead e isoeficiencia. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q3a-s">Ver resolución</button><button class="btn" data-toggle="e3q3a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q3a-s"><div class="t">Resolución oficial</div><p>\(T_{0,filas}=O(\alpha p\log p+\beta pn^2)\) (el solucionario escribe \(\alpha pn\log p\), es una errata); \(T_{0,bloques}=O(\alpha p\sqrt p+\beta p\frac{n^2}{\sqrt p})\).</p></div>
+    <div class="panel how" id="e3q3a-h"><div class="t">Cómo resolverlo</div><p>Multiplica por \(p\) los dos términos de comunicación de cada modelo.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.2 Analíticamente, ¿cuál escala mejor? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q3b-s">Ver resolución</button><button class="btn" data-toggle="e3q3b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q3b-s"><div class="t">Resolución oficial</div><p>\(W_{filas}=n^3\propto pn^2\Rightarrow n\propto p\). \(W_{bloques}=n^3\propto p\sqrt p\Rightarrow n\propto\sqrt p\). Bloques escala mejor.</p></div>
+    <div class="panel how" id="e3q3b-h"><div class="t">Cómo resolverlo</div><p>Bloques: el término \(\beta\sqrt p\,n^2\) da \(n\propto\sqrt p\) y el \(\alpha p^{3/2}\) también (\(n^3\propto p^{3/2}\)). Filas: \(\beta pn^2\Rightarrow n\propto p\), que es más restrictivo.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.3 \(E\) para \(n=10^3\), \(p\in\{1,4,16,64,256,1024\}\), \(\alpha=100\), \(\beta=1\). (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q3c-s">Ver resolución</button><button class="btn" data-toggle="e3q3c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q3c-s"><div class="t">Resolución</div>
+      <p class="note">El solucionario repite la tabla de Floyd de la Sección 1 (dice "N=10⁴"), que no corresponde a estos datos. Estos son los valores correctos con \(E=n^3/(n^3+T_0)\):</p>
+      <div class="tw"><table><thead><tr><th>p</th><th>filas</th><th>bloques</th></tr></thead><tbody>
+      <tr><td>1</td><td>1</td><td>1</td></tr><tr><td>4</td><td>0.9960</td><td>0.9980</td></tr><tr><td>16</td><td>0.9842</td><td>0.9960</td></tr><tr><td>64</td><td>0.9398</td><td>0.9920</td></tr><tr><td>256</td><td>0.7960</td><td>0.9839</td></tr><tr><td>1024</td><td>0.4938</td><td>0.9659</td></tr></tbody></table></div></div>
+    <div class="panel how" id="e3q3c-h"><div class="t">Cómo resolverlo</div><p>Filas, \(p=1024\): \(T_0=100\cdot1024\cdot10+1024\cdot10^6\approx1.025\cdot10^9\) ⇒ \(E=10^9/2.025\cdot10^9\approx0.49\). Bloques: \(T_0=100\cdot32\,768+32\cdot10^6\approx3.5\cdot10^7\) ⇒ \(E\approx0.966\). El término \(\beta\) domina; la latencia casi no influye.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.4 ¿Se cumple \(W=C_p\)? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q3d-s">Ver resolución</button><button class="btn" data-toggle="e3q3d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q3d-s"><div class="t">Resolución oficial</div><p>No, por el overhead.</p></div>
+    <div class="panel how" id="e3q3d-h"><div class="t">Cómo resolverlo</div><p>\(C_p=W+T_0\) con \(T_0&gt;0\) en ambos modelos.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.5 ¿Se cumple \(W\propto p^3\)? ¿Consecuencias? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q3e-s">Ver resolución</button><button class="btn" data-toggle="e3q3e-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q3e-s"><div class="t">Resolución oficial</div><p>Según 3.2 no se da \(n^3\propto p^3\). Sería un modelo altamente escalable (\(n\propto p\)).</p></div>
+    <div class="panel how" id="e3q3e-h"><div class="t">Cómo resolverlo</div><p>Ojo: en filas sí sale \(n\propto p\), es decir \(W\propto p^3\). Puedes señalarlo con la misma lectura del solucionario de Floyd: crecimiento lineal de \(n\) con \(p\). Lo importante es explicar qué significa \(n\propto p\) frente a \(n\propto\sqrt p\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.6 Granularidad de cada modelo y efecto en la escalabilidad. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e3q3f-s">Ver resolución</button><button class="btn" data-toggle="e3q3f-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e3q3f-s"><div class="t">Resolución oficial</div><p>\(G_{filas}=\dfrac{n^3/p}{\alpha\log p+\beta n^2}\), \(G_{bloques}=\dfrac{n^3/p}{\alpha\sqrt p+\beta n^2/\sqrt p}\). Bloques tiene mayor granularidad, optimizando el particionamiento del dominio.</p></div>
+    <div class="panel how" id="e3q3f-h"><div class="t">Cómo resolverlo</div><p>\(G=T_{comp}/T_{comm}\). El denominador de bloques tiene \(n^2/\sqrt p\) en vez de \(n^2\): más cómputo por unidad de comunicación ⇒ \(E=G/(1+G)\) más alta y mejor escalabilidad.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ========================================== 2026-I -->
+<div class="exam" id="e4">
+<div class="ehead"><h2>Final 2026-I</h2><span class="src">6 + 7 + 7 pts · 120 min · sin laptop · <a href="material/finales/CS4052-ExamenFinal-2026-I.pdf">PDF original</a></span></div>
+
+<div class="q" data-b="b1">
+  <div class="qh"><h3>P1. Detección de incendios en GPU (6 pts)</h3><span class="tag b1">Bloque 1</span></div>
+  <p>H100 (\(2^{10}\) hilos por bloque, \(2^{31}\) bloques). Imagen \(N\times N\), \(N=8192\), tres bandas por píxel. Un hilo por píxel:</p>
+<pre><code>ndvi = (nir-rojo)/(nir+rojo+1e-6)
+riesgo = 0
+for m in 0..499:
+    r = 0.7*temp + 0.3*(1-ndvi)
+    for q in 0..99:
+        r = 0.6*r + 0.4*sinf(r)
+    riesgo += r
+riesgo /= 500;  clase = (riesgo&gt;=0.8)?2:(riesgo&gt;=0.5)?1:0</code></pre>
+
+  <div class="sub"><p class="st">1.1 FLOP por hilo (sinf = 40 FLOP). ¿Es adecuado o conviene repartir el píxel entre varios hilos? (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q1a-s">Ver resolución</button><button class="btn" data-toggle="e4q1a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q1a-s"><div class="t">Resolución oficial</div><p>\(W_{pixel}=500(4+100\cdot43+1)=2\,152\,500\approx2\) MFLOP. Hay paralelismo masivo y granularidad suficiente, pero 2 MFLOP por hilo puede ser mucho; se puede repartir el kernel entre varios hilos. Obliga a sincronizar, pero ese overhead es menor que el cómputo.</p></div>
+    <div class="panel how" id="e4q1a-h"><div class="t">Cómo resolverlo</div><ol class="steps"><li>Bucle interno: \(0.6r\) (1) + \(0.4\sin r\) (1 + 40) + suma (1) = 43 FLOP, × 100.</li><li>Cuerpo del externo: \(0.7T+0.3(1-\text{ndvi})\) = 4 FLOP, + \(\text{riesgo}\mathrel{+}=r\) = 1.</li><li>× 500. Lo de fuera de los bucles (ndvi, división) es despreciable.</li></ol></div>
+  </div>
+
+  <div class="sub"><p class="st">1.2 Aplique Foster (GPU). (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q1b-s">Ver resolución</button><button class="btn" data-toggle="e4q1b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q1b-s"><div class="t">Resolución oficial</div><p><b>Partición:</b> cada píxel es independiente: \(8192^2=67\,108\,864\) tareas. <b>Comunicación:</b> no hay comunicación explícita entre tareas; solo con memoria global y CPU–GPU. <b>Aglomeración:</b> bloques de hilos, por ejemplo 256. <b>Mapeo:</b> 256 hilos por bloque; los bloques se asignan a los SM.</p></div>
+    <div class="panel how" id="e4q1b-h"><div class="t">Cómo resolverlo</div><p>Responde los cuatro pasos con un número concreto en cada uno. Justifica 256: múltiplo del warp (32), buena ocupación de los SM, accesos coalescentes.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.3 Configuración óptima de bloques e hilos; hilos inactivos por <code>if(idx&lt;P)</code>. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q1c-s">Ver resolución</button><button class="btn" data-toggle="e4q1c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q1c-s"><div class="t">Resolución oficial</div><p>\(G=P/B=67\,108\,864/256=262\,144\) bloques; \(262\,144\cdot256=67\,108\,864\) hilos ⇒ 0 inactivos. La condición es necesaria en el caso general, cuando \(P\) no es múltiplo de \(B\).</p></div>
+    <div class="panel how" id="e4q1c-h"><div class="t">Cómo resolverlo</div><p>\(P=2^{26}\), \(B=2^8\Rightarrow G=2^{18}\). Inactivos \(=G\cdot B-P\). Con \(B=1024\) también sería exacto (\(2^{16}\) bloques).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.4 Tiempos secuencial y paralelo. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q1d-s">Ver resolución</button><button class="btn" data-toggle="e4q1d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q1d-s"><div class="t">Resolución oficial</div><p>Con \(10^{-8}\) s por operación: \(T_p=2\,152\,500\cdot10^{-8}=0.02\) s; \(T_s=T_p\cdot67\,108\,864=1\,444\,518\) s ≈ 17 días.</p></div>
+    <div class="panel how" id="e4q1d-h"><div class="t">Cómo resolverlo</div><p>Mismo patrón que siempre: \(T_p\) = FLOP de un hilo × \(t_{op}\); \(T_s\) = \(T_p\) × número de píxeles.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">1.5 Speedup y eficiencia respecto al pico (1 GFLOP/s): \(E_{GPU}=\) velocidad alcanzada / pico. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q1e-s">Ver resolución</button><button class="btn" data-toggle="e4q1e-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q1e-s"><div class="t">Resolución oficial</div><p>\(S=T_s/T_p\approx67\,108\,863\). Velocidad alcanzada \(=\text{FLOP}/T_p\approx0.1\) GFLOP/s; \(E_{GPU}=0.1/1=0.1\).</p></div>
+    <div class="panel how" id="e4q1e-h"><div class="t">Cómo resolverlo</div><p>\(2.15\cdot10^6\) FLOP en \(0.0215\) s = \(10^8\) FLOP/s por hilo. Interpreta: se usa el 10 % del pico, porque el tiempo por operación dado (\(10^{-8}\) s) equivale a 0.1 GFLOP/s.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b3">
+  <div class="qh"><h3>P2. Isoeficiencia en memoria compartida, distribuida e híbrida (7 pts)</h3><span class="tag b3">Bloque 3</span></div>
+  <p>Malla \(n\times n\), \(k\) iteraciones, \(W=kn^2\), \(b\) bytes por elemento, memoria por nodo \(M_{nodo}\). Compartida (\(P\) núcleos): \(T_P=\frac{kn^2}{P}+k\gamma\log P\). Distribuida (\(P\) procesos): \(T_P=\frac{kn^2}{P}+k\alpha\log P+k\beta n\log P\).</p>
+
+  <div class="sub"><p class="st">2.1 Tiempo híbrido con \(q\) nodos de \(m\) hilos (\(P=qm\)). (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q2a-s">Ver resolución</button><button class="btn" data-toggle="e4q2a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q2a-s"><div class="t">Resolución oficial</div><p>\(T_P^{(H)}=\frac{kn^2}{P}+k\gamma\log m+k\alpha\log q+k\beta n\log q\).</p></div>
+    <div class="panel how" id="e4q2a-h"><div class="t">Cómo resolverlo</div><p>El cómputo se reparte entre todos los núcleos (\(P\)). La sincronización de memoria compartida ocurre dentro del nodo (\(m\) hilos → \(\log m\)); la comunicación MPI ocurre entre nodos (\(q\) → \(\log q\)).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.2 Overhead e isoeficiencia de cada paradigma. (2 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q2b-s">Ver resolución</button><button class="btn" data-toggle="e4q2b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q2b-s"><div class="t">Resolución oficial</div>
+      <p><b>Compartida:</b> \(T_0=kP\gamma\log P\Rightarrow n^2=\Theta(P\log P)\Rightarrow W_{MC}=\Theta(kP\log P)\).</p>
+      <p><b>Distribuida:</b> \(T_0=kP\alpha\log P+kP\beta n\log P\). Latencia: \(n^2=\Theta(P\log P)\). Comunicación: \(n^2=\Theta(Pn\log P)\Rightarrow n=\Theta(P\log P)\Rightarrow W_{MD}=\Theta(kP^2\log^2P)\).</p>
+      <p><b>Híbrida:</b> \(T_0=kP\gamma\log m+kP\alpha\log\frac Pm+kP\beta n\log\frac Pm\). Dominante: \(W_H=\Theta(kP^2\log^2\frac Pm)\).</p></div>
+    <div class="panel how" id="e4q2b-h"><div class="t">Cómo resolverlo</div><p>Para cada paradigma: \(T_0=PT_P-kn^2\); luego \(kn^2=K\cdot\)(cada término). El truco está en el término \(\beta n\log P\): como contiene \(n\), al despejar queda \(n\propto P\log P\) y \(W=kn^2\propto kP^2\log^2P\). Escribe siempre los tres términos y marca el dominante.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.3 ¿Qué paradigma escala mejor? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q2c-s">Ver resolución</button><button class="btn" data-toggle="e4q2c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q2c-s"><div class="t">Resolución oficial</div><p>Para \(1&lt;m&lt;P\): \(kP\log P&lt;kP^2\log^2\frac Pm&lt;kP^2\log^2P\). Compartida tiene la mejor isoeficiencia, distribuida la peor y la híbrida queda entre ambas.</p></div>
+    <div class="panel how" id="e4q2c-h"><div class="t">Cómo resolverlo</div><p>Ordena las tres funciones por crecimiento. La híbrida mejora a la distribuida porque la comunicación cara solo ocurre entre \(q=P/m\) nodos.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.4 Restricción de memoria (compartida: todo en una máquina; distribuida: \(P\) nodos). (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q2d-s">Ver resolución</button><button class="btn" data-toggle="e4q2d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q2d-s"><div class="t">Resolución oficial</div><p>Compartida: \(bn^2\le M_{nodo}\Rightarrow W\le k\frac{M_{nodo}}{b}\); viable solo si \(CP\log P\le kM_{nodo}/b\). Distribuida: \(bn^2\le PM_{nodo}\Rightarrow W\le kP\frac{M_{nodo}}{b}\). Híbrida: \(q=P/m\) nodos ⇒ \(W\le k\frac{PM_{nodo}}{mb}\).</p></div>
+    <div class="panel how" id="e4q2d-h"><div class="t">Cómo resolverlo</div><p>Memoria total disponible × \(1/b\) = elementos que caben = \(n^2\) máximo. Multiplica por \(k\) para pasar a \(W\). Luego cruza con la isoeficiencia: la compartida necesita que \(W\) crezca como \(P\log P\), pero tiene un techo fijo.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">2.5 Considerando isoeficiencia y memoria, ¿qué paradigma conviene en la práctica? (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q2e-s">Ver resolución</button><button class="btn" data-toggle="e4q2e-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q2e-s"><div class="t">Resolución oficial</div><p>Compartida escala mejor en eficiencia pero peor en capacidad (no resuelve problemas arbitrariamente grandes). Distribuida escala mejor en memoria pero peor en eficiencia. La híbrida equilibra eficiencia y capacidad.</p></div>
+    <div class="panel how" id="e4q2e-h"><div class="t">Cómo resolverlo</div><p>Responde con el trade-off explícito y una recomendación: híbrida (MPI entre nodos + OpenMP dentro), que es lo que se usa en supercomputadores.</p></div>
+  </div>
+</div>
+
+<div class="q" data-b="b2">
+  <div class="qh"><h3>P3. DTS vs PWS (7 pts)</h3><span class="tag b2">Bloque 2</span></div>
+  <p>Árbol con ramificación \(b\) y profundidad \(d\), \(W=T_s=b^d\). <b>DTS:</b> genera la frontera a profundidad \(r=d/2\) (\(|S|=b^r\) subárboles balanceados), explora cada subárbol en paralelo con DFS y reduce. <b>PWS:</b> \(q=p\) ventanas de costo; cada una explora desde la raíz con trabajo redundante \(O(W^{2/3})\).</p>
+
+  <div class="sub"><p class="st">3.1 Trabajo y span de DTS. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q3a-s">Ver resolución</button><button class="btn" data-toggle="e4q3a-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q3a-s"><div class="t">Resolución oficial</div><p>\(T_1=W=b^d\). Frontera \(\Theta(b^r)\), subárbol \(\Theta(b^{d-r})\), reducción \(\Theta(r\log b)\). \(T_\infty=\Theta(b^r+b^{d-r})\); con \(r=d/2\): \(T_\infty=\Theta(b^{d/2})=\Theta(W^{1/2})\).</p></div>
+    <div class="panel how" id="e4q3a-h"><div class="t">Cómo resolverlo</div><p>El span es la suma de las fases en secuencia: generar frontera, luego el subárbol más largo, luego reducir. El logaritmo es despreciable frente a las exponenciales. Usa \(b^{d/2}=\sqrt{b^d}=\sqrt W\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.2 \(T_p\) de DTS. (0.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q3b-s">Ver resolución</button><button class="btn" data-toggle="e4q3b-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q3b-s"><div class="t">Resolución oficial</div><p>Brent: \(T_p^{DTS}=O(\frac Wp+W^{1/2})\).</p></div>
+    <div class="panel how" id="e4q3b-h"><div class="t">Cómo resolverlo</div><p>Sustituye en \(T_p=T_1/p+T_\infty\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.3 Isoeficiencia de DTS. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q3c-s">Ver resolución</button><button class="btn" data-toggle="e4q3c-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q3c-s"><div class="t">Resolución oficial</div><p>\(T_0=pc_1W^{1/2}\). \(W=Kpc_1W^{1/2}\Rightarrow W^{1/2}=Kpc_1\Rightarrow W=K^2c_1^2p^2\Rightarrow W_{DTS}=\Theta(p^2)\).</p></div>
+    <div class="panel how" id="e4q3c-h"><div class="t">Cómo resolverlo</div><p>Cuando \(W\) aparece en ambos lados, divide entre la potencia de \(W\) del lado derecho y eleva para despejar.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.4 Trabajo y span de PWS. (1.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q3d-s">Ver resolución</button><button class="btn" data-toggle="e4q3d-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q3d-s"><div class="t">Resolución oficial</div><p>Tarea más pesada: \(\Theta(\frac Wq+W^{2/3})\) con \(q=p\); reducción \(\Theta(\log p)\). \(T_\infty^{PWS}=\Theta(\frac Wp+W^{2/3})\). Trabajo total \(T_1^{PWS}=\Theta(W+pW^{2/3})\); para la eficiencia se toma como base \(W=b^d\).</p></div>
+    <div class="panel how" id="e4q3d-h"><div class="t">Cómo resolverlo</div><p>Cada ventana hace su parte ideal más la parte redundante. El span es la ventana más lenta. El trabajo total suma \(p\) veces la redundancia, pero la eficiencia se mide contra el mejor secuencial (\(b^d\)).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.5 \(T_p\) de PWS. (0.5 pts)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q3e-s">Ver resolución</button><button class="btn" data-toggle="e4q3e-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q3e-s"><div class="t">Resolución oficial</div><p>\(T_p^{PWS}=O(\frac{W+pW^{2/3}}{p}+\frac Wp+W^{2/3})=O(\frac Wp+W^{2/3})\).</p></div>
+    <div class="panel how" id="e4q3e-h"><div class="t">Cómo resolverlo</div><p>Brent con el trabajo total; los términos repetidos se absorben en la \(O\).</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.6 Isoeficiencia de PWS. (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q3f-s">Ver resolución</button><button class="btn" data-toggle="e4q3f-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q3f-s"><div class="t">Resolución oficial</div><p>\(T_0=pc_2W^{2/3}\). \(W=Kpc_2W^{2/3}\Rightarrow W^{1/3}=Kpc_2\Rightarrow W=K^3c_2^3p^3\Rightarrow W_{PWS}=\Theta(p^3)\).</p></div>
+    <div class="panel how" id="e4q3f-h"><div class="t">Cómo resolverlo</div><p>Igual que en DTS: divide entre \(W^{2/3}\) y eleva al cubo.</p></div>
+  </div>
+
+  <div class="sub"><p class="st">3.7 ¿Qué método escala mejor? (1 pt)</p>
+    <div class="reveal"><button class="btn" data-toggle="e4q3g-s">Ver resolución</button><button class="btn" data-toggle="e4q3g-h">Cómo resolverlo</button></div>
+    <div class="panel sol" id="e4q3g-s"><div class="t">Resolución oficial</div><p>\(W_{DTS}=\Theta(p^2)\ll W_{PWS}=\Theta(p^3)\): DTS requiere un crecimiento menor del problema para mantener la eficiencia. DTS escala mejor.</p></div>
+    <div class="panel how" id="e4q3g-h"><div class="t">Cómo resolverlo</div><p>Compara exponentes y conecta con la causa: el trabajo redundante de PWS (\(W^{2/3}\)) es mayor que el span de DTS (\(W^{1/2}\)), porque la heurística no separa bien las ventanas.</p></div>
+  </div>
+</div>
+</div>
+
+<footer>Las resoluciones oficiales están transcritas de los solucionarios del profesor José Fiestas (CS4052, UTEC). Las explicaciones y las notas de corrección son material de estudio propio; si dudas, revisa el PDF original enlazado en cada examen.</footer>
+</div>
+</body>
+</html>

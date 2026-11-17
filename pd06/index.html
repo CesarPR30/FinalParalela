@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Guía PD06 Paralela</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=STIX+Two+Text:ital@0;1&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: índice fijo a la izquierda (desktop) + columna de lectura; cada tema = bloque con prioridad, teoría, fórmulas, ejemplo de PD pasada y preguntas orales */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#15202b; --muted:#5a6676; --line:#dbe1e8;
+  --accent:#0d6787; --accent-soft:#e2f0f5; --hot:#b4410c; --hot-soft:#fbeadf;
+  --mid:#8a6400; --mid-soft:#f7efd9; --low:#4b5a6b; --low-soft:#e8ecf1;
+  --code:#eef2f6;
+  --f-display:"Space Grotesk",system-ui,sans-serif;
+  --f-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-math:"STIX Two Text","Cambria Math","Times New Roman",serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e141a; --surface:#151d25; --ink:#e4eaf0; --muted:#97a3b0; --line:#26323f;
+  --accent:#55b6d6; --accent-soft:#16303b; --hot:#f08a55; --hot-soft:#3a2216;
+  --mid:#e0b54d; --mid-soft:#352b12; --low:#a9b6c4; --low-soft:#1f2a35; --code:#1b2530;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0e141a; --surface:#151d25; --ink:#e4eaf0; --muted:#97a3b0; --line:#26323f;
+  --accent:#55b6d6; --accent-soft:#16303b; --hot:#f08a55; --hot-soft:#3a2216;
+  --mid:#e0b54d; --mid-soft:#352b12; --low:#a9b6c4; --low-soft:#1f2a35; --code:#1b2530;
+  color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.6;}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:20px}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;font-size:13.5px}
+nav.toc .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:8px;font-weight:600}
+nav.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+nav.toc a{display:flex;gap:8px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--accent-soft);outline:none}
+nav.toc .n{font-family:var(--f-mono);font-size:11px;color:var(--muted);min-width:18px}
+@media (max-width:900px){nav.toc{position:static}nav.toc ol{flex-direction:row;flex-wrap:wrap;gap:6px}nav.toc a{border:1px solid var(--line);background:var(--surface)}}
+main{min-width:0}
+header.top{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;color:var(--accent);letter-spacing:.04em}
+h1{font-family:var(--f-display);font-size:clamp(28px,4.4vw,40px);line-height:1.1;margin:6px 0 10px;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--f-display);font-size:24px;line-height:1.2;margin:0 0 4px;text-wrap:balance}
+h3{font-family:var(--f-display);font-size:17px;margin:22px 0 8px}
+p{margin:0 0 12px;max-width:72ch}
+.lead{color:var(--muted);font-size:16px;max-width:70ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-size:12.5px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.chip b{font-weight:600}
+section.topic{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px clamp(16px,3vw,30px);margin-bottom:22px;scroll-margin-top:16px}
+.thead{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:10px}
+.thead .src{font-size:12.5px;color:var(--muted);font-family:var(--f-mono)}
+.prio{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:5px}
+.p-hot{color:var(--hot);background:var(--hot-soft)}
+.p-mid{color:var(--mid);background:var(--mid-soft)}
+.p-low{color:var(--low);background:var(--low-soft)}
+ul,ol.steps{padding-left:20px;margin:0 0 12px;max-width:72ch}
+li{margin-bottom:4px}
+.m{font-family:var(--f-math);font-size:1.08em;white-space:nowrap}
+.m i{font-style:italic}
+.fbox{background:var(--accent-soft);border-radius:8px;padding:14px 16px;margin:12px 0 16px;display:grid;gap:8px}
+.fbox .row{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:4px 14px;align-items:baseline}
+.fbox .k{font-size:13px;color:var(--muted);font-weight:500}
+.fbox .v{font-family:var(--f-math);font-size:17px;overflow-wrap:anywhere}
+@media (max-width:560px){.fbox .row{grid-template-columns:minmax(0,1fr)}}
+.ex{border-left:3px solid var(--accent);padding:4px 0 4px 16px;margin:14px 0}
+.ex .t{font-size:12px;font-family:var(--f-mono);color:var(--accent);margin-bottom:4px}
+.warn{border-left:3px solid var(--hot);padding:4px 0 4px 16px;margin:14px 0}
+.warn .t{font-size:12px;font-family:var(--f-mono);color:var(--hot);margin-bottom:4px}
+pre{font-family:var(--f-mono);font-size:13px;line-height:1.5;background:var(--code);border-radius:8px;padding:12px 14px;overflow-x:auto;margin:10px 0 14px}
+.tw{overflow-x:auto;margin:10px 0 16px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+td .m{white-space:normal}
+.qa{display:grid;gap:8px;margin-top:10px}
+.card{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.card button{all:unset;box-sizing:border-box;display:flex;gap:10px;width:100%;padding:11px 14px;cursor:pointer;font-weight:500}
+.card button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.card button::before{content:"+";font-family:var(--f-mono);color:var(--accent);width:12px;flex:none}
+.card.open button::before{content:"–"}
+.card .ans{display:none;padding:0 14px 12px 36px;color:var(--ink)}
+.card.open .ans{display:block}
+.card .ans p:last-child{margin-bottom:0}
+.qtools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}
+.btn{font:inherit;font-size:13px;padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent)}
+.check{list-style:none;padding:0;display:grid;gap:6px}
+.check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{margin-top:5px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.progress{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0 14px;max-width:420px}
+.progress span{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px}
+.blk{border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.blk .h{font-family:var(--f-mono);font-size:12px;color:var(--accent)}
+.blk .tt{font-weight:600;margin:2px 0 4px}
+.blk p{font-size:14px;color:var(--muted);margin:0}
+footer{color:var(--muted);font-size:13px;margin-top:30px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{background:#fff;color:#000;font-size:11pt}
+  .wrap{display:block;padding:0;max-width:none}
+  nav.toc,.qtools,.no-print{display:none!important}
+  section.topic{border:none;padding:0;margin:0 0 18px;break-inside:auto}
+  section.topic + section.topic{break-before:page}
+  .card{break-inside:avoid;border-color:#bbb}
+  .card .ans{display:block!important}
+  .card button::before{content:"P"}
+  .fbox{background:#eef5f8;break-inside:avoid}
+  pre{background:#f2f2f2;white-space:pre-wrap}
+  .progress{display:none}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Índice">
+  <div class="lbl">Índice</div>
+  <ol>
+    <li><a href="#temas"><span class="n">00</span>Qué entra</a></li>
+    <li><a href="#perf"><span class="n">01</span>Performance e isoeficiencia</a></li>
+    <li><a href="#busq"><span class="n">02</span>Búsqueda paralela</a></li>
+    <li><a href="#rr"><span class="n">03</span>Intercambio de tareas</a></li>
+    <li><a href="#grafos"><span class="n">04</span>Grafos</a></li>
+    <li><a href="#mat"><span class="n">05</span>Matrices</a></li>
+    <li><a href="#bcast"><span class="n">06</span>Broadcast y topologías</a></li>
+    <li><a href="#extra"><span class="n">07</span>Particionamiento, DAG, máximo</a></li>
+    <li><a href="#oral"><span class="n">08</span>Simulacro oral</a></li>
+    <li><a href="#plan"><span class="n">09</span>Plan para hoy</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <div class="eyebrow">CS4052 · Computación Paralela y Distribuida · 2026-II</div>
+  <h1>Guía de estudio PD06 (oral)</h1>
+  <p class="lead">Armada a partir de las PD06 de 2025-I, 2025-II (S1 y S2) y 2026-I, y de las clases U5.3, U5.4, U6.1, U6.2 y U6.3 de este ciclo. En las cuatro PD06 anteriores se repiten los mismos tres bloques: análisis de performance (overhead, isoeficiencia), búsqueda paralela y algoritmos de grafos o matrices.</p>
+  <div class="meta">
+    <span class="chip"><b>PD06 oral:</b> martes 17 nov</span>
+    <span class="chip"><b>Examen final:</b> miércoles 18 nov</span>
+    <span class="chip">Notación: <span class="m"><i>α</i></span> latencia, <span class="m"><i>β</i></span> tiempo por byte, <span class="m"><i>t<sub>c</sub></i></span> cómputo</span>
+  </div>
+</header>
+
+<!-- 00 -->
+<section class="topic" id="temas">
+  <div class="thead"><h2>Qué entra en la PD06</h2></div>
+  <p>Así se repartieron las preguntas en las PD06 anteriores. La columna de prioridad combina la frecuencia en PD pasadas con lo que se dictó en noviembre de este ciclo.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Tema</th><th>Clase</th><th>Apareció en</th><th>Prioridad</th></tr></thead>
+    <tbody>
+      <tr><td>Overhead <span class="m"><i>T</i><sub>0</sub></span>, eficiencia, isoeficiencia, granularidad</td><td>U6.2</td><td>2026-I (Ej.1), 2025-II S2 (FFT), 2025-II S1, 2025-I (Floyd)</td><td><span class="prio p-hot">Muy alta</span></td></tr>
+      <tr><td>Búsqueda: PWS vs DTS, conteo de pasos, speedup</td><td>U5.3</td><td>2025-I, 2025-II S2</td><td><span class="prio p-hot">Muy alta</span></td></tr>
+      <tr><td>Intercambio de tareas: Round Robin (ARR, GRR, RP), <span class="m"><i>V</i>(<i>p</i>) log <i>W</i></span></td><td>U5.3</td><td>2026-I (Ej.2)</td><td><span class="prio p-hot">Alta</span></td></tr>
+      <tr><td>Grafos: Floyd, Prim/Dijkstra, pointer jumping, coloreo, leader election</td><td>U5.4</td><td>2025-I (Floyd, leader election)</td><td><span class="prio p-hot">Alta</span></td></tr>
+      <tr><td>Multiplicación de matrices: filas/columnas, Fox, Cannon, DNS</td><td>U6.3</td><td>2025-II S1</td><td><span class="prio p-hot">Alta</span></td></tr>
+      <tr><td>Broadcast/reducción, topologías (anillo, malla, hipercubo)</td><td>U6.1, U6.2</td><td>Como pieza de otros ejercicios (Floyd, máximo con MPI)</td><td><span class="prio p-mid">Media</span></td></tr>
+      <tr><td>Particionamiento de tareas (LPT, suma de prefijos)</td><td>U5.3</td><td>2025-II S1 y S2</td><td><span class="prio p-mid">Media</span></td></tr>
+      <tr><td>Concurrencia en DAG; máximo en árbol doble logarítmico</td><td>U2, U6.2</td><td>2025-II S1; 2026-I (Ej.3)</td><td><span class="prio p-mid">Media</span></td></tr>
+      <tr><td>CUDA (U6.4), ordenamiento (U5.2)</td><td>U6.4, U5.2</td><td>No apareció en PD06</td><td><span class="prio p-low">Baja (para el final)</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Cómo responder en el oral</h3>
+  <ol class="steps">
+    <li><b>Define</b> el concepto en una frase (qué es <span class="m"><i>T</i><sub>0</sub></span>, qué hace PWS).</li>
+    <li><b>Escribe la fórmula</b> y nombra cada término: cuál es cómputo y cuál es comunicación.</li>
+    <li><b>Deriva</b> en voz alta: <span class="m"><i>T<sub>p</sub></i> → <i>T</i><sub>0</sub> → <i>E</i> → isoeficiencia</span>.</li>
+    <li><b>Interpreta</b>: qué término domina, qué pasa si crece <span class="m"><i>p</i></span> o <span class="m"><i>α</i></span>, cuál algoritmo escala mejor y por qué.</li>
+  </ol>
+  <p>En un oral el profesor suele cortar y preguntar "¿y si…?". Los cambios típicos son: tarea de costo <span class="m"><i>O</i>(<i>n</i>)</span> en lugar de <span class="m"><i>O</i>(1)</span>, broadcast lineal en lugar de árbol, memoria compartida en lugar de distribuida, o un valor concreto de <span class="m"><i>E</i></span>.</p>
+</section>
+
+<!-- 01 -->
+<section class="topic" id="perf">
+  <div class="thead"><h2>Performance e isoeficiencia</h2><span class="prio p-hot">Muy alta</span><span class="src">U6.2 · PD06 2026-I Ej.1, 2025-II S2 Ej.1</span></div>
+  <p>Es la base de casi todas las preguntas: cualquier algoritmo (búsqueda, Floyd, Cannon, FFT) termina en "calcula <span class="m"><i>S</i></span>, <span class="m"><i>E</i></span> e isoeficiencia".</p>
+  <div class="fbox">
+    <div class="row"><div class="k">Speedup</div><div class="v"><i>S</i> = <i>T<sub>s</sub></i> / <i>T<sub>p</sub></i></div></div>
+    <div class="row"><div class="k">Eficiencia</div><div class="v"><i>E</i> = <i>S</i>/<i>p</i> = <i>T<sub>s</sub></i> / (<i>p</i>·<i>T<sub>p</sub></i>)</div></div>
+    <div class="row"><div class="k">Trabajo</div><div class="v"><i>W</i> = <i>T<sub>s</sub></i> (mejor algoritmo secuencial)</div></div>
+    <div class="row"><div class="k">Función de overhead</div><div class="v"><i>T</i><sub>0</sub>(<i>W</i>,<i>p</i>) = <i>p</i>·<i>T<sub>p</sub></i> − <i>W</i></div></div>
+    <div class="row"><div class="k">Tiempo paralelo</div><div class="v"><i>T<sub>p</sub></i> = (<i>W</i> + <i>T</i><sub>0</sub>) / <i>p</i></div></div>
+    <div class="row"><div class="k">Eficiencia vía overhead</div><div class="v"><i>E</i> = 1 / (1 + <i>T</i><sub>0</sub>/<i>W</i>)</div></div>
+    <div class="row"><div class="k">Isoeficiencia</div><div class="v"><i>W</i> = <i>K</i>·<i>T</i><sub>0</sub>(<i>W</i>,<i>p</i>), con <i>K</i> = <i>E</i>/(1−<i>E</i>)</div></div>
+    <div class="row"><div class="k">Granularidad</div><div class="v"><i>G</i> = <i>T</i><sub>comp</sub>/<i>T</i><sub>comm</sub> = <i>W</i>/<i>T</i><sub>0</sub></div></div>
+    <div class="row"><div class="k">Mensaje de <i>m</i> bytes</div><div class="v"><i>T</i>(<i>m</i>) = <i>α</i> + <i>m</i>·<i>β</i></div></div>
+    <div class="row"><div class="k">Brent</div><div class="v"><i>T<sub>p</sub></i> ≤ <i>W</i>/<i>p</i> + <i>T</i><sub>∞</sub></div></div>
+  </div>
+
+  <h3>Receta de isoeficiencia (memorízala)</h3>
+  <ol class="steps">
+    <li>Escribe <span class="m"><i>T<sub>p</sub></i></span> = cómputo/<span class="m"><i>p</i></span> + comunicación.</li>
+    <li>Calcula <span class="m"><i>T</i><sub>0</sub> = <i>pT<sub>p</sub></i> − <i>W</i></span>. El término de cómputo se cancela; queda el overhead (comunicación, desbalance, cómputo extra).</li>
+    <li>Iguala <span class="m"><i>W</i> = <i>K</i> · (término)</span> para <b>cada</b> término de <span class="m"><i>T</i><sub>0</sub></span> por separado y despeja <span class="m"><i>n</i></span> o <span class="m"><i>W</i></span> en función de <span class="m"><i>p</i></span>.</li>
+    <li>La condición de escalabilidad es la <b>más restrictiva</b>: <span class="m"><i>n</i> = Θ(max{<i>f</i><sub>1</sub>(<i>p</i>), <i>f</i><sub>2</sub>(<i>p</i>), …})</span>. Ejemplo de clase: entre <span class="m">Θ(<i>p</i>)</span> y <span class="m">Θ(√<i>p</i>)</span> manda <span class="m">Θ(<i>p</i>)</span>.</li>
+    <li>Interpreta: cuanto más lento crece <span class="m"><i>W</i>(<i>p</i>)</span>, más escalable es el algoritmo (<span class="m"><i>p</i> log <i>p</i></span> es mejor que <span class="m"><i>p</i><sup>3</sup></span>).</li>
+  </ol>
+  <p>Matiz que el profesor menciona en U6.2: el algoritmo con <span class="m"><i>O</i>(<i>p</i><sup>2</sup>)</span> escala peor, pero puede ser más económico porque usa menos procesos. La escalabilidad débil (Gustafson) es el caso particular <span class="m"><i>n</i>/<i>p</i></span> = constante; la isoeficiencia es la relación general <span class="m"><i>n</i> = <i>f</i>(<i>p</i>)</span>. Consumo energético: <span class="m"><i>C<sub>E</sub></i> = <i>P<sub>n</sub></i>·<i>T<sub>s</sub></i>/<i>E</i></span>, inversamente proporcional a la eficiencia.</p>
+
+  <div class="ex">
+    <div class="t">Ejemplo de clase: suma de n números</div>
+    <p><span class="m"><i>T<sub>p</sub></i> = <i>n</i>/<i>p</i> + log <i>p</i></span> ⇒ <span class="m"><i>pT<sub>p</sub></i> = <i>n</i> + <i>p</i> log <i>p</i></span> ⇒ <span class="m"><i>T</i><sub>0</sub> = <i>p</i> log <i>p</i></span> ⇒ <span class="m"><i>W</i> = <i>K p</i> log <i>p</i></span>.</p>
+    <p>Si pasas de <span class="m"><i>p</i><sub>0</sub></span> a <span class="m"><i>p</i><sub>1</sub></span>, <span class="m"><i>W</i></span> debe crecer en el factor <span class="m"><i>p</i><sub>1</sub>log <i>p</i><sub>1</sub> / (<i>p</i><sub>0</sub>log <i>p</i><sub>0</sub>)</span>. Con <span class="m"><i>p</i>=4, <i>n</i>=64, <i>E</i>=0.8</span>: para <span class="m"><i>p</i>=16</span> hace falta <span class="m"><i>n</i> = 64·(16·4)/(4·2) = 512</span>.</p>
+  </div>
+
+  <div class="ex">
+    <div class="t">PD06 2026-I · Ej.1 (resuelto)</div>
+    <p>Modelo: <span class="m"><i>T<sub>p</sub></i> = <i>W</i>/<i>p</i> + <i>α</i> log <i>p</i> + <i>β</i>(<i>W</i>/<i>p</i>) log <i>p</i></span></p>
+    <ul>
+      <li><b>Overhead:</b> <span class="m"><i>T</i><sub>0</sub> = <i>p</i>(<i>W</i>/<i>p</i> + <i>α</i> log <i>p</i> + <i>β</i>(<i>W</i>/<i>p</i>) log <i>p</i>) − <i>W</i> = <i>α p</i> log <i>p</i> + <i>β W</i> log <i>p</i></span></li>
+      <li><b>Eficiencia:</b> <span class="m"><i>E</i> = 1 / (1 + <i>α p</i> log <i>p</i> / <i>W</i> + <i>β</i> log <i>p</i>)</span>. La latencia pesa a través de <span class="m"><i>α p</i> log <i>p</i>/<i>W</i></span> (se puede compensar con más <span class="m"><i>W</i></span>); el ancho de banda pesa con <span class="m"><i>β</i> log <i>p</i></span>, que <b>no depende de <i>W</i></b>.</li>
+      <li><b>Isoeficiencia:</b> <span class="m"><i>W</i> = <i>K</i>(<i>α p</i> log <i>p</i> + <i>β W</i> log <i>p</i>)</span> ⇒ <span class="m"><i>W</i>(1 − <i>Kβ</i> log <i>p</i>) = <i>Kα p</i> log <i>p</i></span> ⇒ <span class="m"><i>W</i> = <i>Kα p</i> log <i>p</i> / (1 − <i>Kβ</i> log <i>p</i>)</span>.</li>
+      <li><b>Condición:</b> <span class="m"><i>Kβ</i> log <i>p</i> &lt; 1</span>. Si no se cumple, aumentar <span class="m"><i>W</i></span> ya no mantiene la eficiencia: hay un <span class="m"><i>p</i></span> máximo a partir del cual el modelo deja de escalar.</li>
+      <li><b>Granularidad:</b> <span class="m"><i>G</i> = <i>W</i>/<i>T</i><sub>0</sub> = 1 / (<i>α p</i> log <i>p</i>/<i>W</i> + <i>β</i> log <i>p</i>)</span>. Es mayor cuando el cómputo domina sobre la comunicación.</li>
+    </ul>
+  </div>
+
+  <div class="ex">
+    <div class="t">PD06 2025-II S2 · FFT (resuelto)</div>
+    <p><span class="m"><i>T<sub>s</sub></i> = <i>t<sub>c</sub> n</i> log <i>n</i></span>, <span class="m"><i>T<sub>p</sub></i> = <i>t<sub>c</sub></i>(<i>n</i>/<i>p</i>) log <i>n</i> + <i>α</i> log <i>p</i> + <i>β</i>(<i>n</i>/<i>p</i>) log <i>p</i></span></p>
+    <ul>
+      <li><span class="m"><i>T</i><sub>0</sub> = <i>α p</i> log <i>p</i> + <i>β n</i> log <i>p</i></span></li>
+      <li>Término <span class="m"><i>α</i></span>: <span class="m"><i>W</i> = <i>K</i>(<i>α</i>/<i>t<sub>c</sub></i>) <i>p</i> log <i>p</i></span>.</li>
+      <li>Término <span class="m"><i>β</i></span>: <span class="m"><i>t<sub>c</sub> n</i> log <i>n</i> = <i>Kβ n</i> log <i>p</i></span> ⇒ <span class="m">log <i>n</i> = (<i>Kβ</i>/<i>t<sub>c</sub></i>) log <i>p</i></span> ⇒ <span class="m"><i>n</i> = <i>p</i><sup><i>Kβ</i>/<i>t<sub>c</sub></i></sup></span> ⇒ <span class="m"><i>W</i> ∝ <i>p</i><sup><i>Kβ</i>/<i>t<sub>c</sub></i></sup> log <i>p</i></span>.</li>
+      <li>La isoeficiencia depende del hardware a través de <span class="m"><i>Kβ</i>/<i>t<sub>c</sub></i></span>. Con <span class="m"><i>β</i> = 2<i>t<sub>c</sub></i></span>: <span class="m"><i>E</i>=0.33 → <i>K</i>=0.5 → <i>W</i> ∼ <i>p</i> log <i>p</i></span>; <span class="m"><i>E</i>=0.5 → <i>K</i>=1 → <i>W</i> ∼ <i>p</i><sup>2</sup> log <i>p</i></span>; <span class="m"><i>E</i>=0.9 → <i>K</i>=9 → <i>W</i> ∼ <i>p</i><sup>18</sup> log <i>p</i></span>. Pedir eficiencia alta vuelve el algoritmo prácticamente no escalable.</li>
+    </ul>
+  </div>
+
+  <h3>Métricas de un solo procesador (U6.2)</h3>
+  <ul>
+    <li><span class="m"><i>T</i><sub>CPU</sub> = <i>n</i><sub>instr</sub> · CPI · <i>t</i><sub>cycle</sub></span>; <span class="m">MIPS = <i>f</i><sub>cycle</sub>/(CPI·10<sup>6</sup>)</span>; <span class="m">MFLOPS = <i>n</i><sub>flop</sub>/(<i>T</i><sub>CPU</sub>·10<sup>6</sup>)</span>.</li>
+    <li>Ejemplo de clase: el compilador C2 tiene más MIPS (1600 vs 1400) pero tarda más (7.5 s vs 5 s). Más MIPS no significa menos tiempo.</li>
+    <li>Benchmarks: sintéticos (Whetstone, Dhrystone), kernel (Livermore Loops, Linpack) y aplicaciones reales (SPEC, EEMBC).</li>
+  </ul>
+
+  <div class="qa">
+    <div class="card"><button type="button">¿Por qué el término de cómputo desaparece de <i>T</i><sub>0</sub>?</button><div class="ans"><p>Porque <span class="m"><i>p</i>·(<i>W</i>/<i>p</i>) = <i>W</i></span> y se resta. <span class="m"><i>T</i><sub>0</sub></span> mide solo lo que el sistema paralelo gasta de más respecto al secuencial: comunicación, ociosidad por desbalance y cómputo redundante.</p></div></div>
+    <div class="card"><button type="button">¿Qué significa que la isoeficiencia sea <i>W</i> = Θ(<i>p</i><sup>3</sup>)?</button><div class="ans"><p>Que si duplicas los procesos, debes multiplicar el trabajo por 8 para mantener la misma eficiencia. Es poco escalable; uno con <span class="m">Θ(<i>p</i> log <i>p</i>)</span> casi solo necesita duplicar el trabajo.</p></div></div>
+    <div class="card"><button type="button">¿Qué pasa con la eficiencia si fijas <i>n</i> y aumentas <i>p</i>?</button><div class="ans"><p>Baja, porque <span class="m"><i>T</i><sub>0</sub></span> crece con <span class="m"><i>p</i></span> y <span class="m"><i>W</i></span> no. Es lo que se ve en la tabla de U6.2: con 8→64 procesos la eficiencia cae de 1.00 a 0.42.</p></div></div>
+    <div class="card"><button type="button">¿Qué es la granularidad y para qué sirve?</button><div class="ans"><p>Es la razón entre cómputo útil y overhead, <span class="m"><i>G</i> = <i>W</i>/<i>T</i><sub>0</sub></span>. Grano grueso (G alto) significa que cada proceso calcula mucho entre comunicaciones, y por lo tanto mejor eficiencia. Además <span class="m"><i>E</i> = <i>G</i>/(1+<i>G</i>)</span>.</p></div></div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section class="topic" id="busq">
+  <div class="thead"><h2>Búsqueda paralela</h2><span class="prio p-hot">Muy alta</span><span class="src">U5.3 · PD06 2025-I Ej.1, 2025-II S2 Ej.2 · Participación 9</span></div>
+  <h3>Algoritmos base</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Algoritmo</th><th><i>T<sub>s</sub></i></th><th><i>T</i><sub>∞</sub></th><th><i>T<sub>p</sub></i></th><th>Idea</th></tr></thead>
+    <tbody>
+      <tr><td>Lineal</td><td><span class="m"><i>O</i>(<i>n</i>)</span></td><td><span class="m"><i>O</i>(log <i>n</i>)</span></td><td><span class="m"><i>n</i>/<i>p</i> + log <i>p</i></span></td><td>Particionar el vector y reducir con OR</td></tr>
+      <tr><td>Binaria</td><td><span class="m"><i>O</i>(log <i>n</i>)</span></td><td>–</td><td><span class="m">Θ(log<sub><i>p</i></sub> <i>n</i>)</span></td><td><span class="m"><i>p</i>−1</span> pivotes dividen en <span class="m"><i>p</i></span> regiones; <span class="m"><i>S</i> = Θ(log <i>p</i>)</span>, <span class="m"><i>E</i> = Θ(log <i>p</i>/<i>p</i>)</span></td></tr>
+      <tr><td>DFS</td><td><span class="m"><i>O</i>(<i>b<sup>d</sup></i>)</span></td><td><span class="m"><i>O</i>(<i>d</i>)</span></td><td><span class="m"><i>b<sup>d</sup></i>/<i>p</i> + <i>d</i></span></td><td>Subárboles hijos en paralelo (task + taskwait)</td></tr>
+      <tr><td>Branch &amp; Bound</td><td><span class="m"><i>O</i>(<i>α b<sup>d</sup></i>)</span></td><td><span class="m"><i>O</i>(<i>d</i>)</span></td><td><span class="m"><i>b<sup>d</sup></i>/<i>p</i> + <i>d</i></span></td><td>DFS con poda; <span class="m"><i>E</i> = 1/(1 + <i>pd</i>/<i>b<sup>d</sup></i>)</span></td></tr>
+      <tr><td>IDA*</td><td><span class="m"><i>O</i>(<i>K b<sup>d</sup></i>)</span></td><td><span class="m"><i>O</i>(<i>Kd</i>)</span></td><td><span class="m"><i>K b<sup>d</sup></i>/<i>p</i> + <i>Kd</i></span></td><td>Límite de costo <span class="m"><i>l</i>(<i>x</i>) = <i>g</i>(<i>x</i>) + <i>h</i>(<i>x</i>)</span>; óptimo si <span class="m"><i>h</i></span> es admisible</td></tr>
+    </tbody>
+  </table></div>
+  <p>Descomposición del dominio: con factor de ramificación <span class="m"><i>b</i></span> se busca el nivel <span class="m"><i>k</i></span> con <span class="m"><i>p</i> = <i>b<sup>k</sup></i></span>. Hasta el nivel <span class="m"><i>k</i></span> la búsqueda es secuencial; luego cada proceso busca en su subárbol: <span class="m"><i>T<sub>p</sub></i> = <i>O</i>(<i>b<sup>k</sup></i> + <i>b</i><sup><i>d</i>−<i>k</i></sup>)</span>. Problema: los subárboles pueden tener tamaños muy distintos, por eso hace falta balance de carga dinámico.</p>
+
+  <h3>PWS vs DTS</h3>
+  <div class="tw"><table>
+    <thead><tr><th></th><th>Parallel Window Search (PWS)</th><th>Distributed Tree Search (DTS)</th></tr></thead>
+    <tbody>
+      <tr><td>Autores</td><td>Powley &amp; Korf (1991)</td><td>Kumar &amp; Rao (1990)</td></tr>
+      <tr><td>Qué recibe cada proceso</td><td>Una <b>copia del árbol completo</b> con un <b>umbral de costo distinto</b> <span class="m"><i>B<sub>i</sub></i> = <i>B</i> + <i>i</i>Δ</span></td><td>Un <b>subárbol distinto</b>, todos con el <b>mismo costo</b></td></tr>
+      <tr><td>Parte secuencial</td><td>Ninguna (todos parten de la raíz)</td><td>Generar la frontera hasta el nivel <span class="m"><i>k</i> = ⌈log<sub><i>b</i></sub> <i>p</i>⌉</span></td></tr>
+      <tr><td>Sincronización</td><td>Todos deben terminar su búsqueda local (TASKWAIT); manda el más lento</td><td>Todos terminan; se toma el mínimo costo entre subárboles</td></tr>
+      <tr><td><span class="m"><i>T</i>(<i>n</i>,<i>p</i>)</span></td><td><span class="m"><i>b<sup>d</sup></i>/<i>p</i> + <i>b<sup>m</sup></i> + log <i>p</i></span></td><td><span class="m"><i>b<sup>d</sup></i>/<i>p</i> + <i>b<sup>k</sup></i> + log <i>p</i></span></td></tr>
+      <tr><td><span class="m"><i>E</i></span></td><td><span class="m">1 / (1 + <i>p</i>(<i>b<sup>m</sup></i> + log <i>p</i>)/<i>b<sup>d</sup></i>)</span></td><td><span class="m">1 / (1 + <i>p</i>(<i>b<sup>k</sup></i> + log <i>p</i>)/<i>b<sup>d</sup></i>)</span></td></tr>
+      <tr><td>Cuándo conviene</td><td>Búsquedas heurísticas profundas (IDA*)</td><td>Árboles bien balanceados</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Clusters (Cook, 1997):</b> cada cluster tiene un costo y lo reparte entre sus procesos. 1 cluster equivale a DTS; <span class="m"><i>p</i></span> clusters equivale a PWS. <span class="m"><i>T</i> = <i>b<sup>d</sup></i>/<i>p</i> + <i>b<sup>k</sup></i> + <i>b<sup>m</sup></i> + log <i>p</i></span>; es el más eficiente en clusters multinodo.</p>
+  <p>El speedup de DTS vs PWS depende de <b>dónde está la solución</b> en el árbol (Cook &amp; Varnell): si está a la izquierda, DFS secuencial ya la encuentra rápido y el speedup es bajo; puede haber speedup superlineal si la solución está en una rama que el secuencial visita tarde.</p>
+
+  <div class="ex">
+    <div class="t">Cómo contar pasos (PD06 2025-I · Participación 9)</div>
+    <p>En el DAG cada arista cuesta 1. El árbol completo tiene 35 aristas, entonces <span class="m"><i>T<sub>s</sub></i> = 35</span> (DFS recorre todo).</p>
+    <ol class="steps">
+      <li><b>PWS</b> (3 procesos, costos m=1, 2, 3): P0 no encuentra solución en 3 pasos; P1 encuentra s3 en 9; P2 encuentra s1 en 7 y s2 en 20. Como todos deben terminar, <span class="m"><i>T<sub>p</sub></i> = max = 20</span>. Sumar 3 aristas para combinar las 3 soluciones parciales: <span class="m"><i>T<sub>p</sub></i> = 23</span>.</li>
+      <li><b>DTS, partición en m=1</b> (3 procesos): 3 aristas secuenciales hasta el nivel 1 y luego cada subárbol: P0 3+6=9, P1 3+4=7, P2 3+8=11. <span class="m"><i>T<sub>p</sub></i> = 11 + 3 = 14</span>.</li>
+      <li><b>DTS, partición en m=2</b> (6 procesos): secuencial hasta nivel 2 = 9; luego el subárbol más largo suma 6, así que el máximo es 15. <span class="m"><i>T<sub>p</sub></i> = 15 + 3 = 18</span>.</li>
+      <li><b>Speedup y eficiencia:</b> PWS <span class="m"><i>S</i> = 35/23, <i>E</i> = 35/69</span>; DTS(m1) <span class="m"><i>S</i> = 35/14, <i>E</i> = 35/42</span>; DTS(m2) <span class="m"><i>S</i> = 35/18, <i>E</i> = 35/108</span>.</li>
+      <li><b>Conclusión:</b> DTS en m=1 tiene el mejor speedup y la mejor eficiencia. Partir más profundo (m=2) usa el doble de procesos, aumenta la parte secuencial y baja la eficiencia. El resultado depende de la ubicación de las soluciones y del método de búsqueda local (DFS).</li>
+    </ol>
+  </div>
+
+  <div class="ex">
+    <div class="t">PD06 2025-II S2 · versión simbólica</div>
+    <p>Árbol con ramificación <span class="m"><i>b</i></span>, profundidad <span class="m"><i>d</i></span>, <span class="m"><i>n</i> = <i>O</i>(<i>b<sup>d</sup></i>)</span>, profundidad de búsqueda <span class="m"><i>h</i></span>, comunicación colectiva <span class="m">log <i>p</i>(<i>α</i> + <i>xβ</i>)</span>.</p>
+    <ul>
+      <li><b>DTS</b> con <span class="m"><i>C</i></span> AllReduce: <span class="m"><i>T<sub>p</sub></i> = <i>b<sup>d</sup></i>/<i>p</i> + <i>h</i> + <i>C</i> log <i>p</i>(<i>α</i> + <i>β</i>)</span> (cada AllReduce mueve un dato: <span class="m"><i>x</i> = 1</span>).</li>
+      <li><b>PWS</b> con un solo broadcast: <span class="m"><i>T<sub>p</sub></i> = <i>b<sup>d</sup></i>/<i>p</i> + <i>h</i> + log <i>p</i>(<i>α</i> + <i>β</i>)</span>.</li>
+      <li>Si <span class="m"><i>h</i> ≫ log <i>p</i></span>: domina el span <span class="m"><i>h</i></span>; las diferencias por comunicación son menores, aunque DTS sigue pagando el factor <span class="m"><i>C</i></span>.</li>
+      <li>Si <span class="m"><i>h</i> ≪ log <i>p</i></span>: domina la comunicación; DTS pierde más eficiencia por el factor <span class="m"><i>C</i></span>, así que PWS escala mejor.</li>
+    </ul>
+  </div>
+
+  <div class="qa">
+    <div class="card"><button type="button">¿Por qué en PWS el tiempo lo define el proceso más lento?</button><div class="ans"><p>Porque cada proceso explora con un umbral distinto y no se sabe cuál solución es la óptima hasta que todos terminan: un proceso con umbral bajo puede hallar una solución más barata que otro que terminó antes. Por eso hay TASKWAIT y luego <span class="m">min <i>c<sub>i</sub></i></span>.</p></div></div>
+    <div class="card"><button type="button">¿Qué ventaja y qué riesgo tiene partir el árbol más profundo en DTS?</button><div class="ans"><p>Ventaja: más subárboles, más procesos y mejor balance de carga. Riesgo: la parte secuencial (<span class="m"><i>b<sup>k</sup></i></span>) crece y muchos subárboles no contienen solución, así que la eficiencia baja (35/42 → 35/108 en la PD).</p></div></div>
+    <div class="card"><button type="button">¿Por qué DFS es preferido como búsqueda local?</button><div class="ans"><p>Usa memoria lineal respecto a la profundidad del árbol. BFS necesita guardar niveles completos (<span class="m"><i>b<sup>d</sup></i></span>).</p></div></div>
+    <div class="card"><button type="button">¿Cómo se detiene a todos los procesos cuando uno encuentra la solución (OpenMP)?</button><div class="ans"><p>Con una variable compartida consultada con <code>#pragma omp atomic</code>, o con <code>#pragma omp cancel taskgroup</code>. <code>taskyield</code> permite suspender una tarea para que corra otra; <code>untied</code> deja que la tarea la continúe otro hilo.</p></div></div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="topic" id="rr">
+  <div class="thead"><h2>Intercambio de tareas (Round Robin)</h2><span class="prio p-hot">Alta</span><span class="src">U5.3 p.40-42 · PD06 2026-I Ej.2</span></div>
+  <p>Balance de carga dinámico: un proceso sin trabajo pide trabajo a otro. <span class="m"><i>V</i>(<i>p</i>)</span> es la cantidad mínima de llamadas para que cada proceso reciba al menos una llamada; <span class="m"><i>V</i>(<i>p</i>) ≥ <i>p</i></span>.</p>
+  <div class="fbox">
+    <div class="row"><div class="k">Comunicación</div><div class="v"><i>T</i><sub>comm</sub> = <i>O</i>(<i>V</i>(<i>p</i>) · log <i>W</i>)</div></div>
+    <div class="row"><div class="k">Asíncrono (ARR)</div><div class="v"><i>O</i>(<i>p</i><sup>2</sup> log <i>W</i>)</div></div>
+    <div class="row"><div class="k">Global (GRR)</div><div class="v"><i>O</i>(<i>p</i> log <i>W</i>)</div></div>
+    <div class="row"><div class="k">Polling aleatorio (RP)</div><div class="v"><i>O</i>(<i>p</i> log <i>p</i> log <i>W</i>)</div></div>
+  </div>
+  <ul>
+    <li><b>ARR:</b> cada procesador tiene su propio contador round-robin. Hace muchas llamadas.</li>
+    <li><b>GRR:</b> un único contador global. Pocas llamadas, pero el procesador que guarda el contador es un cuello de botella.</li>
+    <li><b>RP:</b> cada uno elige al azar a quién pedir. Más llamadas que GRR y menos que ARR, sin cuello de botella.</li>
+  </ul>
+  <div class="ex">
+    <div class="t">Demostración: ¿por qué log W? (PD06 2026-I 2.1)</div>
+    <p>Cada vez que un proceso comparte, divide su trabajo en <span class="m"><i>xW</i></span> y <span class="m">(1−<i>x</i>)<i>W</i></span>. Tras <span class="m"><i>V</i>(<i>p</i>)</span> llamadas el máximo trabajo de un proceso es <span class="m">(1−<i>x</i>)<i>W</i></span>; tras <span class="m">2<i>V</i>(<i>p</i>)</span>, <span class="m">(1−<i>x</i>)<sup>2</sup><i>W</i></span>; tras <span class="m"><i>q</i>·<i>V</i>(<i>p</i>)</span>, <span class="m">(1−<i>x</i>)<sup><i>q</i></sup><i>W</i></span>. El reparto termina cuando se llega al mínimo <span class="m"><i>ε</i></span>:</p>
+    <p><span class="m">(1−<i>x</i>)<sup><i>q</i></sup><i>W</i> = <i>ε</i> ⇒ <i>q</i> = log(<i>W</i>/<i>ε</i>) / log(1/(1−<i>x</i>)) = <i>O</i>(log <i>W</i>)</span>. Entonces <span class="m"><i>T</i><sub>comm</sub> = <i>O</i>(<i>V</i>(<i>p</i>) log <i>W</i>)</span>.</p>
+  </div>
+  <div class="ex">
+    <div class="t">¿Cuál escala mejor? (2026-I 2.2)</div>
+    <p>Tomando <span class="m"><i>T<sub>p</sub></i> ≈ <i>T</i><sub>comm</sub></span>: ARR <span class="m"><i>E</i> = <i>W</i>/(<i>p</i><sup>3</sup> log <i>W</i>)</span>; GRR <span class="m"><i>E</i> = <i>W</i>/(<i>p</i><sup>2</sup> log <i>W</i>)</span>; RP <span class="m"><i>E</i> = <i>W</i>/(<i>p</i><sup>2</sup> log <i>p</i> log <i>W</i>)</span>. GRR tiene la mayor eficiencia teórica. En una tarea de pura comunicación la función de overhead sí tiene sentido: es justamente lo que define la escalabilidad. En la práctica RP puede ganar porque GRR tiene el cuello de botella del contador.</p>
+  </div>
+</section>
+
+<!-- 04 -->
+<section class="topic" id="grafos">
+  <div class="thead"><h2>Algoritmos de grafos</h2><span class="prio p-hot">Alta</span><span class="src">U5.4 · PD06 2025-I Ej.2-3</span></div>
+
+  <h3>Pointer jumping y suma de prefijos en árboles</h3>
+  <pre>for 1 ≤ i ≤ n pardo
+    S(i) = P(i)
+    while S(i) ≠ S(S(i)) do
+        W(i) = W(i) + W(S(i))   // solo en la versión parallel prefix
+        S(i) = S(S(i))</pre>
+  <p>Cada iteración duplica la distancia al sucesor, por eso bastan <span class="m"><i>O</i>(log <i>h</i>)</span> iteraciones (<span class="m"><i>h</i></span> = profundidad máxima). <span class="m"><i>T</i><sub>∞</sub> = <i>O</i>(log <i>h</i>)</span>, <span class="m"><i>W</i> = <i>O</i>(<i>n</i> log <i>h</i>)</span>.</p>
+
+  <h3>Coloreo de ciclos (Cole–Vishkin)</h3>
+  <p>Inicio <span class="m"><i>c</i>(<i>i</i>) = <i>i</i></span>. Por cada vértice: <span class="m"><i>k</i></span> = posición del bit menos significativo en que <span class="m"><i>c</i>(<i>i</i>) ≠ <i>c</i>(<i>S</i>(<i>i</i>))</span>; nuevo color <span class="m"><i>c</i>′(<i>i</i>) = 2<i>k</i> + <i>c</i>(<i>i</i>)<sub><i>k</i></sub></span>. Un paso es <span class="m"><i>O</i>(1)</span> con <span class="m"><i>W</i> = <i>O</i>(<i>n</i>)</span>; si <span class="m"><i>c</i></span> usa <span class="m"><i>q</i></span> colores, <span class="m"><i>c</i>′</span> usa <span class="m"><i>O</i>(log <i>q</i>)</span>.</p>
+  <p>Ejemplo de la tabla de clase: vértice 1 = <code>0001</code>, sucesor 3 = <code>0011</code>. Difieren en el bit 1 y el bit 1 de <code>0001</code> es 0, entonces <span class="m"><i>c</i>′ = 2·1 + 0 = 2</span>.</p>
+  <p>3-coloreo: aplicar el paso repetidamente (mientras <span class="m"><i>t</i> &gt; 3</span> bits) y luego, para cada color de 3 a 5, recolorear con el menor de {0,1,2} distinto a los dos vecinos. Teorema: 3 colores en <span class="m"><i>O</i>(log* <i>n</i>)</span> con <span class="m"><i>W</i> = <i>O</i>(<i>n</i> log* <i>n</i>)</span>.</p>
+
+  <h3>Prim (MST) y Dijkstra en paralelo</h3>
+  <ol class="steps">
+    <li>Repartir los <span class="m"><i>n</i></span> vértices (y columnas de la matriz y vector <span class="m"><i>d</i></span>) en bloques de <span class="m"><i>n</i>/<i>p</i></span>.</li>
+    <li>Cada proceso halla su vértice local más cercano; una <b>reducción global</b> (min) elige el más cercano de todos.</li>
+    <li><b>Broadcast</b> del vértice elegido (en memoria distribuida).</li>
+    <li>Cada proceso actualiza su parte de <span class="m"><i>d</i></span> localmente. Se repite <span class="m"><i>n</i></span> veces.</li>
+  </ol>
+  <div class="fbox">
+    <div class="row"><div class="k">Trabajo / span</div><div class="v"><i>W</i> = Θ(<i>n</i><sup>2</sup>), <i>T</i><sub>∞</sub> = Θ(<i>n</i> log <i>n</i>)</div></div>
+    <div class="row"><div class="k">Tiempo (<i>n</i> ≫ <i>p</i>)</div><div class="v"><i>T<sub>p</sub></i> = <i>n</i><sup>2</sup>/<i>p</i> + <i>n</i> log <i>p</i></div></div>
+    <div class="row"><div class="k">Eficiencia</div><div class="v"><i>E</i> = 1 / (1 + <i>p</i> log <i>p</i> / <i>n</i>)</div></div>
+    <div class="row"><div class="k">Isoeficiencia</div><div class="v"><i>n</i> = Θ(<i>p</i> log <i>p</i>) ⇒ <i>W</i> = Θ(<i>p</i><sup>2</sup> log<sup>2</sup> <i>p</i>)</div></div>
+  </div>
+  <p>Dijkstra tiene exactamente la misma estructura y performance que Prim. Prim es mejor en grafos densos; con binary heap <span class="m"><i>T<sub>s</sub></i> = <i>O</i>(<i>m</i> log <i>n</i>)</span>, con Fibonacci heap <span class="m"><i>O</i>(<i>m</i> + <i>n</i> log <i>n</i>)</span>.</p>
+
+  <h3>Floyd (todos los pares)</h3>
+  <p><span class="m"><i>d<sub>ij</sub></i><sup>(<i>k</i>)</sup> = min(<i>d<sub>ij</sub></i><sup>(<i>k</i>−1)</sup>, <i>d<sub>ik</sub></i><sup>(<i>k</i>−1)</sup> + <i>d<sub>kj</sub></i><sup>(<i>k</i>−1)</sup>)</span>, <span class="m"><i>T<sub>s</sub></i> = <i>O</i>(<i>n</i><sup>3</sup>)</span>. El bucle en <span class="m"><i>k</i></span> es secuencial; los <span class="m"><i>n</i><sup>2</sup></span> updates de cada etapa son paralelos: <span class="m"><i>T</i><sub>∞</sub> = Θ(<i>n</i>)</span>, <span class="m"><i>T<sub>p</sub></i> = <i>n</i><sup>3</sup>/<i>p</i> + <i>n</i></span>.</p>
+  <p><b>Bloques 2D</b> (<span class="m">√<i>p</i> × √<i>p</i></span>): en la iteración <span class="m"><i>k</i></span>, los procesos con parte de la fila <span class="m"><i>k</i></span> la mandan por su columna y los de la columna <span class="m"><i>k</i></span> por su fila.</p>
+  <div class="fbox">
+    <div class="row"><div class="k">Slide U5.4</div><div class="v"><i>T<sub>p</sub></i> = <i>n</i><sup>3</sup>/<i>p</i> + (<i>n</i><sup>2</sup>/<i>p</i>) log <i>p</i>, &nbsp; <i>E</i> = 1/(1 + log <i>p</i> / <i>n</i>)</div></div>
+  </div>
+  <div class="ex">
+    <div class="t">PD06 2025-I · Floyd con distintos broadcast (n broadcasts en total)</div>
+    <ul>
+      <li><b>(a) Broadcast O(n)</b> (malla store-and-forward): <span class="m"><i>T<sub>p</sub></i> = <i>n</i><sup>3</sup>/<i>p</i> + <i>n</i><sup>2</sup></span>, <span class="m"><i>E</i> = 1/(1 + <i>p</i>/<i>n</i>)</span> ⇒ <span class="m"><i>n</i> = Θ(<i>p</i>)</span>.</li>
+      <li><b>(b) Broadcast O((n/p) log p + √p)</b> (malla cut-through): <span class="m"><i>T<sub>p</sub></i> = <i>n</i><sup>3</sup>/<i>p</i> + (<i>n</i><sup>2</sup>/<i>p</i>) log <i>p</i> + <i>n</i>√<i>p</i></span>, <span class="m"><i>E</i> = 1/(1 + log <i>p</i>/<i>n</i> + <i>p</i><sup>1.5</sup>/<i>n</i><sup>2</sup>)</span> ⇒ manda el último término: <span class="m"><i>n</i> = Θ(<i>p</i><sup>3/4</sup>)</span>.</li>
+      <li>Como <span class="m"><i>p</i><sup>3/4</sup></span> crece más lento que <span class="m"><i>p</i></span>, <b>cut-through (b) es el más escalable</b>, que es la conclusión oficial.</li>
+    </ul>
+  </div>
+  <div class="warn">
+    <div class="t">Si te preguntan de dónde sale la comunicación</div>
+    <p>Cada broadcast de fila o columna lleva <span class="m"><i>n</i>/√<i>p</i></span> elementos entre <span class="m">√<i>p</i></span> procesos. En Grama (texto estándar) eso da <span class="m"><i>T<sub>p</sub></i> = <i>n</i><sup>3</sup>/<i>p</i> + (<i>n</i><sup>2</sup>/√<i>p</i>) log <i>p</i></span> y <span class="m"><i>n</i> = Θ(√<i>p</i> log <i>p</i>)</span>. Usa la fórmula del slide, pero si te repreguntan, poder explicar esto suma.</p>
+  </div>
+
+  <h3>Leader election en anillo (Franklin, 1982)</h3>
+  <ul>
+    <li>Cada proceso activo manda su id a ambos vecinos activos; si algún vecino tiene id mayor, se desactiva; si recibe su propio id por ambos lados, es líder.</li>
+    <li>En cada ronda al menos la mitad de los activos se desactiva (dos vecinos no pueden ser ambos máximos locales), así que hay ≤ log <i>n</i> rondas, cada una con <span class="m"><i>O</i>(<i>n</i>)</span> mensajes: <span class="m"><i>T<sub>p</sub></i> = <i>O</i>(<i>n</i> log <i>n</i>)</span>.</li>
+    <li>Alternativa: cada uno manda su id a la derecha y reenvía solo el mayor. Tiempo lineal <span class="m"><i>O</i>(<i>n</i>)</span>, pero hasta <span class="m"><i>O</i>(<i>n</i><sup>2</sup>)</span> mensajes. Respuesta de la PD: el segundo demora menos pero usa más memoria y mensajes.</li>
+  </ul>
+
+  <div class="qa">
+    <div class="card"><button type="button">¿Por qué Prim no se puede paralelizar en el bucle externo?</button><div class="ans"><p>Porque cada vértice que entra al MST depende del vector de distancias actualizado por el anterior. Las <span class="m"><i>n</i></span> iteraciones son secuenciales; solo se paraleliza la búsqueda del mínimo (reducción) y la actualización de <span class="m"><i>d</i></span>.</p></div></div>
+    <div class="card"><button type="button">¿Qué comunicación necesita Prim distribuido por iteración?</button><div class="ans"><p>Un all-reduce (o reducción + broadcast) del mínimo: <span class="m"><i>O</i>(log <i>p</i>)</span>. Por eso <span class="m"><i>T</i><sub>comm</sub> = <i>n</i> log <i>p</i></span>.</p></div></div>
+    <div class="card"><button type="button">¿Qué ventaja tiene Floyd con bloques 2D frente a 1D (filas)?</button><div class="ans"><p>En 2D cada proceso solo recibe <span class="m"><i>n</i>/√<i>p</i></span> elementos de la fila <span class="m"><i>k</i></span> y otros tantos de la columna <span class="m"><i>k</i></span>, en vez de una fila completa de <span class="m"><i>n</i></span>. Menos volumen de comunicación, así que mejor isoeficiencia.</p></div></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="topic" id="mat">
+  <div class="thead"><h2>Multiplicación de matrices</h2><span class="prio p-hot">Alta</span><span class="src">U6.3 · PD06 2025-II S1 Ej.2</span></div>
+  <p><span class="m"><i>C</i> = <i>A</i>·<i>B</i></span>, <span class="m"><i>T<sub>s</sub></i> = <i>O</i>(<i>n</i><sup>3</sup>)</span>. Con <span class="m"><i>p</i> = <i>n</i><sup>3</sup></span> (PRAM): <span class="m"><i>T</i><sub>∞</sub> = log <i>n</i></span>, <span class="m"><i>E</i> = 1/log <i>n</i></span>. Con Brent (<span class="m"><i>p</i> ≪ <i>n</i><sup>3</sup></span>): <span class="m"><i>T<sub>p</sub></i> = <i>n</i><sup>3</sup>/<i>p</i> + log <i>n</i></span>.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Método</th><th>Cómputo</th><th>Comunicación</th><th>Idea</th></tr></thead>
+    <tbody>
+      <tr><td>Filas/columnas (bloques)</td><td><span class="m"><i>n</i><sup>3</sup>/<i>p</i></span></td><td><span class="m">log <i>p</i>(<i>α</i> + (<i>n</i><sup>2</sup>/<i>p</i>)<i>β</i>)</span></td><td>A en <span class="m"><i>p</i></span> bloques horizontales, B en verticales; B rota en anillo</td></tr>
+      <tr><td>Fox</td><td><span class="m"><i>n</i><sup>3</sup>/<i>p</i></span></td><td><span class="m">√<i>p</i> log √<i>p</i>(<i>α</i> + (<i>n</i><sup>2</sup>/<i>p</i>)<i>β</i>)</span></td><td>Malla 2D; broadcast de un bloque de A por fila + shift de B por columna</td></tr>
+      <tr><td>Cannon</td><td><span class="m"><i>n</i><sup>3</sup>/<i>p</i></span></td><td><span class="m">√<i>p</i>(<i>α</i> + (<i>n</i><sup>2</sup>/<i>p</i>)<i>β</i>)</span></td><td>Alineación inicial (A fila <span class="m"><i>i</i></span> a la izquierda, B columna <span class="m"><i>j</i></span> arriba) y luego solo shifts circulares</td></tr>
+      <tr><td>DNS</td><td><span class="m"><i>n</i><sup>3</sup>/<i>p</i></span></td><td><span class="m">log <i>p</i>(<i>α</i> + (<i>n</i><sup>2</sup>/<i>p</i><sup>2/3</sup>)<i>β</i>)</span></td><td>Malla 3D (<span class="m"><i>p</i> = <i>N</i><sup>3</sup></span>): 2 broadcasts + 1 reducción ≈ 3 <span class="m"><i>T</i><sub>BCast</sub></span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="fbox">
+    <div class="row"><div class="k">Fox</div><div class="v"><i>E</i> = 1 / (1 + <i>p</i><sup>3/2</sup> log √<i>p</i> · <i>α</i>/<i>n</i><sup>3</sup> + √<i>p</i> log √<i>p</i> · <i>β</i>/<i>n</i>)</div></div>
+    <div class="row"><div class="k">Cannon</div><div class="v"><i>E</i> = 1 / (1 + <i>p</i><sup>3/2</sup><i>α</i>/<i>n</i><sup>3</sup> + √<i>p</i> <i>β</i>/<i>n</i>) ⇒ <i>n</i> = Θ(√<i>p</i>), <i>W</i> = Θ(<i>p</i><sup>3/2</sup>)</div></div>
+    <div class="row"><div class="k">DNS</div><div class="v">término <i>β</i>: <i>n</i> = Θ(<i>p</i><sup>1/3</sup> log <i>p</i>) ⇒ <i>W</i> = Θ(<i>p</i> log<sup>3</sup> <i>p</i>)</div></div>
+  </div>
+  <p>Cannon evita el broadcast de Fox (solo envíos punto a punto al vecino), por eso tiene <span class="m">√<i>p</i></span> en vez de <span class="m">√<i>p</i> log √<i>p</i></span>. Según el slide, los tres algoritmos (bloques, Fox, Cannon) son comparables en la práctica.</p>
+
+  <div class="ex">
+    <div class="t">PD06 2025-II S1 · respuesta modelo</div>
+    <p>A en <span class="m"><i>p</i></span> bloques de filas, B en <span class="m"><i>p</i></span> bloques de columnas; en cada una de las <span class="m"><i>p</i></span> iteraciones cada proceso calcula un bloque <span class="m">(<i>n</i>/<i>p</i>)×(<i>n</i>/<i>p</i>)</span> de C y pasa su bloque de B al proceso <span class="m">(<i>i</i>+1) mod <i>p</i></span>.</p>
+    <ul>
+      <li><b>Cómputo:</b> <span class="m"><i>p</i> · (<i>n</i>/<i>p</i>)<sup>2</sup> · <i>n</i> = <i>n</i><sup>3</sup>/<i>p</i></span>.</li>
+      <li><b>Comunicación</b> (rotación): <span class="m"><i>p</i> · (<i>α</i> + (<i>n</i><sup>2</sup>/<i>p</i>)<i>β</i>) = <i>pα</i> + <i>n</i><sup>2</sup><i>β</i></span>.</li>
+      <li><b>Overhead:</b> <span class="m"><i>T</i><sub>0</sub> = <i>p</i><sup>2</sup><i>α</i> + <i>p n</i><sup>2</sup><i>β</i></span>; <span class="m"><i>E</i> = 1/(1 + <i>p</i><sup>2</sup><i>α</i>/<i>n</i><sup>3</sup> + <i>pβ</i>/<i>n</i>)</span>.</li>
+      <li><b>Isoeficiencia:</b> término <span class="m"><i>β</i></span>: <span class="m"><i>n</i><sup>3</sup> = <i>K p n</i><sup>2</sup><i>β</i></span> ⇒ <span class="m"><i>n</i> = Θ(<i>p</i>)</span> ⇒ <span class="m"><i>W</i> = Θ(<i>p</i><sup>3</sup>)</span>. Término <span class="m"><i>α</i></span>: <span class="m"><i>n</i> = Θ(<i>p</i><sup>2/3</sup>)</span>. Manda <span class="m"><i>p</i><sup>3</sup></span>.</li>
+      <li><b>Optimización 1:</b> descomposición 2D tipo Cannon: comunicación <span class="m">√<i>p</i>(<i>α</i> + (<i>n</i><sup>2</sup>/<i>p</i>)<i>β</i>)</span> ⇒ <span class="m"><i>W</i> = Θ(<i>p</i><sup>3/2</sup>)</span>, mucho más escalable.</li>
+      <li><b>Optimización 2:</b> solapar comunicación y cómputo con <code>MPI_Isend/MPI_Irecv</code> (enviar el bloque de B mientras se multiplica el actual). Si el cómputo por iteración supera el envío, la comunicación queda oculta.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="topic" id="bcast">
+  <div class="thead"><h2>Broadcast, reducción y topologías</h2><span class="prio p-mid">Media</span><span class="src">U6.1 · U6.2</span></div>
+  <p>Aparece como pieza dentro de otros ejercicios: cuando un algoritmo hace un broadcast, tienes que saber qué costo poner.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Algoritmo</th><th>Tiempo</th><th>Comentario</th></tr></thead>
+    <tbody>
+      <tr><td>Reducción (árbol)</td><td><span class="m">log <i>p</i>(<i>α</i> + <i>nβ</i>)</span>; con <i>n</i>&gt;<i>p</i>: <span class="m"><i>n</i>/<i>p</i> + log <i>p</i></span></td><td>Equivalente a broadcast para operadores asociativos (+, ·, max, min)</td></tr>
+      <tr><td>Broadcast lineal</td><td><span class="m">(<i>p</i>−1)(<i>α</i> + <i>nβ</i>)</span></td><td>El proceso 0 envía a todos uno por uno</td></tr>
+      <tr><td>Binomial</td><td><span class="m">log <i>p</i>(<i>α</i> + <i>nβ</i>)</span></td><td>Lo que usa MPI típicamente (MST); bueno para mensajes cortos</td></tr>
+      <tr><td>Pipeline lineal</td><td><span class="m"><i>nβ</i> + <i>pα</i> + 2√(<i>npαβ</i>)</span></td><td>Mensaje en <span class="m"><i>k</i></span> piezas; bueno para mensajes largos</td></tr>
+      <tr><td>Árbol binario pipelined</td><td><span class="m">2<i>dα</i> + 3<i>nβ</i> + √(<i>ndαβ</i>)</span></td><td>Las hojas solo reciben (desperdicio)</td></tr>
+      <tr><td>2-3 Broadcast</td><td><span class="m">2 log <i>p</i> · <i>α</i> + <i>nβ</i> + √(2<i>n</i> log <i>p</i> · <i>αβ</i>)</span></td><td>Dos árboles: los nodos internos de uno son hojas del otro</td></tr>
+      <tr><td>Edge-disjoint binomial (hipercubo)</td><td><span class="m">log <i>p</i> · <i>α</i> + <i>nβ</i> + √(<i>n</i> log <i>p</i> · <i>αβ</i>)</span></td><td>El mejor asintóticamente de la lista</td></tr>
+      <tr><td>Scatter / Gather (MPI)</td><td><span class="m"><i>p</i>(<i>α</i> + <i>nβ</i>/<i>p</i>) + (<i>p</i>−1)(<i>α</i> + <i>nβ</i>/<i>p</i>)</span></td><td>Divide y vencerás</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tw"><table>
+    <thead><tr><th>Topología</th><th>Single broadcast</th><th>Multi-broadcast</th><th>Suma de prefijos</th></tr></thead>
+    <tbody>
+      <tr><td>Array lineal</td><td><span class="m">Θ(<i>p</i>)</span> (<i>p</i>−1 pasos desde un extremo, ⌊<i>p</i>/2⌋ desde el medio)</td><td><span class="m">Θ(<i>p</i>)</span></td><td><span class="m"><i>O</i>(<i>p</i>)</span></td></tr>
+      <tr><td>Anillo</td><td>⌊<i>p</i>/2⌋ pasos</td><td><i>p</i>/2 pasos, <span class="m">Θ(<i>p</i>)</span></td><td>–</td></tr>
+      <tr><td>Malla d-dim</td><td><span class="m">Θ(<i>p</i><sup>1/<i>d</i></sup>)</span> (diámetro <span class="m"><i>d</i>(<i>p</i><sup>1/<i>d</i></sup>−1)</span>)</td><td>2D: <span class="m"><i>α</i>(√<i>p</i>−1) + <i>βm</i>(<i>p</i>−1)</span></td><td><span class="m"><i>O</i>(<i>p</i>)</span> en 3 pasos</td></tr>
+      <tr><td>Hipercubo (<span class="m"><i>p</i>=2<sup><i>d</i></sup></span>)</td><td><span class="m"><i>O</i>(log <i>p</i>)</span></td><td><span class="m"><i>α</i> log <i>p</i> + <i>βm</i>(<i>p</i>−1)</span></td><td><span class="m"><i>O</i>(log <i>p</i>)</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>No hay un único broadcast óptimo: depende de la topología, de <span class="m"><i>p</i></span> y del tamaño del mensaje. MPICH y OpenMPI usan una función de decisión (tamaño de mensaje y número de procesos) o la interfaz MPI_T para elegir, pero eso no garantiza el óptimo. MPI está optimizado para baja latencia (cálculo científico); en Big Data con <span class="m"><i>α</i></span> pequeño, <span class="m"><i>T</i>(<i>n</i>) ≈ 2<i>nβ</i></span>.</p>
+</section>
+
+<!-- 07 -->
+<section class="topic" id="extra">
+  <div class="thead"><h2>Particionamiento, concurrencia en DAG y máximo</h2><span class="prio p-mid">Media</span><span class="src">PD06 2025-II S1/S2, 2026-I Ej.3</span></div>
+
+  <h3>Distribuir n tareas de tiempos t<sub>i</sub> en p procesos (n ≫ p)</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Método</th><th>Idea</th><th>Complejidad</th></tr></thead>
+    <tbody>
+      <tr><td>Greedy LPT + reordenar cargas</td><td>Ordenar tareas descendente; dar las primeras <span class="m"><i>p</i></span>; cada siguiente va al proceso menos cargado (reordenando cargas)</td><td><span class="m"><i>O</i>(<i>n</i> log <i>n</i> + <i>p</i> + <i>np</i> log <i>p</i>)</span></td></tr>
+      <tr><td>Greedy LPT + min-heap</td><td>Igual, pero el menos cargado sale de un min-heap</td><td><span class="m"><i>O</i>(<i>n</i> log <i>n</i> + <i>n</i> log <i>p</i>)</span></td></tr>
+      <tr><td>Suma de prefijos + cortes (PRAM CREW)</td><td>Prefijos <span class="m"><i>s</i>[<i>i</i>]</span>; carga ideal <span class="m"><i>L</i> = <i>T</i><sub>total</sub>/<i>p</i></span>; cada proceso <span class="m"><i>j</i></span> busca binariamente el índice donde <span class="m"><i>s</i> ≈ <i>jL</i></span></td><td>Secuencial <span class="m"><i>O</i>(<i>n</i>)</span>; PRAM <span class="m"><i>O</i>(log <i>n</i>)</span></td></tr>
+    </tbody>
+  </table></div>
+  <p>El ordenamiento lo hace el maestro y es la parte que no se paraleliza en la versión greedy. Prefijos + cortes da bloques contiguos casi balanceados y es el más paralelo.</p>
+
+  <h3>Concurrencia y speedup en un DAG</h3>
+  <ul>
+    <li><b>Grado máximo de concurrencia:</b> la mayor cantidad de tareas que se pueden ejecutar a la vez (el nivel más ancho del DAG).</li>
+    <li><b>Speedup máximo</b> (procesos ilimitados): <span class="m"><i>S</i><sub>max</sub> = <i>W</i>/<i>T</i><sub>∞</sub></span> = nº total de tareas / longitud del camino crítico.</li>
+    <li><b>Eficiencia</b> con <span class="m"><i>p</i></span> = grado máximo de concurrencia: <span class="m"><i>E</i> = <i>S</i><sub>max</sub>/<i>p</i></span>. Es constante (isoeficiente) si no depende de <span class="m"><i>n</i></span>.</li>
+    <li>Ejemplo: reducción en árbol binario con <span class="m"><i>n</i></span> hojas: <span class="m"><i>N</i> = 2<i>n</i>−1</span> tareas, camino crítico <span class="m">log <i>n</i> + 1</span>, concurrencia <span class="m"><i>n</i></span> ⇒ <span class="m"><i>S</i> ≈ (2<i>n</i>−1)/log <i>n</i></span>, <span class="m"><i>E</i> ≈ 2/log <i>n</i></span>, que no es constante.</li>
+    <li>Si cada tarea cuesta <span class="m"><i>O</i>(<i>n</i>)</span> en vez de <span class="m"><i>O</i>(1)</span>: el speedup máximo no cambia (numerador y denominador se multiplican por <span class="m"><i>n</i></span>), pero la condición de isoeficiencia sí cambia.</li>
+  </ul>
+
+  <h3>Máximo en árbol doble logarítmico (2026-I Ej.3)</h3>
+  <p>Base: máximo en <span class="m"><i>O</i>(1)</span> con <span class="m"><i>n</i><sup>2</sup></span> procesadores (CRCW, cada par compara). Árbol con <span class="m"><i>n</i> = 2<sup>2<sup><i>k</i></sup></sup></span> hojas y <span class="m"><i>k</i>+2</span> niveles (<span class="m"><i>k</i> = log log <i>n</i></span>); en cada nivel cada nodo calcula su máximo en <span class="m"><i>O</i>(1)</span>.</p>
+  <pre>for i := k downto 0 do
+    for 1 ≤ j ≤ n / 2^(2^(k-i)) pardo
+        m_ij := máximo del nodo j del nivel i   // O(1)
+m := m_01                                       // raíz</pre>
+  <ul>
+    <li>Memoria compartida: <span class="m"><i>T<sub>p</sub></i> = <i>n</i>/<i>p</i> + log log <i>p</i></span>, <span class="m"><i>T</i><sub>0</sub> = <i>p</i> log log <i>p</i></span> ⇒ <span class="m"><i>n</i> = Θ(<i>p</i> log log <i>p</i>)</span>.</li>
+    <li>Memoria distribuida (MPI_Scatter + máximo local + Send/Recv por niveles): <span class="m"><i>T<sub>p</sub></i> = <i>n</i>/<i>p</i> + (<i>α</i> + <i>β</i>) log log <i>p</i></span> ⇒ <span class="m"><i>n</i> = Θ(<i>p</i>(<i>α</i> + <i>β</i>) log log <i>p</i>)</span>.</li>
+    <li>Misma dependencia asintótica en <span class="m"><i>p</i></span>; la distribuida paga el factor <span class="m">(<i>α</i> + <i>β</i>)</span>, así que en la práctica escala mejor la de memoria compartida.</li>
+  </ul>
+</section>
+
+<!-- 08 -->
+<section class="topic" id="oral">
+  <div class="thead"><h2>Simulacro oral</h2><span class="src">Responde en voz alta antes de abrir</span></div>
+  <div class="qtools no-print">
+    <button class="btn" type="button" id="openAll">Mostrar todas</button>
+    <button class="btn" type="button" id="closeAll">Ocultar todas</button>
+  </div>
+  <div class="qa" id="drill">
+    <div class="card"><button type="button">Define función de overhead e isoeficiencia en dos frases.</button><div class="ans"><p><span class="m"><i>T</i><sub>0</sub> = <i>pT<sub>p</sub></i> − <i>W</i></span> es el tiempo total que los <span class="m"><i>p</i></span> procesos gastan además del trabajo útil. La isoeficiencia <span class="m"><i>W</i> = <i>K T</i><sub>0</sub>(<i>W</i>,<i>p</i>)</span> dice cuánto debe crecer el problema cuando aumentas <span class="m"><i>p</i></span> para mantener la eficiencia constante.</p></div></div>
+    <div class="card"><button type="button">Dado T<sub>p</sub> = n/p + log p, ¿cuál es la isoeficiencia?</button><div class="ans"><p><span class="m"><i>T</i><sub>0</sub> = <i>p</i> log <i>p</i></span> ⇒ <span class="m"><i>W</i> = Θ(<i>p</i> log <i>p</i>)</span>.</p></div></div>
+    <div class="card"><button type="button">¿Por qué K = E/(1−E) y qué pasa cuando E → 1?</button><div class="ans"><p>De <span class="m"><i>E</i> = 1/(1 + <i>T</i><sub>0</sub>/<i>W</i>)</span> se despeja <span class="m"><i>W</i> = (<i>E</i>/(1−<i>E</i>)) <i>T</i><sub>0</sub></span>. Si <span class="m"><i>E</i> → 1</span>, <span class="m"><i>K</i> → ∞</span>: necesitas un problema infinitamente grande (ver FFT con <span class="m"><i>E</i>=0.9</span>: <span class="m"><i>p</i><sup>18</sup></span>).</p></div></div>
+    <div class="card"><button type="button">Diferencia principal entre PWS y DTS.</button><div class="ans"><p>PWS reparte <b>umbrales de costo</b> (todos con el árbol completo); DTS reparte <b>subárboles</b> (todos con el mismo costo). PWS no tiene parte secuencial pero repite trabajo; DTS tiene parte secuencial hasta el nivel <span class="m"><i>k</i></span> y puede desbalancearse.</p></div></div>
+    <div class="card"><button type="button">En DTS, ¿cómo eliges el nivel de partición?</button><div class="ans"><p><span class="m"><i>k</i> = ⌈log<sub><i>b</i></sub> <i>p</i>⌉</span>, de modo que <span class="m"><i>b<sup>k</sup></i> ≥ <i>p</i></span> subárboles. Si el árbol está desbalanceado conviene partir más profundo para que cada proceso tenga varios subárboles.</p></div></div>
+    <div class="card"><button type="button">¿Qué Round Robin elegirías y por qué?</button><div class="ans"><p>Teóricamente GRR (<span class="m"><i>p</i> log <i>W</i></span>, menos llamadas). Con muchos procesos, el contador global es cuello de botella, así que RP (<span class="m"><i>p</i> log <i>p</i> log <i>W</i></span>) es la opción práctica: casi igual de barato y sin punto central. ARR (<span class="m"><i>p</i><sup>2</sup></span>) es el peor.</p></div></div>
+    <div class="card"><button type="button">¿Cuál es la complejidad de pointer jumping y por qué?</button><div class="ans"><p><span class="m"><i>O</i>(log <i>h</i>)</span> iteraciones: cada <span class="m"><i>S</i>(<i>i</i>) = <i>S</i>(<i>S</i>(<i>i</i>))</span> duplica la distancia saltada. Trabajo <span class="m"><i>O</i>(<i>n</i> log <i>h</i>)</span>, no óptimo.</p></div></div>
+    <div class="card"><button type="button">Isoeficiencia de Prim paralelo.</button><div class="ans"><p><span class="m"><i>T<sub>p</sub></i> = <i>n</i><sup>2</sup>/<i>p</i> + <i>n</i> log <i>p</i></span> ⇒ <span class="m"><i>T</i><sub>0</sub> = <i>np</i> log <i>p</i></span> ⇒ <span class="m"><i>n</i><sup>2</sup> = <i>K n p</i> log <i>p</i></span> ⇒ <span class="m"><i>n</i> = Θ(<i>p</i> log <i>p</i>)</span>.</p></div></div>
+    <div class="card"><button type="button">¿Por qué Cannon escala mejor que filas/columnas?</button><div class="ans"><p>Con descomposición 2D cada proceso hace solo <span class="m">√<i>p</i></span> shifts de bloques de <span class="m"><i>n</i><sup>2</sup>/<i>p</i></span>, en vez de <span class="m"><i>p</i></span>. Volumen total por proceso <span class="m"><i>n</i><sup>2</sup>/√<i>p</i></span> vs <span class="m"><i>n</i><sup>2</sup></span>. Isoeficiencia <span class="m"><i>p</i><sup>3/2</sup></span> vs <span class="m"><i>p</i><sup>3</sup></span>.</p></div></div>
+    <div class="card"><button type="button">Fox vs Cannon: ¿qué los diferencia?</button><div class="ans"><p>Fox hace un <b>broadcast</b> de un bloque de A por fila en cada iteración (<span class="m">log √<i>p</i></span> extra); Cannon hace una <b>alineación inicial</b> y luego solo shifts circulares punto a punto de A y B.</p></div></div>
+    <div class="card"><button type="button">Binomial vs pipeline: ¿cuándo cada uno?</button><div class="ans"><p>Binomial <span class="m">log <i>p</i>(<i>α</i> + <i>nβ</i>)</span> para mensajes cortos (domina la latencia). Pipeline <span class="m"><i>nβ</i> + <i>pα</i> + 2√(<i>npαβ</i>)</span> para mensajes largos: el término <span class="m"><i>nβ</i></span> no se multiplica por log <i>p</i>.</p></div></div>
+    <div class="card"><button type="button">En 2026-I Ej.1, ¿qué significa la condición Kβ log p &lt; 1?</button><div class="ans"><p>El término <span class="m"><i>β W</i> log <i>p</i></span> del overhead crece proporcional a <span class="m"><i>W</i></span>, así que agrandar el problema no lo compensa. Pasado cierto <span class="m"><i>p</i></span> (cuando <span class="m"><i>Kβ</i> log <i>p</i> ≥ 1</span>) ninguna <span class="m"><i>W</i></span> mantiene la eficiencia: el ancho de banda limita la escalabilidad.</p></div></div>
+    <div class="card"><button type="button">¿Cómo cambia el análisis de un algoritmo al pasar de memoria compartida a distribuida?</button><div class="ans"><p>Aparecen los términos de comunicación <span class="m"><i>α</i></span> y <span class="m"><i>β</i></span> (y la topología). En compartida el overhead es sincronización (barreras, taskwait) y contención. Ejemplo del máximo: <span class="m">log log <i>p</i></span> pasa a <span class="m">(<i>α</i>+<i>β</i>) log log <i>p</i></span>.</p></div></div>
+    <div class="card"><button type="button">¿Es posible un speedup superlineal en búsqueda?</button><div class="ans"><p>Sí. Si la solución está en un subárbol que el DFS secuencial visita tarde, un proceso que empieza directamente ahí la encuentra mucho antes. Depende de la ubicación de la solución (Cook &amp; Varnell).</p></div></div>
+    <div class="card"><button type="button">¿Qué es una isoeficiencia "más restrictiva"?</button><div class="ans"><p>La que exige que <span class="m"><i>n</i></span> crezca más rápido con <span class="m"><i>p</i></span>. Como hay que cumplir todas las condiciones a la vez, se toma la máxima. Entre <span class="m">Θ(<i>p</i>)</span> y <span class="m">Θ(√<i>p</i>)</span>, manda <span class="m">Θ(<i>p</i>)</span>.</p></div></div>
+  </div>
+</section>
+
+<!-- 09 -->
+<section class="topic" id="plan">
+  <div class="thead"><h2>Plan de estudio para hoy (lunes 16)</h2></div>
+  <p>Alrededor de 6 horas. Primero lo que más se repite, al final el simulacro. El miércoles (final) entra todo el curso; esta guía cubre la parte de U5-U6.</p>
+  <div class="plan">
+    <div class="blk"><div class="h">Bloque 1 · 90 min</div><div class="tt">Performance e isoeficiencia</div><p>Receta de 5 pasos. Rehaz sin mirar 2026-I Ej.1 y FFT de 2025-II S2.</p></div>
+    <div class="blk"><div class="h">Bloque 2 · 75 min</div><div class="tt">Búsqueda + Round Robin</div><p>PWS vs DTS, conteo de pasos del DAG (35 / 23 / 14 / 18), demostración de log W.</p></div>
+    <div class="blk"><div class="h">Bloque 3 · 60 min</div><div class="tt">Grafos</div><p>Prim/Dijkstra con su isoeficiencia, Floyd (casos a y b), pointer jumping, Cole–Vishkin, leader election.</p></div>
+    <div class="blk"><div class="h">Bloque 4 · 60 min</div><div class="tt">Matrices + broadcast</div><p>Tabla de 4 métodos, respuesta modelo de 2025-II S1, tabla de broadcasts.</p></div>
+    <div class="blk"><div class="h">Bloque 5 · 45 min</div><div class="tt">Simulacro oral</div><p>Las 15 preguntas en voz alta. Marca abajo lo que ya dominas.</p></div>
+  </div>
+  <h3>Checklist</h3>
+  <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+  <ul class="check" id="checklist">
+    <li><label><input type="checkbox" id="c1"> Derivo <i>T</i><sub>0</sub>, <i>E</i>, isoeficiencia y <i>G</i> de cualquier <i>T<sub>p</sub></i></label></li>
+    <li><label><input type="checkbox" id="c2"> Sé explicar cómo dependen de <i>α</i> y <i>β</i>, y qué es "la condición más restrictiva"</label></li>
+    <li><label><input type="checkbox" id="c3"> Explico PWS vs DTS y cuento pasos en un DAG</label></li>
+    <li><label><input type="checkbox" id="c4"> Calculo <i>S</i> y <i>E</i> de PWS/DTS y concluyo cuál es mejor</label></li>
+    <li><label><input type="checkbox" id="c5"> Round Robin: ARR, GRR, RP y la demostración de log <i>W</i></label></li>
+    <li><label><input type="checkbox" id="c6"> Prim/Dijkstra: pasos y <i>n</i> = Θ(<i>p</i> log <i>p</i>)</label></li>
+    <li><label><input type="checkbox" id="c7"> Floyd: recurrencia, bloques 2D y casos de broadcast</label></li>
+    <li><label><input type="checkbox" id="c8"> Pointer jumping, Cole–Vishkin y leader election</label></li>
+    <li><label><input type="checkbox" id="c9"> Matrices: filas/columnas, Fox, Cannon, DNS y una optimización</label></li>
+    <li><label><input type="checkbox" id="c10"> Costos de broadcast (lineal, binomial, pipeline) y topologías</label></li>
+    <li><label><input type="checkbox" id="c11"> Particionamiento LPT / prefijos y concurrencia en DAG</label></li>
+  </ul>
+  <footer>Fuentes: carpetas PD06 y Clases-Paralela (U5.3, U5.4, U6.1, U6.2, U6.3). Las respuestas de PD pasadas siguen las soluciones del profesor; donde el texto original estaba incompleto, la derivación se completó con la receta de U6.2.</footer>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.card button').forEach(function(b){
+    b.setAttribute('aria-expanded','false');
+    b.addEventListener('click',function(){
+      var c=b.parentElement; var o=c.classList.toggle('open');
+      b.setAttribute('aria-expanded',o?'true':'false');
+    });
+  });
+  function setAll(open){document.querySelectorAll('#drill .card').forEach(function(c){c.classList.toggle('open',open);c.querySelector('button').setAttribute('aria-expanded',open?'true':'false');});}
+  var oa=document.getElementById('openAll'), ca=document.getElementById('closeAll');
+  if(oa) oa.addEventListener('click',function(){setAll(true)});
+  if(ca) ca.addEventListener('click',function(){setAll(false)});
+  var KEY='pd06-checklist-v1', state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ state={}; }
+  var boxes=document.querySelectorAll('#checklist input'), bar=document.getElementById('bar');
+  function upd(){var n=0;boxes.forEach(function(x){if(x.checked)n++;});bar.style.width=(100*n/boxes.length)+'%';}
+  boxes.forEach(function(x){
+    if(state[x.id]) x.checked=true;
+    x.addEventListener('change',function(){state[x.id]=x.checked;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){} upd();});
+  });
+  upd();
+})();
+</script>
+
+</html>
