@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apuntes examen final</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+:root{--ink:#111;--muted:#444;--line:#9a9a9a;--soft:#f1f1f1;--b1:#1d5fa8;--b2:#7a3fa0;--b3:#b2541a;--hot:#b3261e}
+*{box-sizing:border-box}
+html{background:#fff}
+body{margin:0 auto;max-width:900px;padding:16px;color:var(--ink);background:#fff;font:9.6pt/1.36 "Segoe UI",Arial,sans-serif}
+@page{size:A4;margin:9mm 10mm 10mm}
+@media print{body{max-width:none;padding:0}}
+h1{font-size:20pt;margin:0 0 4px}
+h2{font-size:13pt;margin:0 0 6px;padding:4px 8px;color:#fff;border-radius:4px;break-after:avoid}
+h2.b1{background:var(--b1)} h2.b2{background:var(--b2)} h2.b3{background:var(--b3)} h2.b0{background:#333}
+h3{font-size:10.6pt;margin:10px 0 4px;padding-bottom:2px;border-bottom:1.5px solid var(--line);break-after:avoid}
+h3 .n{display:inline-block;min-width:30px;color:var(--muted)}
+h4{font-size:9.8pt;margin:7px 0 3px;break-after:avoid}
+p{margin:3px 0 5px}
+ul,ol{margin:3px 0 6px;padding-left:18px} li{margin:1.5px 0}
+.part{break-before:page}
+.small{font-size:8.6pt;color:var(--muted)}
+table{border-collapse:collapse;width:100%;margin:4px 0 7px;font-size:8.9pt;break-inside:auto}
+th,td{border:1px solid var(--line);padding:2px 5px;vertical-align:top;text-align:left}
+th{background:#e4e4e4}
+tr{break-inside:avoid}
+table.mini{width:auto} table.mini td,table.mini th{padding:1.5px 6px}
+table.num td{text-align:right} table.num td:first-child{text-align:left}
+.box{border:1.3px solid #555;border-radius:5px;padding:5px 8px;margin:5px 0 8px;break-inside:avoid}
+.box.hot{border-color:var(--hot);border-width:2px}
+.box .t,.ex .t,.tpl .t{font-weight:700;margin-bottom:2px}
+.ex{background:var(--soft);border-left:4px solid #777;padding:5px 8px;margin:5px 0 8px;break-inside:avoid}
+.tpl{border:1.5px dashed #555;border-radius:5px;padding:5px 8px;margin:5px 0 8px;break-inside:avoid}
+.say{border-left:4px solid #2e7d32;background:#eef6ee;padding:4px 8px;margin:4px 0 7px;break-inside:avoid}
+.say .t{font-weight:700;color:#1b5e20}
+.warn{border-left:4px solid var(--hot);background:#fbeeed;padding:4px 8px;margin:4px 0 7px;break-inside:avoid}
+.warn .t{font-weight:700;color:var(--hot)}
+.cols{columns:2;column-gap:14px} .cols>*{break-inside:avoid}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2>*{min-width:0}
+pre{font:8.3pt/1.3 Consolas,"Courier New",monospace;background:#f6f6f6;border:1px solid #ccc;border-radius:4px;padding:4px 6px;margin:4px 0 7px;white-space:pre-wrap;break-inside:avoid}
+code{font:8.6pt Consolas,"Courier New",monospace}
+.f{display:grid;grid-template-columns:150px 1fr;border:1.3px solid #555;border-radius:5px;margin:5px 0 8px;break-inside:avoid}
+.f>div{padding:3px 7px;border-bottom:1px solid #ccc}
+.f>div:nth-child(odd){font-weight:700;background:#efefef}
+.f>div:nth-last-child(-n+2){border-bottom:none}
+.steps{counter-reset:s;list-style:none;padding-left:0}
+.steps>li{counter-increment:s;padding-left:24px;position:relative;margin:3px 0}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:0;width:17px;height:17px;border-radius:50%;background:#333;color:#fff;font-size:8pt;font-weight:700;text-align:center;line-height:17px}
+.map td:first-child{font-weight:600}
+.cover{border:2px solid #333;border-radius:8px;padding:10px 14px;margin-bottom:10px}
+.tag{display:inline-block;font-size:8pt;font-weight:700;padding:0 6px;border-radius:9px;color:#fff;vertical-align:middle}
+.tag.b1{background:var(--b1)} .tag.b2{background:var(--b2)} .tag.b3{background:var(--b3)}
+.katex{font-size:1.05em}
+.katex-display{margin:3px 0}
+@media (max-width:640px){.grid2{grid-template-columns:1fr}.cols{columns:1}.f{grid-template-columns:1fr}table{display:block;overflow-x:auto}}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ PORTADA -->
+<div class="cover">
+  <div class="small">CS4052 Computación Paralela y Distribuida · UTEC 2026-II · Examen final: miércoles 18 de noviembre · 120 min</div>
+  <h1>Apuntes para el examen final</h1>
+  <p>Este cuadernillo sirve para <b>resolver</b> el examen, no para estudiar de cero. Cada pregunta tiene una receta paso a paso, las fórmulas que necesitas, un ejemplo resuelto de un final anterior que puedes copiar cambiando los números, y frases listas para justificar. Al final hay tablas numéricas para no depender de la calculadora.</p>
+</div>
+
+<h3><span class="n">0.1</span>Cómo usar estos apuntes durante el examen</h3>
+<ol class="steps">
+  <li><b>Lee la pregunta e identifica el tipo</b> con la tabla de abajo. Los 4 finales anteriores tuvieron siempre la misma forma: una pregunta de GPU, una de PRAM/estructura de datos y una de escalabilidad.</li>
+  <li><b>Ve a la receta</b> de esa sección y síguela en orden. Escribe primero la fórmula general, luego reemplaza números, luego interpreta.</li>
+  <li><b>Busca el ejemplo resuelto más parecido</b> y copia su estructura.</li>
+  <li><b>Cierra cada subpregunta con una frase de justificación</b> (cajas verdes "Qué escribir"). En los solucionarios del profesor, la mitad del puntaje es la justificación.</li>
+</ol>
+
+<h3><span class="n">0.2</span>¿Qué me están pidiendo? → ¿Dónde lo busco?</h3>
+<table class="map">
+<thead><tr><th>Si la pregunta dice…</th><th>Es</th><th>Ve a</th></tr></thead>
+<tbody>
+<tr><td>GPU, CUDA, NVIDIA, hilos/bloques, kernel, píxeles, \(2^{10}\) hilos, \(2^{31}\) bloques</td><td><span class="tag b1">P1</span></td><td>Sección 1 (receta 1.2, FLOPs 1.3, ejemplos 1.4)</td></tr>
+<tr><td>"¿Cuántos modelos/datos se pueden simular?", "configuración de bloques", "hilos inactivos"</td><td><span class="tag b1">P1</span></td><td>1.2 pasos 1-2, 1.5 variantes</td></tr>
+<tr><td>Shared memory, halo, forma del bloque, filtro, convolución</td><td><span class="tag b1">P1</span></td><td>1.6</td></tr>
+<tr><td>Foster, PCAM, particionamiento, aglomeración, Flynn, SIMD</td><td><span class="tag b1">P1</span></td><td>1.7</td></tr>
+<tr><td>Amdahl, Gustafson, MIPS, costo, speedup superlineal</td><td>Teoría</td><td>1.8 y Apéndice C</td></tr>
+<tr><td>"Escriba el PRAM", "span", "trabajo", pardo, Brent, EREW/CREW/CRCW</td><td><span class="tag b2">P2</span></td><td>Sección 2 (2.2-2.4)</td></tr>
+<tr><td>Stack, cola, árbol 2-3, árbol k-ario, máximo, búsqueda en estructura</td><td><span class="tag b2">P2</span></td><td>2.7 ejemplos resueltos</td></tr>
+<tr><td>"Agregue directivas MPI", "describa las directivas OMP"</td><td><span class="tag b2">P2</span></td><td>2.5 (MPI), 2.6 (OpenMP)</td></tr>
+<tr><td>DTS, PWS, búsqueda en árbol, branch &amp; bound, round robin, balance de carga</td><td><span class="tag b2">P2</span></td><td>2.8</td></tr>
+<tr><td>Grafos (Floyd, Prim, Dijkstra), ordenamiento, DAG, prefijos, pointer jumping</td><td><span class="tag b2">P2</span></td><td>2.9</td></tr>
+<tr><td>\(T_p\) con \(\alpha\), \(\beta\); "overhead", "isoeficiencia", "¿cuál escala mejor?"</td><td><span class="tag b3">P3</span></td><td>Sección 3 (receta 3.1, despejes 3.2, catálogo 3.3)</td></tr>
+<tr><td>"Calcule la eficiencia para p = 1, 4, 16, …" (tabla)</td><td><span class="tag b3">P3</span></td><td>3.4 + Apéndice A</td></tr>
+<tr><td>"¿Cuántos procesos para un problema 10 veces mayor?"</td><td><span class="tag b3">P3</span></td><td>3.5</td></tr>
+<tr><td>"¿Se cumple \(W=C_p\)?", "\(W\propto p^3\)", "granularidad", "si aumenta n"</td><td><span class="tag b3">P3</span></td><td>3.6 frases listas</td></tr>
+<tr><td>Memoria compartida vs distribuida vs híbrida, restricción de memoria</td><td><span class="tag b3">P3</span></td><td>3.7</td></tr>
+<tr><td>Filas vs bloques, Floyd, multiplicación de matrices, Cannon, Fox</td><td><span class="tag b3">P3</span></td><td>3.3 y 3.9</td></tr>
+<tr><td>Malla, hipercubo, anillo, broadcast, scatter, reducción</td><td><span class="tag b3">P3</span></td><td>3.8</td></tr>
+<tr><td>Código OpenMP/MPI con errores, "encuentre los errores", tasks</td><td><span class="tag b3">P3</span>/<span class="tag b2">P2</span></td><td>3.10 (checklist de errores) y 2.6</td></tr>
+</tbody></table>
+
+<div class="grid2">
+<div class="box">
+  <div class="t">0.3 Plan de tiempo (120 min)</div>
+  <ul>
+    <li>Min 0-5: lee las 3 preguntas, marca qué tipo es cada una.</li>
+    <li>Empieza por la que más se parezca a un ejemplo de estos apuntes.</li>
+    <li>~35 min por pregunta. Si te trabas en una subpregunta, escribe la fórmula general y sigue: suma puntos parciales.</li>
+    <li>Últimos 10 min: revisa que cada respuesta tenga número final <b>y</b> una frase de interpretación.</li>
+  </ul>
+</div>
+<div class="box hot">
+  <div class="t">0.4 Reglas de oro para el puntaje</div>
+  <ul>
+    <li>Siempre: <b>fórmula general → reemplazo → resultado con unidades → interpretación</b>.</li>
+    <li>Si no sabes el número, escribe la expresión simbólica; vale puntos.</li>
+    <li>"No se pide código compilable": en MPI/OMP basta nombrar la directiva correcta en cada fase y decir qué protege.</li>
+    <li>Siempre di <b>qué término domina</b> y <b>por qué</b> un modelo escala mejor.</li>
+    <li>Trabaja en potencias de 2: dividir = restar exponentes.</li>
+  </ul>
+</div>
+</div>
+
+<div class="box">
+  <div class="t">0.5 Las 10 fórmulas que más se usan (todo el examen gira en torno a estas)</div>
+  <div class="cols">
+    <p>① Speedup: \(S=\dfrac{T_s}{T_p}\)</p>
+    <p>② Eficiencia: \(E=\dfrac{S}{p}=\dfrac{T_s}{p\,T_p}\)</p>
+    <p>③ Costo: \(C_p=p\,T_p\)</p>
+    <p>④ Brent: \(T_p\le\dfrac{W}{p}+T_\infty\)</p>
+    <p>⑤ Overhead: \(T_0=p\,T_p-W\)</p>
+    <p>⑥ \(E=\dfrac{W}{W+T_0}=\dfrac{1}{1+T_0/W}\)</p>
+    <p>⑦ Isoeficiencia: \(W=K\,T_0\), \(K=\dfrac{E}{1-E}\)</p>
+    <p>⑧ Granularidad: \(G=\dfrac{T_{comp}}{T_{comm}}\), \(E=\dfrac{G}{1+G}\)</p>
+    <p>⑨ GPU: \(t_p=\text{FLOP}_{hilo}\cdot t_{op}\), \(t_s=t_p\cdot\#\text{hilos}\)</p>
+    <p>⑩ Mensaje de \(m\) datos: \(\alpha+m\beta\); árbol: \(\log p\,(\alpha+m\beta)\)</p>
+  </div>
+</div>
+
+<h3><span class="n">0.6</span>Índice</h3>
+<div class="cols small">
+<p><b>1. Pregunta 1: GPU, CUDA y métricas</b><br>1.1 Vocabulario y datos fijos · 1.2 Receta · 1.3 Contar FLOPs · 1.4 Los 4 P1 resueltos · 1.5 Variantes y restricciones · 1.6 Shared memory y halo · 1.7 Foster y Flynn · 1.8 Métricas generales · 1.9 Esqueleto CUDA · 1.10 Frases</p>
+<p><b>2. Pregunta 2: PRAM y estructuras</b><br>2.1 Guion · 2.2 Definiciones · 2.3 Cómo sacar W y span · 2.4 Plantillas PRAM · 2.5 De PRAM a MPI · 2.6 De PRAM a OpenMP · 2.7 Estructuras resueltas · 2.8 Búsqueda DTS/PWS y round robin · 2.9 Grafos, orden, DAG, otros</p>
+<p><b>3. Pregunta 3: escalabilidad</b><br>3.1 Receta · 3.2 Despejes · 3.3 Catálogo de modelos · 3.4 Tabla de eficiencia · 3.5 Problema 10× mayor · 3.6 Frases listas · 3.7 Compartida/distribuida/híbrida · 3.8 Topologías · 3.9 Matrices y EDP · 3.10 MPI y OpenMP de referencia</p>
+<p><b>Apéndices</b><br>A. Tablas numéricas · B. Álgebra, logaritmos y derivadas · C. Glosario de teoría</p>
+</div>
+
+<!-- ============================================================ BLOQUE 1 -->
+<div class="part">
+<h2 class="b1">1 · Pregunta 1: GPU, CUDA y métricas (6 pts, siempre sale)</h2>
+<p>Las 4 P1 anteriores: filtro convolucional (2025-I), Value at Risk (2025-II S1), KNN (2025-II S2), detección de incendios (2026-I). Siempre dan: <b>\(2^{10}\) hilos por bloque</b>, <b>hasta \(2^{31}\) bloques</b>, un kernel corto y un tiempo por operación (\(10^{-7}\) o \(10^{-8}\) s).</p>
+
+<h3><span class="n">1.1</span>Vocabulario y datos fijos</h3>
+<div class="grid2">
+<div>
+<ul>
+  <li><b>Host</b> = CPU + su memoria; <b>device</b> = GPU + su memoria.</li>
+  <li><b>Kernel</b> (<code>__global__</code>): función que corre en la GPU, lanzada desde la CPU con <code>kernel&lt;&lt;&lt;G, B&gt;&gt;&gt;</code>. Se ejecutan \(G\cdot B\) copias (hilos).</li>
+  <li><b>Hilo</b> → <b>bloque</b> (hasta 1024 hilos, todos en el mismo SM) → <b>grid</b> (hasta \(2^{31}\) bloques).</li>
+  <li><b>SM</b> (Streaming Multiprocessor): grupo de núcleos (SP) que trabaja en modo SIMD.</li>
+  <li><b>Warp</b>: 32 hilos que ejecutan la misma instrucción a la vez. Por eso \(B\) debe ser múltiplo de 32 (típico 256). Si los hilos de un warp toman ramas distintas de un <code>if</code>, se serializan (divergencia).</li>
+  <li><b>Índice global</b>: <code>idx = blockIdx.x * blockDim.x + threadIdx.x</code>. Guarda <code>if (idx &lt; N)</code> para los hilos sobrantes.</li>
+</ul>
+</div>
+<div>
+<table>
+<thead><tr><th>Memoria</th><th>Alcance</th><th>Velocidad</th></tr></thead>
+<tbody>
+<tr><td>Registros</td><td>1 hilo</td><td>La más rápida</td></tr>
+<tr><td><code>__shared__</code></td><td>Hilos de <b>un</b> bloque (no entre bloques). Necesita <code>__syncthreads()</code></td><td>Rápida (en el chip)</td></tr>
+<tr><td><code>__constant__</code></td><td>Todo el grid, solo lectura</td><td>Cacheada</td></tr>
+<tr><td>Global (DRAM)</td><td>Todo el grid y el host (<code>cudaMalloc</code>)</td><td>Lenta</td></tr>
+</tbody></table>
+<p><b>Coalescencia:</b> la lectura de memoria global es eficiente cuando los 32 hilos de un warp leen direcciones contiguas.</p>
+<p><b>Hilos totales de la GPU</b> \(=2^{31}\cdot2^{10}=2^{41}\approx2.2\cdot10^{12}\).</p>
+</div>
+</div>
+
+<h3><span class="n">1.2</span>Receta para la pregunta GPU</h3>
+<div class="box hot">
+<ol class="steps">
+  <li><b>Capacidad</b> ("¿cuántos modelos/datos caben?"): \(\text{hilos totales}=2^{31}\cdot2^{10}=2^{41}\). Si un modelo usa \(N\) hilos (uno por escenario/dato): \(\#\text{modelos}=2^{41}/N\). Con un dato por hilo, el máximo de datos es \(2^{41}\).</li>
+  <li><b>Configuración</b>: elige \(B\) hilos por bloque (múltiplo de 32; 256 es la respuesta modelo). Bloques \(G=\lceil P/B\rceil\) con \(P\) = elementos/hilos necesarios. <b>Hilos inactivos</b> \(=G\cdot B-P\). Verifica \(G\le2^{31}\).</li>
+  <li><b>FLOP por hilo</b>: cuenta las operaciones del kernel de adentro hacia afuera (ver 1.3).</li>
+  <li><b>Tiempo paralelo</b>: \(t_p=\text{FLOP}_{hilo}\cdot t_{op}\). Si cada hilo procesa \(c\) datos: \(t_p=c\cdot\text{FLOP}_{dato}\cdot t_{op}\). (Convención del curso: todos los hilos lanzados corren a la vez.)</li>
+  <li><b>Tiempo secuencial</b>: \(t_s=t_p\cdot(\#\text{hilos que trabajan})=\text{FLOP}_{total}\cdot t_{op}\). Pásalo a días: \(\div86\,400\).</li>
+  <li><b>Métricas</b>: \(S=t_s/t_p\) (≈ número de hilos que trabajan); \(E=S/\#\text{hilos usados}\) (≈ 1 si no hay ociosos); \(\text{FLOP/s}=\text{FLOP}_{total}/t_p\). Si dan pico: \(E_{GPU}=\dfrac{\text{FLOP/s alcanzados}}{\text{FLOP/s pico}}\).</li>
+  <li><b>Comenta</b>: hilos ociosos, carga por hilo (¿mucho trabajo por hilo? → repartir), transferencias CPU-GPU, memoria. <b>Este comentario es la mitad del puntaje.</b></li>
+</ol>
+</div>
+<div class="f">
+  <div>Proporcionalidad S y FLOP/s</div><div>\(S=\dfrac{t_s}{t_p}=\dfrac{\text{FLOP}_{total}\cdot t_{op}}{t_p}=\text{FLOP/s}\cdot t_{op}\). Ambos tienen el mismo denominador \(t_p\) y numeradores proporcionales.</div>
+  <div>Velocidad de un hilo</div><div>\(\text{FLOP}_{hilo}/t_p=1/t_{op}\): con \(t_{op}=10^{-8}\) s son \(10^8\) FLOP/s = 0.1 GFLOP/s.</div>
+  <div>Conversiones</div><div>1 día = 86 400 s; 1 año ≈ \(3.15\cdot10^7\) s; 1 h = 3600 s. Prefijos: G = \(10^9\), T = \(10^{12}\), P = \(10^{15}\), E = \(10^{18}\).</div>
+</div>
+
+<h3><span class="n">1.3</span>Cómo contar FLOPs de un kernel</h3>
+<div class="grid2">
+<div>
+<ul>
+  <li>Cada <code>+ − × ÷</code> = 1 FLOP. <code>a += b*c</code> = 2 FLOP. <code>a = b - c</code> = 1.</li>
+  <li>Funciones especiales: usa el valor que dan (2026-I: <code>sinf</code> = 40 FLOP).</li>
+  <li>Comparaciones, asignaciones, índices y accesos a memoria = 0, salvo que digan lo contrario.</li>
+  <li>Bucles: FLOP del cuerpo × iteraciones; anidados se multiplican de adentro hacia afuera.</li>
+  <li>Lo que está fuera de los bucles se suma, pero suele ser despreciable (dilo).</li>
+</ul>
+</div>
+<div>
+<table>
+<thead><tr><th>Kernel</th><th>FLOP</th></tr></thead>
+<tbody>
+<tr><td>VaR: <code>for j&lt;M: dV += w[j]*s[j]</code></td><td>\(2M\)</td></tr>
+<tr><td>KNN: <code>for j&lt;d: diff=q-t; dist+=diff*diff</code></td><td>\(3d\)</td></tr>
+<tr><td>Filtro 3×3 (9 productos + 8 sumas)</td><td>17 por píxel</td></tr>
+<tr><td>Incendios (abajo)</td><td>\(500(4+100\cdot43+1)\)</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="ex">
+  <div class="t">Ejemplo de conteo (2026-I)</div>
+<pre>for m in 0..499:                       // ×500
+    r = 0.7*temp + 0.3*(1-ndvi)        // 2 prod + 1 suma + 1 resta = 4
+    for q in 0..99:                    // ×100
+        r = 0.6*r + 0.4*sinf(r)        // 2 prod + 1 suma + sinf(40) = 43
+    riesgo += r                        // 1</pre>
+  <p>\(\text{FLOP}_{hilo}=500\,(4+100\cdot43+1)=500\cdot4305=2\,152\,500\approx2.15\) MFLOP. (El ndvi y la división final están fuera de los bucles: despreciables.)</p>
+</div>
+
+<h3><span class="n">1.4</span>Los 4 P1 anteriores resueltos (cópialos cambiando números)</h3>
+
+<div class="ex">
+  <div class="t">2026-I · Incendios: imagen \(8192\times8192\), un hilo por píxel, \(t_{op}=10^{-8}\) s, pico 1 GFLOP/s</div>
+  <table>
+  <tbody>
+  <tr><td>1.1 FLOP/hilo</td><td>\(2\,152\,500\approx2\) MFLOP. Hay paralelismo masivo y granularidad suficiente, pero 2 MFLOP por hilo es mucho: se puede repartir el bucle de escenarios de un píxel entre varios hilos del bloque y reducir en shared memory. Agrega sincronización, pero ese overhead es menor que el cómputo.</td></tr>
+  <tr><td>1.2 Foster</td><td><b>P:</b> cada píxel es una tarea: \(8192^2=67\,108\,864\). <b>C:</b> no hay comunicación entre tareas; solo lectura/escritura en memoria global y transferencia CPU–GPU. <b>A:</b> agrupar en bloques de 256 hilos (múltiplo de 32, buena ocupación, accesos coalescentes). <b>M:</b> el hardware asigna los bloques a los SM y los ejecuta por oleadas.</td></tr>
+  <tr><td>1.3 Configuración</td><td>\(P=2^{26}\), \(B=256=2^8\Rightarrow G=2^{18}=262\,144\) bloques; \(G\cdot B=P\Rightarrow\) <b>0 hilos inactivos</b>. El <code>if (idx&lt;P)</code> es necesario en el caso general (P no múltiplo de B).</td></tr>
+  <tr><td>1.4 Tiempos</td><td>\(T_p=2\,152\,500\cdot10^{-8}=0.0215\) s. \(T_s=T_p\cdot2^{26}=1.44\cdot10^6\) s ≈ 17 días.</td></tr>
+  <tr><td>1.5 S y E</td><td>\(S=T_s/T_p=2^{26}\approx6.7\cdot10^7\). Velocidad \(=\text{FLOP}/T_p=10^8\) FLOP/s = 0.1 GFLOP/s por hilo; \(E_{GPU}=0.1/1=0.1\) (10 % del pico).</td></tr>
+  </tbody></table>
+</div>
+
+<div class="ex">
+  <div class="t">2025-II S1 · Value at Risk: \(N=2^8\) escenarios por modelo, \(M=2^8\) activos, 2 FLOP por activo, \(t_{op}=10^{-8}\) s</div>
+  <table><tbody>
+  <tr><td>1.1 Modelos</td><td>\(2^{41}/2^8=2^{33}\) modelos (un hilo por escenario).</td></tr>
+  <tr><td>1.2 Tiempos</td><td>\(t_p=2M\cdot t_{op}=2\cdot2^8\cdot10^{-8}=5.12\cdot10^{-6}\) s. \(t_s=t_p\cdot2^{41}=1.125\cdot10^7\) s ≈ 130 días.</td></tr>
+  <tr><td>1.3 S, E, FLOP/s</td><td>\(S=2^{41}=2.2\cdot10^{12}\); \(E=S/2^{41}=1\); \(\text{FLOP/s}=2\cdot2^8\cdot2^{41}/5.12\cdot10^{-6}\approx2.2\cdot10^{18}\) (220 EFLOP/s). Proporcionales (ver 1.2).</td></tr>
+  <tr><td>1.4 Un modelo por bloque</td><td>Caben \(2^{31}\) modelos (uno por bloque). \(t_p\) no cambia. Trabajan \(2^{31}\cdot2^8=2^{39}\) hilos ⇒ \(S=2^{39}\), \(E=2^8/2^{10}=0.25\): 768 de cada 1024 hilos quedan ociosos. Mejora: empaquetar 4 modelos por bloque. (El solucionario da \(E\approx0.004\) mezclando cantidades; defiende la idea de los hilos ociosos.)</td></tr>
+  </tbody></table>
+</div>
+
+<div class="ex">
+  <div class="t">2025-II S2 · KNN: \(N=10^5\) datos de entrenamiento, \(Q=10^4\) queries, \(d=64\), 3 FLOP por dimensión, \(t_{op}=10^{-8}\) s</div>
+  <table><tbody>
+  <tr><td>1.1 Máximo (Q=1)</td><td>\(2^{41}\) datos de entrenamiento (un hilo por distancia). Problema: no caben en memoria de la GPU y luego hay que ordenar \(2^{41}\) distancias.</td></tr>
+  <tr><td>1.2 Carga por hilo</td><td>Un bloque (1024 hilos) por query: \(\lceil10^5/1024\rceil=98\) distancias por hilo. Bloques usados \(10^4\ll2^{31}\).</td></tr>
+  <tr><td>1.3 Tiempos</td><td>\(t_p=3\cdot64\cdot98\cdot10^{-8}=1.9\cdot10^{-4}\approx2\cdot10^{-4}\) s. \(t_s=t_p\cdot2^{10}\cdot10^4\approx2048\) s ≈ 34 min.</td></tr>
+  <tr><td>1.4 S, E, FLOP/s</td><td>\(S\approx10^7\); \(E=10^7/(2^{10}\cdot10^4)\approx1\); FLOP/s \(\approx9.6\cdot10^{14}\) ≈ 1 PFLOP/s. Ociosos en el último paso: \(98\cdot1024-10^5=352\) por bloque.</td></tr>
+  <tr><td>1.5 Varias queries por bloque</td><td>Aumenta la carga por hilo y alarga \(t_p\); como sobran bloques no hay ventaja. (Única ventaja posible: reutilizar en shared memory los datos de entrenamiento para varias queries.)</td></tr>
+  </tbody></table>
+</div>
+
+<div class="ex">
+  <div class="t">2025-I · Filtro 3×3: imagen \(2^{13}\times2^{13}\), 1 byte/píxel, 100 KB shared por SM, \(10^{-7}\) s por píxel</div>
+  <table><tbody>
+  <tr><td>1.1 ¿Alcanzan bloques 16×16?</td><td>\(2^{26}/2^8=2^{18}\) bloques \(\ll2^{31}\): sí alcanzan.</td></tr>
+  <tr><td>1.2 Forma del bloque</td><td>Mismo área (256 px): 16×16 → halo ≈ 64; 32×8 → 80; 64×1 → 130. El cuadrado minimiza el perímetro ⇒ menos halo, menos memoria y menos lecturas redundantes. Bloques muy anchos afectan la coalescencia.</td></tr>
+  <tr><td>1.3 ¿Cabe en shared?</td><td>16×16: \(256+64=320\) B. 256×256: \(65\,536+1024=66\,560\) B &lt; 100 KB (cabe). 512×512: 264 192 B, no cabe. Ojo: 256×256 son 65 536 píxeles pero un bloque tiene máx. 1024 hilos ⇒ 64 píxeles por hilo.</td></tr>
+  <tr><td>1.4 Tiempo de \(10^6\) convoluciones</td><td>\(t_p=10^6\cdot10^{-7}=0.1\) s. \(t_s=0.1\cdot2^{26}=6.7\cdot10^6\) s ≈ 78 días.</td></tr>
+  </tbody></table>
+</div>
+
+<h3><span class="n">1.5</span>Variantes y restricciones (lo que cambian para que no sea igual)</h3>
+<table>
+<thead><tr><th>Si dicen…</th><th>Haz esto</th></tr></thead>
+<tbody>
+<tr><td>"Los hilos de un modelo deben compartir memoria" / "un modelo por bloque"</td><td>Modelos = número de bloques (\(2^{31}\)). Hilos usados por bloque = \(N\); \(E=N/1024\). Comenta los ociosos y propone empaquetar \(\lfloor1024/N\rfloor\) modelos por bloque.</td></tr>
+<tr><td>"Un bloque por query/imagen" y hay más datos que hilos del bloque</td><td>Carga por hilo \(c=\lceil N/B\rceil\); \(t_p=c\cdot\text{FLOP}_{dato}\cdot t_{op}\). Ociosos en el último paso: \(c\cdot B-N\).</td></tr>
+<tr><td>Hay más trabajo que hilos en la GPU (\(P&gt;2^{41}\))</td><td>Oleadas: \(t_p=\lceil P/2^{41}\rceil\cdot\text{FLOP}_{hilo}\cdot t_{op}\), o grid-stride loop (<code>idx += blockDim.x*gridDim.x</code>).</td></tr>
+<tr><td>"¿Conviene repartir el trabajo de un hilo entre varios?"</td><td>Sí si el trabajo por hilo es grande (MFLOP) y sobran hilos: dividir el bucle externo entre hilos del bloque y reducir en shared memory con <code>__syncthreads()</code>. Costo: sincronización, pequeño frente al cómputo.</td></tr>
+<tr><td>"Varias queries/modelos por bloque"</td><td>Más carga por hilo ⇒ mayor \(t_p\). Sin ventaja si sobran bloques. Ventaja: reutilizar datos en shared memory.</td></tr>
+<tr><td>Dan un pico de la GPU</td><td>\(E_{GPU}=\) FLOP/s alcanzados / FLOP/s pico.</td></tr>
+<tr><td>"¿Por qué no se alcanza ese speedup en la práctica?"</td><td>Transferencias CPU–GPU (<code>cudaMemcpy</code>), latencia de memoria global, divergencia de warps, ocupación de SM, no todos los hilos corren realmente a la vez.</td></tr>
+</tbody></table>
+
+<h3><span class="n">1.6</span>Shared memory, halo y forma del bloque</h3>
+<div class="f">
+  <div>Memoria de un tile</div><div>\(\text{bytes}\approx(B_x B_y+2B_x+2B_y)\cdot\text{bytes/píxel}\). Cuadrado \(B\times B\): \(B^2+4B\). (Exacto con esquinas: \((B+2)^2\).)</div>
+  <div>¿Cabe?</div><div>Compara con la shared del SM (p. ej. 100 KB = 102 400 B). Si son floats (4 B), multiplica por 4.</div>
+  <div>Halo</div><div>Franja de vecinos que el bloque necesita y que pertenecen a otros bloques. Proporcional al perímetro: el cuadrado minimiza el halo para un área dada.</div>
+</div>
+
+<h3><span class="n">1.7</span>Método de Foster (PCAM) y Flynn</h3>
+<div class="grid2">
+<div>
+<ol class="steps">
+  <li><b>Particionamiento</b>: dividir datos (dominio) o funciones en el mayor número de tareas primitivas. Al menos 10× más tareas que procesos, de tamaño parecido.</li>
+  <li><b>Comunicación</b>: qué datos intercambian las tareas (local o global). Es overhead: pocos vecinos, balanceada, concurrente.</li>
+  <li><b>Aglomeración</b>: agrupar tareas para reducir comunicación, manteniendo escalabilidad.</li>
+  <li><b>Mapeo</b>: asignar a procesadores; balancear carga y minimizar comunicación (estático o dinámico).</li>
+</ol>
+</div>
+<div>
+<div class="tpl"><div class="t">Plantilla Foster para GPU</div>
+<p><b>P:</b> cada [píxel/escenario/dato] es una tarea independiente: [N] tareas. <b>C:</b> no hay comunicación entre tareas, solo memoria global y CPU↔GPU (y shared memory dentro del bloque si hay halo). <b>A:</b> bloques de 256 hilos (múltiplo de 32, ocupación, coalescencia). <b>M:</b> \(G=N/256\) bloques; el planificador de la GPU los asigna a los SM.</p></div>
+<table><tbody>
+<tr><td>SISD</td><td>Von Neumann clásico</td></tr>
+<tr><td>SIMD</td><td>GPU, vectoriales (misma instrucción, muchos datos)</td></tr>
+<tr><td>MISD</td><td>Tolerancia a fallos (aviónica)</td></tr>
+<tr><td>MIMD</td><td>Clusters, multicore, MPI</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<h3><span class="n">1.8</span>Métricas generales (por si preguntan teoría)</h3>
+<div class="f">
+  <div>Speedup / Eficiencia</div><div>\(S=T_s/T_p\) con \(T_s\) del mejor secuencial; \(S\le p\) normalmente (\(S&gt;p\) superlineal: efectos de caché). \(E=S/p\le1\).</div>
+  <div>Costo</div><div>\(C_p=pT_p\); costo óptimo si \(C_p=\Theta(T_s)\).</div>
+  <div>Amdahl (strong scaling)</div><div>Tamaño fijo, fracción serial \(f_s\): \(S=\dfrac{1}{f_s+(1-f_s)/p}\to\dfrac1{f_s}\). Ej.: \(f_s=0.1\Rightarrow S_{max}=10\).</div>
+  <div>Gustafson (weak scaling)</div><div>El problema crece con \(p\): \(S=f_s+p(1-f_s)\), casi lineal.</div>
+  <div>CPU</div><div>\(T_{CPU}=n_{instr}\cdot\text{CPI}\cdot t_{ciclo}\); \(\text{MIPS}=\dfrac{f}{\text{CPI}\cdot10^6}\); \(\text{MFLOPS}=\dfrac{n_{flop}}{T\cdot10^6}\). Más MIPS no implica menos tiempo.</div>
+  <div>Potencia</div><div>\(P_{dyn}=\gamma f^3\) (power wall): por eso más núcleos en vez de más GHz.</div>
+</div>
+
+<h3><span class="n">1.9</span>Esqueleto CUDA (si piden pseudocódigo)</h3>
+<pre>__global__ void kernel(float *in, float *out, int P){
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;   // índice global
+    if (idx &lt; P) {                                     // hilos sobrantes inactivos
+        out[idx] = f(in[idx]);                         // trabajo de un elemento
+    }
+}
+// host
+cudaMalloc(&amp;d_in, P*sizeof(float));  cudaMalloc(&amp;d_out, P*sizeof(float));
+cudaMemcpy(d_in, h_in, P*sizeof(float), cudaMemcpyHostToDevice);
+int B = 256, G = (P + B - 1) / B;                       // G = ceil(P/B)
+kernel&lt;&lt;&lt;G, B&gt;&gt;&gt;(d_in, d_out, P);
+cudaMemcpy(h_out, d_out, P*sizeof(float), cudaMemcpyDeviceToHost);
+cudaFree(d_in); cudaFree(d_out);
+
+// con shared memory (tile + halo, filtro 3x3, bloque 2D de 16x16)
+__shared__ unsigned char tile[16+2][16+2];
+tile[ty+1][tx+1] = img[y*W + x];      // + los hilos del borde cargan el halo
+__syncthreads();                      // esperar a que todo el tile esté cargado
+out[y*W+x] = suma de tile[ty..ty+2][tx..tx+2] * coef;</pre>
+
+<div class="say"><div class="t">1.10 Qué escribir (frases para justificar la P1)</div>
+<ul>
+  <li>"El speedup es aproximadamente igual al número de hilos que trabajan, porque cada hilo procesa su dato de forma independiente, sin comunicación ni sincronización (problema <i>embarrassingly parallel</i>); por eso \(E\approx1\)."</li>
+  <li>"En la práctica la eficiencia será menor por las transferencias CPU–GPU y la latencia de memoria global, que este modelo desprecia."</li>
+  <li>"Elijo 256 hilos por bloque: es múltiplo del warp (32), permite varios bloques activos por SM (buena ocupación) y accesos coalescentes."</li>
+  <li>"Hay [X] hilos ociosos por bloque ([X]/1024), lo que reduce la eficiencia a [E]; se podría empaquetar más trabajo por bloque."</li>
+  <li>"La carga por hilo es alta ([X] FLOP); conviene dividirla entre varios hilos y reducir en shared memory, con un overhead de sincronización pequeño frente al cómputo."</li>
+  <li>"La GPU es SIMD: miles de núcleos simples orientados a throughput, frente a pocos núcleos de la CPU optimizados para latencia."</li>
+</ul>
+</div>
+</div>
+
+<!-- ============================================================ BLOQUE 2 -->
+<div class="part">
+<h2 class="b2">2 · Pregunta 2: PRAM, estructuras de datos y algoritmos (5-7 pts)</h2>
+<p>Anteriores: árbol 2-3 (2025-I), parallel stack (2025-II S1), máximo en árbol k-ario con MPI (2025-II S2), DTS vs PWS (2026-I, venía como P3). PD06: árbol doble logarítmico, round robin, grafos.</p>
+
+<h3><span class="n">2.1</span>Guion de la pregunta 2 (casi siempre en este orden)</h3>
+<div class="box hot">
+<ol class="steps">
+  <li><b>PRAM</b>: pseudocódigo con <code>for … pardo</code> (o <code>||</code> + <code>sync</code>). Usa una plantilla de 2.4.</li>
+  <li><b>Span</b> \(T_\infty\) y <b>trabajo</b> \(W\) (reglas de 2.3).</li>
+  <li><b>Brent</b>: \(T_p=\dfrac{W}{p}+T_\infty\). Si es memoria distribuida, suma la comunicación: \(T_p=\dfrac Wp+(\#\text{niveles})\cdot(\#\text{mensajes por nivel})\cdot(\alpha+m\beta)\).</li>
+  <li><b>Directivas</b> MPI u OpenMP según la fase (2.5, 2.6).</li>
+  <li><b>Overhead e isoeficiencia</b>: \(T_0=pT_p-W\), \(W=KT_0\) (ver 3.1 y 3.2).</li>
+  <li>A veces: optimizar un parámetro (derivar e igualar a 0) o comparar dos métodos (el de menor \(W(p)\) en la isoeficiencia escala mejor).</li>
+</ol>
+</div>
+
+<h3><span class="n">2.2</span>Definiciones que tienes que escribir</h3>
+<div class="f">
+  <div>PRAM</div><div>\(p\) procesadores idénticos, síncronos, que se comunican solo por una memoria compartida; acceso en \(O(1)\); ignora comunicación y caché.</div>
+  <div>Trabajo \(W\) (\(T_1\))</div><div>Número total de operaciones = tiempo con 1 procesador. Para costo óptimo debe ser del orden del mejor secuencial.</div>
+  <div>Span \(T_\infty\)</div><div>Camino crítico del DAG = tiempo con procesadores ilimitados = número de pasos paralelos.</div>
+  <div>Brent</div><div>\(\dfrac Wp\le T_p\le\dfrac Wp+T_\infty\). Idea: el paso \(i\) con \(W_i\) operaciones toma \(\lceil W_i/p\rceil\le W_i/p+1\); sumando los \(T_\infty\) pasos.</div>
+  <div>Costo / costo óptimo</div><div>\(C_p=pT_p=O(W+pT_\infty)\). Costo óptimo si \(C_p=\Theta(T_s)\), lo que ocurre si \(p=O(W/T_\infty)\).</div>
+  <div>Speedup máximo</div><div>\(S_{max}=W/T_\infty\) (paralelismo del algoritmo).</div>
+</div>
+<table>
+<thead><tr><th>Variante</th><th>Lectura</th><th>Escritura</th><th>Ejemplo</th></tr></thead>
+<tbody>
+<tr><td>EREW</td><td>Exclusiva</td><td>Exclusiva</td><td>Suma de vectores, reducción en árbol</td></tr>
+<tr><td>CREW</td><td>Concurrente</td><td>Exclusiva</td><td>Todos leen la misma variable (broadcast), búsqueda, prefijos</td></tr>
+<tr><td>CRCW</td><td>Concurrente</td><td>Concurrente</td><td>OR global y máximo en \(O(1)\). Resolución: común, arbitraria, prioridad, combinada</td></tr>
+</tbody></table>
+<p class="small">\(\text{EREW}\subseteq\text{CREW}\subseteq\text{CRCW}\) en poder. Si tu algoritmo hace que varios lean lo mismo → al menos CREW; si varios escriben a la vez → CRCW.</p>
+
+<h3><span class="n">2.3</span>Cómo sacar \(W\) y \(T_\infty\) de un pseudocódigo</h3>
+<div class="grid2">
+<table>
+<thead><tr><th>Construcción</th><th>Span</th><th>Trabajo</th></tr></thead>
+<tbody>
+<tr><td><code>for i=1..n pardo</code> { O(1) }</td><td>\(O(1)\)</td><td>\(O(n)\)</td></tr>
+<tr><td><code>for i=1..n do</code> (secuencial) { c }</td><td>\(n\cdot\text{span}(c)\)</td><td>\(n\cdot W(c)\)</td></tr>
+<tr><td><code>A || B; sync</code></td><td>\(\max(T_\infty^A,T_\infty^B)\)</td><td>\(W_A+W_B\)</td></tr>
+<tr><td><code>while m&gt;1: m=m/k</code></td><td>\(\log_k n\) rondas</td><td>suma geométrica \(\approx n\)</td></tr>
+<tr><td>Región crítica / lock con \(n\) accesos</td><td>\(n\) (se serializa)</td><td>\(n\)</td></tr>
+<tr><td>Recursión</td><td colspan="2">Escribe una recurrencia para cada uno y resuélvela con la tabla</td></tr>
+</tbody></table>
+<table>
+<thead><tr><th>Recurrencia</th><th>Solución</th></tr></thead>
+<tbody>
+<tr><td>\(T(n)=T(n/2)+O(1)\)</td><td>\(\Theta(\log n)\)</td></tr>
+<tr><td>\(T(n)=T(n/2)+O(\log n)\)</td><td>\(\Theta(\log^2n)\)</td></tr>
+<tr><td>\(T(n)=T(n/2)+O(n)\)</td><td>\(\Theta(n)\)</td></tr>
+<tr><td>\(T(n)=2T(n/2)+O(1)\)</td><td>\(\Theta(n)\)</td></tr>
+<tr><td>\(T(n)=2T(n/2)+O(n)\)</td><td>\(\Theta(n\log n)\)</td></tr>
+<tr><td>\(T(n)=kT(n/k)+O(1)\)</td><td>\(\Theta(n)\)</td></tr>
+<tr><td>\(T(n)=T(n-1)+O(1)\)</td><td>\(\Theta(n)\)</td></tr>
+<tr><td>\(T(n)=T(n-1)+O(n)\)</td><td>\(\Theta(n^2)\)</td></tr>
+<tr><td>\(T(n)=T(\sqrt n)+O(1)\)</td><td>\(\Theta(\log\log n)\)</td></tr>
+</tbody></table>
+</div>
+<p class="small"><b>Teorema maestro</b> para \(T(n)=aT(n/b)+f(n)\): compara \(f(n)\) con \(n^{\log_b a}\). Si \(f\) es menor → \(\Theta(n^{\log_b a})\); si son iguales → \(\Theta(n^{\log_b a}\log n)\); si \(f\) es mayor → \(\Theta(f(n))\).</p>
+
+<h3><span class="n">2.4</span>Plantillas PRAM (copia y adapta)</h3>
+<div class="grid2">
+<div>
+<h4>Reducción binaria (suma, máximo, OR…) · EREW</h4>
+<pre>// n = 2^k
+for i = 1 to n pardo
+    B[i] = A[i]
+for h = 1 to log n do               // log n rondas
+    for i = 1 to n/2^h pardo
+        B[i] = B[2i-1] (op) B[2i]    // op = +, max, OR
+return B[1]
+// W = O(n), T∞ = O(log n), Tp = n/p + log n</pre>
+<h4>Reducción k-aria (máximo en árbol k-ario)</h4>
+<pre>m = n
+while m &gt; 1 do                       // log_k n rondas
+    for i = 0 to ceil(m/k)-1 pardo
+        B[i] = max(B[i*k], ..., B[i*k+k-1])   // O(k)
+    m = ceil(m/k)
+return B[0]
+// T∞ = log_k n (k·log_k n si cuentas el max de k)</pre>
+<h4>Máximo en O(1) con n² procesadores · CRCW común</h4>
+<pre>for i, j = 1 to n pardo
+    B[i][j] = (A[i] &gt;= A[j]) ? 1 : 0
+for i = 1 to n pardo  M[i] = 1
+for i, j = 1 to n pardo
+    if B[i][j] == 0 then M[i] = 0    // escritura concurrente
+for i = 1 to n pardo
+    if M[i] == 1 then max = A[i]
+// T∞ = O(1), W = O(n²)  (no es de costo óptimo)</pre>
+</div>
+<div>
+<h4>Suma de prefijos (recursiva) · CREW</h4>
+<pre>prefix(A, n):                        // n = 2^k
+  if n == 1: return A
+  for i = 1 to n/2 pardo
+      B[i] = A[2i-1] + A[2i]
+  C = prefix(B, n/2)
+  for i = 1 to n pardo
+      if i == 1:      S[1] = A[1]
+      elif i par:     S[i] = C[i/2]
+      else:           S[i] = C[(i-1)/2] + A[i]
+  return S
+// W(n)=W(n/2)+O(n)=O(n); T∞(n)=T∞(n/2)+O(1)=O(log n)</pre>
+<h4>Recursivo con fork-join (búsqueda en árbol)</h4>
+<pre>buscar(v, b):
+  if v == null: return False
+  if v.clave == b: return True
+  r1 = buscar(hijo1, b) || r2 = buscar(hijo2, b)
+       || r3 = buscar(hijo3, b)        // en paralelo
+  sync
+  return r1 OR r2 OR r3
+// T∞ = altura = O(log n); W = O(n)</pre>
+<h4>Pointer jumping (raíz / suma en listas o árboles)</h4>
+<pre>for i = 1 to n pardo
+    S[i] = P[i]                       // sucesor/padre
+    while S[i] != S[S[i]] do
+        W[i] = W[i] + W[S[i]]         // si piden prefijos
+        S[i] = S[S[i]]                // duplica el salto
+// T∞ = O(log h), W = O(n log h)</pre>
+</div>
+</div>
+
+<h3><span class="n">2.5</span>De PRAM a MPI (memoria distribuida)</h3>
+<table>
+<thead><tr><th>Fase</th><th>Directiva MPI</th><th>Costo</th></tr></thead>
+<tbody>
+<tr><td>Iniciar</td><td><code>MPI_Init</code>, <code>MPI_Comm_rank</code>, <code>MPI_Comm_size</code></td><td>–</td></tr>
+<tr><td>Repartir datos</td><td><code>MPI_Scatter</code> (\(n/p\) a cada uno) o <code>MPI_Bcast</code> (todos lo mismo)</td><td>\(\alpha\log p+\beta n\) aprox.</td></tr>
+<tr><td>Cómputo local</td><td>bucle secuencial sobre los \(n/p\) datos locales</td><td>\(n/p\)</td></tr>
+<tr><td>Combinar</td><td><code>MPI_Reduce(..., MPI_MAX/MPI_SUM, 0, ...)</code> o árbol con <code>MPI_Send</code>/<code>MPI_Recv</code></td><td>\(\log p(\alpha+\beta)\)</td></tr>
+<tr><td>Juntar resultados</td><td><code>MPI_Gather</code> / <code>MPI_Allgather</code> / <code>MPI_Allreduce</code></td><td>–</td></tr>
+<tr><td>Terminar</td><td><code>MPI_Finalize</code></td><td>–</td></tr>
+</tbody></table>
+<div class="grid2">
+<pre>// Plantilla MPI: máximo (o suma) de n datos
+MPI_Init(&amp;argc, &amp;argv);
+MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+MPI_Comm_size(MPI_COMM_WORLD, &amp;p);
+int ln = n / p;
+MPI_Scatter(A, ln, MPI_DOUBLE, loc, ln, MPI_DOUBLE,
+            0, MPI_COMM_WORLD);
+double lmax = loc[0];                     // fase 1: O(n/p)
+for (int i = 1; i &lt; ln; i++)
+    if (loc[i] &gt; lmax) lmax = loc[i];
+MPI_Reduce(&amp;lmax, &amp;gmax, 1, MPI_DOUBLE,  // fase 2: O(log p)
+           MPI_MAX, 0, MPI_COMM_WORLD);
+if (rank == 0) printf("%f\n", gmax);
+MPI_Finalize();
+// Tp = n/p + log p (α + β)</pre>
+<pre>// Reducción en árbol k-ario con Send/Recv (2025-II S2)
+step = 1
+while step &lt; p:
+    bs = step * k
+    if rank % bs == 0:                    // padre
+        for t = 1..k-1:
+            child = rank + t*step
+            if child &lt; p:
+                MPI_Recv(&amp;r, 1, MPI_DOUBLE, child, ...)
+                lmax = max(lmax, r)
+    else if rank % step == 0:             // hijo
+        MPI_Send(&amp;lmax, 1, MPI_DOUBLE,
+                 rank - rank % bs, ...)
+        break
+    step = step * k
+// log_k p niveles, k-1 mensajes por nivel:
+// Tp = n/p + k·log_k p (α + β)</pre>
+</div>
+<div class="f">
+  <div>Regla general</div><div>\(T_p=\underbrace{T_{comp}/p}_{\text{cómputo}}+\underbrace{(\#\text{niveles})\cdot(\#\text{mensajes por nivel})\cdot(\alpha+m\beta)}_{\text{comunicación}}\)</div>
+  <div>Lineal / binario / k-ario</div><div>\((p-1)(\alpha+m\beta)\) · \(\log_2p\,(\alpha+m\beta)\) · \((k-1)\log_kp\,(\alpha+m\beta)\)</div>
+</div>
+
+<h3><span class="n">2.6</span>De PRAM a OpenMP (memoria compartida)</h3>
+<table>
+<thead><tr><th>Necesidad</th><th>Directiva</th></tr></thead>
+<tbody>
+<tr><td>Bucle <code>pardo</code></td><td><code>#pragma omp parallel for</code> (+ <code>schedule(static|dynamic)</code>)</td></tr>
+<tr><td>Combinar (suma, máx, mín)</td><td><code>reduction(+:s)</code>, <code>reduction(max:m)</code> ← la más eficiente</td></tr>
+<tr><td>Proteger estructura compartida (stack, cola, árbol)</td><td><code>#pragma omp critical(nombre)</code> o locks <code>omp_set_lock/omp_unset_lock</code></td></tr>
+<tr><td>Actualización simple de un escalar</td><td><code>#pragma omp atomic</code> (solo <code>x++</code>, <code>x+=e</code>; NO "if + asignación")</td></tr>
+<tr><td>Recursión <code>A || B; sync</code></td><td><code>#pragma omp task</code> + <code>#pragma omp taskwait</code> (dentro de <code>parallel</code> + <code>single</code>)</td></tr>
+<tr><td>Bloques de código distintos en paralelo</td><td><code>#pragma omp sections</code> / <code>section</code></td></tr>
+<tr><td>Esperar a todos</td><td><code>#pragma omp barrier</code> (implícita al final de <code>for</code>, <code>single</code>, <code>parallel</code>)</td></tr>
+<tr><td>Variables</td><td><code>shared(…)</code>, <code>private(…)</code>, <code>firstprivate(…)</code>, <code>default(none)</code></td></tr>
+</tbody></table>
+<div class="grid2">
+<pre>// Máximo correcto: reduction
+double m = -1e300;
+#pragma omp parallel for reduction(max:m)
+for (int i = 0; i &lt; N; i++)
+    if (A[i] &gt; m) m = A[i];
+
+// Alternativa: local + critical (p entradas, no N)
+#pragma omp parallel
+{
+    double lm = -1e300;
+    #pragma omp for
+    for (int i = 0; i &lt; N; i++)
+        if (A[i] &gt; lm) lm = A[i];
+    #pragma omp critical
+    { if (lm &gt; m) m = lm; }
+}</pre>
+<pre>// Recursión con tasks (fork-join)
+long suma(int *a, int n) {
+    if (n &lt; CUTOFF) return suma_sec(a, n);
+    long x, y;
+    #pragma omp task shared(x)
+    x = suma(a, n/2);
+    #pragma omp task shared(y)
+    y = suma(a + n/2, n - n/2);
+    #pragma omp taskwait          // = sync
+    return x + y;
+}
+// main:
+#pragma omp parallel
+#pragma omp single
+r = suma(a, n);</pre>
+</div>
+
+<h3><span class="n">2.7</span>Estructuras de datos resueltas</h3>
+<div class="ex">
+  <div class="t">Parallel stack (2025-II S1, 7 pts)</div>
+<pre>Input: n elementos, p hilos                 // stack compartido, variable top
+for i = 1 to n pardo
+    lock();  pop();  checkStackStatus();  unlock()     // región crítica
+    run()                                              // cómputo T_comp, paralelo
+    lock();  push();  checkStackStatus(); unlock()
+// checkStackStatus: vacío si top == -1, lleno si top == MAX-1</pre>
+  <ul>
+    <li><b>Overhead:</b> los accesos al stack se serializan (\(n\)) y el chequeo cuesta \(O(p)\): \(T_p=n+p+\dfrac{T_{comp}(n)}{p}\Rightarrow T_0=pT_p-W=np+p^2\).</li>
+    <li><b>Escalabilidad:</b> \(T_{comp}(n)=K(np+p^2)\). Domina \(np\): solo escala si el cómputo por elemento crece al menos como \(p\) (grano grueso). Difícilmente escalable.</li>
+    <li><b>OpenMP:</b> <code>#pragma omp critical</code> dentro de push, pop y checkStackStatus (o locks); en el main <code>#pragma omp parallel shared(stack, top)</code> con <code>sections</code>/<code>section</code> (o <code>parallel for</code>); <code>omp_set_num_threads</code>, <code>omp_get_thread_num</code>.</li>
+  </ul>
+<pre>void push(int x){ #pragma omp critical(st)
+                  { if (top &lt; MAX-1) stack[++top] = x; } }
+int  pop(){ int x = -1; #pragma omp critical(st)
+            { if (top &gt;= 0) x = stack[top--]; }  return x; }</pre>
+</div>
+
+<div class="ex">
+  <div class="t">Árbol 2-3 (2025-I): nodos internos con 2 o 3 hijos, hojas a la misma profundidad ⇒ altura \(\Theta(\log n)\)</div>
+  <ul>
+    <li><b>Buscar \(b\):</b> recursión post-orden con los hijos en paralelo (plantilla "fork-join" de 2.4). Span \(O(\log n)\), trabajo \(O(n)\). Alternativa: búsqueda binaria paralela \(O(\log n/\log p)\).</li>
+    <li><b>Insertar \(b\):</b> <code>for i pardo: if a_i == b return; if a_i &lt; b &lt; a_{i+1}: insertar b como hijo de v después de a_i</code>; si \(v\) queda con 4 hijos, se parte en \(v,v_1\) (2+2) y se inserta \(v_1\) en el padre \(w\), repitiendo hacia arriba. Ubicar: \(O(1)\); reestructurar: \(O(\log n)\).</li>
+    <li><b>Insertar \(k\) elementos:</b> bucle secuencial <code>for i &lt; k</code> sobre la inserción (cada una cambia el árbol): span \(O(k\log n)\).</li>
+    <li><b>\(T(n,p)\) (Brent):</b> caso 1: \(O(\log n/p)\); caso 2: \(O(\log n/p+\log n)\); caso 3: \(O(k\log n/p+k\log n)\).</li>
+  </ul>
+</div>
+
+<div class="ex">
+  <div class="t">Máximo en árbol k-ario, memoria distribuida (2025-II S2, 7 pts)</div>
+  <ul>
+    <li><b>PRAM:</b> reducción k-aria (2.4). \(T_\infty=\log_k n\).</li>
+    <li><b>MPI:</b> Scatter (\(n/p\)) → máximo local → árbol k-ario con Send/Recv (2.5), o <code>MPI_Reduce</code> con <code>MPI_MAX</code>.</li>
+    <li><b>\(T_p\):</b> \(\dfrac np+k\log_kp\,(\alpha+\beta)\). <b>\(T_0\):</b> \(kp\log_kp(\alpha+\beta)\). <b>Isoeficiencia:</b> \(n=K\,kp\log_kp\) (casi lineal en \(p\): muy escalable).</li>
+    <li><b>\(k\) óptimo:</b> \(k\log_kp=\dfrac{k}{\ln k}\ln p\). \(\dfrac{d}{dk}\dfrac{k}{\ln k}=\dfrac{\ln k-1}{\ln^2k}=0\Rightarrow\ln k=1\Rightarrow k=e\approx2.72\to k=3\). \(T_{p,opt}=\dfrac np+e\log_ep(\alpha+\beta)\). Intuición: \(k\) chico → muchos niveles; \(k\) grande → muchos mensajes por padre.</li>
+  </ul>
+  <table class="mini"><tbody><tr><th>k</th><td>2</td><td>3</td><td>4</td><td>5</td><td>8</td><td>16</td></tr><tr><th>k / ln k</th><td>2.885</td><td>2.731</td><td>2.885</td><td>3.107</td><td>3.847</td><td>5.771</td></tr></tbody></table>
+</div>
+
+<div class="ex">
+  <div class="t">Máximo en árbol doble logarítmico (PD06 2026-I)</div>
+  <p>\(n=2^{2^k}\) hojas, \(k+2=\log\log n+2\) niveles; cada nodo calcula el máximo de sus hijos en \(O(1)\) con el algoritmo CRCW de \(n^2\) procesadores. \(T_\infty=O(\log\log n)\), \(W=O(n)\). Compartida: \(T_p=\dfrac np+\log\log p\Rightarrow n=\Theta(p\log\log p)\). Distribuida: \(T_p=\dfrac np+(\alpha+\beta)\log\log p\Rightarrow n=\Theta(p(\alpha+\beta)\log\log p)\).</p>
+</div>
+
+<h3><span class="n">2.8</span>Búsqueda paralela: DTS vs PWS y balance de carga</h3>
+<div class="ex">
+  <div class="t">DTS vs PWS (2026-I, 7 pts). Árbol con ramificación \(b\), profundidad \(d\), \(W=b^d\)</div>
+  <table>
+  <thead><tr><th></th><th>DTS (frontera a profundidad \(r=d/2\))</th><th>PWS (\(p\) ventanas, redundancia \(W^{2/3}\))</th></tr></thead>
+  <tbody>
+  <tr><td>Trabajo y span</td><td>Frontera \(\Theta(b^r)\) + subárbol \(\Theta(b^{d-r})\) + reducción \(\Theta(r\log b)\). \(T_\infty=\Theta(b^{d/2})=\Theta(W^{1/2})\). \(T_1=W\).</td><td>Ventana más pesada \(\Theta(W/p+W^{2/3})\) + reducción \(\log p\). \(T_\infty=\Theta(W/p+W^{2/3})\). \(T_1=W+pW^{2/3}\) (eficiencia contra \(W\)).</td></tr>
+  <tr><td>\(T_p\) (Brent)</td><td>\(\dfrac Wp+W^{1/2}\)</td><td>\(\dfrac Wp+W^{2/3}\)</td></tr>
+  <tr><td>\(T_0\)</td><td>\(pc_1W^{1/2}\)</td><td>\(pc_2W^{2/3}\)</td></tr>
+  <tr><td>Isoeficiencia</td><td>\(W=Kpc_1W^{1/2}\Rightarrow W^{1/2}=Kc_1p\Rightarrow W=\Theta(p^2)\)</td><td>\(W=Kpc_2W^{2/3}\Rightarrow W^{1/3}=Kc_2p\Rightarrow W=\Theta(p^3)\)</td></tr>
+  </tbody></table>
+  <p><b>Conclusión:</b> \(p^2\ll p^3\): DTS escala mejor; el trabajo redundante de PWS (\(W^{2/3}\)) crece más que el span de DTS (\(W^{1/2}\)). DTS es bueno en árboles balanceados; PWS cuando hay heurísticas buenas y soluciones profundas.</p>
+</div>
+<table>
+<thead><tr><th>Búsqueda</th><th>\(T_p\)</th><th>Nota</th></tr></thead>
+<tbody>
+<tr><td>Lineal</td><td>\(n/p+\log p\)</td><td>Cada proceso busca en \(n/p\); reducción OR</td></tr>
+<tr><td>Binaria paralela</td><td>\(\Theta(\log_{p+1}n)\)</td><td>\(S=\Theta(\log p)\), \(E=\Theta(\log p/p)\): mala</td></tr>
+<tr><td>DFS / branch &amp; bound</td><td>\(b^d/p+d\)</td><td>\(E=1/(1+pd/b^d)\). DFS usa memoria lineal en \(d\) (BFS guarda \(b^d\))</td></tr>
+<tr><td>DTS / PWS (clase)</td><td>\(b^d/p+b^k+\log p\) / \(b^d/p+b^m+\log p\)</td><td>Parte secuencial: generar frontera / redundancia</td></tr>
+</tbody></table>
+<div class="box">
+  <div class="t">Round robin / intercambio de tareas (PD06 2026-I)</div>
+  <p>Un proceso sin trabajo pide a otro. \(V(p)\) = mínimo de pedidos para que cada proceso reciba al menos uno. Cada reparto divide el trabajo en \(xW\) y \((1-x)W\); tras \(q\,V(p)\) pedidos el máximo es \((1-x)^qW=\varepsilon\Rightarrow q=O(\log W)\). Por tanto \(T_{comm}=O(V(p)\log W)\).</p>
+  <table class="mini"><tbody>
+  <tr><th>ARR (contador local)</th><td>\(V=O(p^2)\): \(O(p^2\log W)\); \(E=W/(p^3\log W)\)</td></tr>
+  <tr><th>GRR (contador global)</th><td>\(V=O(p)\): \(O(p\log W)\); mejor en teoría, pero el contador es cuello de botella</td></tr>
+  <tr><th>RP (aleatorio)</th><td>\(V=O(p\log p)\): \(O(p\log p\log W)\); sin cuello de botella</td></tr>
+  </tbody></table>
+</div>
+
+<h3><span class="n">2.9</span>Grafos, ordenamiento, DAG y otros algoritmos</h3>
+<table>
+<thead><tr><th>Algoritmo</th><th>\(W\)</th><th>\(T_\infty\)</th><th>\(T_p\) / isoeficiencia / idea</th></tr></thead>
+<tbody>
+<tr><td>Suma / reducción</td><td>\(n\)</td><td>\(\log n\)</td><td>\(n/p+\log p\) (+comunicación \(\log p(\alpha+\beta)\)); \(n=\Theta(p\log p)\)</td></tr>
+<tr><td>Prefijos</td><td>\(n\)</td><td>\(\log n\)</td><td>subida + bajada en árbol</td></tr>
+<tr><td>Mergesort (merge secuencial)</td><td>\(n\log n\)</td><td>\(n\)</td><td>\(n\log n/p+n\); \(E=1/(1+p/\log n)\)</td></tr>
+<tr><td>Bitónico / odd-even merge</td><td>\(n\log^2n\)</td><td>\(\log^2n\)</td><td>redes de comparación</td></tr>
+<tr><td>Quicksort paralelo</td><td>\(n\log n\)</td><td>\(\log^2n\)</td><td>\(\frac np\log\frac np+\log p(\alpha+\frac np\beta)+\alpha\log^2p\)</td></tr>
+<tr><td>Floyd (todos los pares)</td><td>\(n^3\)</td><td>\(n\)</td><td>bucle en \(k\) secuencial, \(n^2\) updates paralelos; filas vs bloques en 3.3</td></tr>
+<tr><td>Prim / Dijkstra</td><td>\(n^2\)</td><td>\(n\log n\)</td><td>\(n^2/p+n\log p\) (cada iteración: mín local + all-reduce + broadcast); \(n=\Theta(p\log p)\), \(W=\Theta(p^2\log^2p)\)</td></tr>
+<tr><td>Matrices \(n^3\) (PRAM, \(p=n^3\))</td><td>\(n^3\)</td><td>\(\log n\)</td><td>\(n^3/p+\log n\)</td></tr>
+<tr><td>Coloreo de ciclos (Cole-Vishkin)</td><td>\(n\log^*n\)</td><td>\(\log^*n\)</td><td>\(c'=2k+c_k\) (\(k\) = bit menos significativo donde difiere del sucesor); 3 colores</td></tr>
+<tr><td>Leader election en anillo (Franklin)</td><td colspan="2">\(\le\log n\) rondas de \(O(n)\) mensajes</td><td>\(O(n\log n)\). Alternativa: enviar a la derecha, \(O(n)\) tiempo pero \(O(n^2)\) mensajes</td></tr>
+<tr><td>N-body</td><td>\(n^2\)</td><td>–</td><td>\(n(n-1)/p\); Barnes-Hut \(n\log n/p\)</td></tr>
+</tbody></table>
+<div class="grid2">
+<div class="box">
+  <div class="t">DAG: concurrencia y speedup</div>
+  <ul>
+    <li><b>Grado máximo de concurrencia</b> = nivel más ancho.</li>
+    <li>\(S_{max}=W/T_\infty\) = tareas totales / camino crítico. Con \(p\) = concurrencia máxima: \(E=S_{max}/p\).</li>
+    <li>Árbol binario de \(n\) hojas: \(2n-1\) tareas, camino \(\log n+1\) ⇒ \(S\approx(2n-1)/\log n\), \(E\approx2/\log n\).</li>
+    <li>Si cada tarea cuesta \(O(n)\): \(S_{max}\) no cambia, la isoeficiencia sí.</li>
+    <li>Fibonacci recursivo: \(W(n)=W(n-1)+W(n-2)+1\), \(T_\infty(n)=T_\infty(n-1)+1=O(n)\).</li>
+  </ul>
+</div>
+<div class="box">
+  <div class="t">Particionamiento y modelos</div>
+  <ul>
+    <li><b>Datos</b> (imágenes): tareas independientes; \(T_p=n^2/p+\alpha\log p+\beta n^2/p\).</li>
+    <li><b>Tareas irregulares</b> (Mandelbrot): estático desbalancea; dinámico (work pool, <code>schedule(dynamic)</code>) balancea con overhead.</li>
+    <li><b>Distribuir \(n\) tareas de tiempos \(t_i\)</b>: LPT greedy (ordenar desc., dar al menos cargado, min-heap: \(O(n\log n+n\log p)\)) o prefijos + cortes en \(T/p\) (PRAM \(O(\log n)\)).</li>
+    <li><b>Monte Carlo:</b> tiempo fijo, resultado con error; <b>Las Vegas:</b> resultado exacto, tiempo aleatorio.</li>
+    <li><b>BSP</b> \((p,g,L)\): \(\sum(w+gh+L)\); reducción \(n/p+(g+L)\log p\). <b>LogP</b>: reducción \(n/p+\log p(L+o+g)\).</li>
+  </ul>
+</div>
+</div>
+
+<div class="say"><div class="t">Qué escribir (P2)</div>
+<ul>
+  <li>"El span es \(O(\cdot)\) porque es la profundidad de [la recursión / el número de rondas], cada una de costo \(O(1)\) con suficientes procesadores."</li>
+  <li>"Por Brent, \(T_p=W/p+T_\infty\); el primer término es el trabajo repartido y el segundo el camino crítico, que no se reduce con más procesadores."</li>
+  <li>"El acceso a la estructura compartida es una región crítica: se serializa y genera el overhead \(np\); por eso escala solo si el cómputo por elemento es grande."</li>
+  <li>"Uso <code>reduction</code> en vez de <code>critical</code>/<code>atomic</code>: cada hilo trabaja con una copia privada y se combinan al final, sin serializar el bucle."</li>
+  <li>"El modelo es CREW porque varios procesadores leen la misma posición pero nunca escriben a la vez" (o CRCW si escriben a la vez).</li>
+</ul>
+</div>
+</div>
+
+<!-- ============================================================ BLOQUE 3 -->
+<div class="part">
+<h2 class="b3">3 · Pregunta 3: escalabilidad, isoeficiencia, MPI y OpenMP (7 pts)</h2>
+<p>Anteriores: Quicksort malla vs hipercubo (2025-I), Floyd filas vs bloques (2025-II S1), matrices filas vs bloques (2025-II S2), compartida vs distribuida vs híbrida (2026-I, venía como P2). Te dan uno o más \(T_p\) con cómputo, latencia \(\alpha\) y ancho de banda \(\beta\).</p>
+
+<h3><span class="n">3.1</span>Receta de overhead e isoeficiencia</h3>
+<div class="box hot">
+<ol class="steps">
+  <li><b>Identifica \(W\)</b>: el término de cómputo de \(T_p\) multiplicado por \(p\) (\(\frac{n^3}{p}\Rightarrow W=n^3\); \(\frac{kn^2}{P}\Rightarrow W=kn^2\); \(\frac{n\log n}{p}\Rightarrow W=n\log n\)).</li>
+  <li><b>Overhead</b>: \(T_0=pT_p-W\) = <b>cada término de comunicación multiplicado por \(p\)</b>. (Ojo: \(p\cdot\frac{1}{\sqrt p}=\sqrt p\); \(p\cdot\sqrt p=p^{3/2}\); \(p\cdot\frac{1}{p\log p}=\frac1{\log p}\).)</li>
+  <li><b>Isoeficiencia</b>: iguala \(W=K\cdot(\text{cada término de }T_0)\) <b>por separado</b> y despeja \(n\) en función de \(p\) (tabla 3.2).</li>
+  <li><b>Término dominante</b>: el que obliga a \(n\) (o \(W\)) a crecer más rápido. Esa es la condición de isoeficiencia del modelo.</li>
+  <li><b>Compara</b>: el modelo con la \(W(p)\) que crece más lento es <b>el más escalable</b>.</li>
+  <li><b>Interpreta</b> con una frase de 3.6.</li>
+</ol>
+</div>
+<div class="grid2">
+<div class="f">
+  <div>\(E\) vía overhead</div><div>\(E=\dfrac{W}{W+T_0}=\dfrac1{1+T_0/W}\)</div>
+  <div>Isoeficiencia</div><div>\(E\) constante \(\iff W=K\,T_0(W,p)\), \(K=\dfrac{E}{1-E}\)</div>
+  <div>Granularidad</div><div>\(G=\dfrac{T_{comp}}{T_{comm}}=\dfrac{W}{T_0}\), \(E=\dfrac{G}{1+G}\)</div>
+  <div>Costo</div><div>\(C_p=pT_p=W+T_0\)</div>
+</div>
+<div>
+<table class="mini"><tbody><tr><th>E</th><td>0.5</td><td>0.6</td><td>0.7</td><td>0.75</td><td>0.8</td><td>0.85</td><td>0.9</td><td>0.95</td><td>0.99</td></tr><tr><th>K = E/(1−E)</th><td>1.00</td><td>1.50</td><td>2.33</td><td>3.00</td><td>4.00</td><td>5.67</td><td>9.00</td><td>19.00</td><td>99.00</td></tr></tbody></table>
+<p class="small">Cambiar \(E\) (0.7 → 0.8) solo cambia la constante \(K\), no la forma de la relación \(W(p)\).</p>
+</div>
+</div>
+
+<h3><span class="n">3.2</span>Despejes típicos (busca el que te quedó)</h3>
+<table>
+<thead><tr><th>Si te queda…</th><th>Despeje</th><th>Isoeficiencia \(W(p)\)</th></tr></thead>
+<tbody>
+<tr><td>\(n^3=Kc\,p\,n^2\)</td><td>\(n=Kc\,p\)</td><td>\(W=n^3=\Theta(p^3)\)</td></tr>
+<tr><td>\(n^3=Kc\sqrt p\,n^2\)</td><td>\(n=Kc\sqrt p\)</td><td>\(\Theta(p^{3/2})\)</td></tr>
+<tr><td>\(n^3=Kc\,p^{3/2}\)</td><td>\(n=(Kc)^{1/3}\sqrt p\)</td><td>\(\Theta(p^{3/2})\)</td></tr>
+<tr><td>\(n^3=Kc\,p\log p\)</td><td>\(n=(Kc\,p\log p)^{1/3}\)</td><td>\(\Theta(p\log p)\)</td></tr>
+<tr><td>\(n^3=Kc\,p\,n\log p\)</td><td>\(n^2=Kc\,p\log p\Rightarrow n=\sqrt{Kc\,p\log p}\)</td><td>\(\Theta((p\log p)^{3/2})\)</td></tr>
+<tr><td>\(n^2=Kc\,P\log P\)</td><td>\(n=\sqrt{Kc\,P\log P}\)</td><td>\(W=n^2=\Theta(P\log P)\)</td></tr>
+<tr><td>\(n^2=Kc\,P\,n\log P\)</td><td>\(n=Kc\,P\log P\)</td><td>\(W=n^2=\Theta(P^2\log^2P)\)</td></tr>
+<tr><td>\(n=Kc\,p\log p\)</td><td>–</td><td>\(W=n=\Theta(p\log p)\)</td></tr>
+<tr><td>\(n\log n=Kc\,p^{3/2}\)</td><td>–</td><td>\(W=n\log n=\Theta(p^{3/2})\)</td></tr>
+<tr><td>\(W=Kc\,p\,W^{1/2}\)</td><td>\(W^{1/2}=Kc\,p\)</td><td>\(\Theta(p^2)\)</td></tr>
+<tr><td>\(W=Kc\,p\,W^{2/3}\)</td><td>\(W^{1/3}=Kc\,p\)</td><td>\(\Theta(p^3)\)</td></tr>
+<tr><td>\(W=Kc\,p\,W^{a}\)</td><td>\(W^{1-a}=Kc\,p\)</td><td>\(\Theta(p^{1/(1-a)})\)</td></tr>
+</tbody></table>
+<p class="small"><b>Truco:</b> si el término de \(T_0\) contiene \(n\), divide ambos lados por esa potencia de \(n\) antes de despejar. Si \(W\) aparece a ambos lados, divide por la potencia de \(W\) de la derecha y eleva.</p>
+
+<h3><span class="n">3.3</span>Catálogo de modelos ya resueltos</h3>
+<table>
+<thead><tr><th>Modelo</th><th>\(T_p\)</th><th>\(T_0\)</th><th>Isoeficiencia</th></tr></thead>
+<tbody>
+<tr><td>Floyd filas (1D)</td><td>\(t_c\frac{n^3}{p}+\alpha n\log p+\beta n^2\)</td><td>\(\alpha pn\log p+\beta pn^2\)</td><td>\(\beta\): \(n\propto p\) (\(W\propto p^3\)); \(\alpha\): \(n\propto\sqrt{p\log p}\). Domina \(n\propto p\)</td></tr>
+<tr><td>Floyd bloques (2D)</td><td>\(t_c\frac{n^3}{p}+\alpha n\log\sqrt p+\beta\frac{n^2}{\sqrt p}\)</td><td>\(\alpha pn\log\sqrt p+\beta\sqrt p\,n^2\)</td><td>\(\beta\): \(n\propto\sqrt p\); \(\alpha\): \(n\propto\sqrt{p\log\sqrt p}\) (domina). Mejor que filas</td></tr>
+<tr><td>Matrices filas</td><td>\(\frac{n^3}{p}+\alpha\log p+\beta n^2\)</td><td>\(\alpha p\log p+\beta pn^2\)</td><td>\(\beta\): \(n\propto p\) (domina); \(\alpha\): \(n\propto(p\log p)^{1/3}\)</td></tr>
+<tr><td>Matrices bloques</td><td>\(\frac{n^3}{p}+\alpha\sqrt p+\beta\frac{n^2}{\sqrt p}\)</td><td>\(\alpha p^{3/2}+\beta\sqrt p\,n^2\)</td><td>ambos dan \(n\propto\sqrt p\) (\(W\propto p^{3/2}\)). Mejor que filas</td></tr>
+<tr><td>Quicksort malla 2D</td><td>\(\frac{n\log n}{p}+\alpha\sqrt p+\beta\frac{n}{\sqrt p}\)</td><td>\(\alpha p^{3/2}+\beta n\sqrt p\)</td><td>\(\alpha\): \(n\log n\propto p^{3/2}\) (solucionario). El término \(\beta\) da \(\log n\propto\sqrt p\), aún peor</td></tr>
+<tr><td>Quicksort hipercubo</td><td>\(\frac{n\log n}{p}+\alpha\log p+\beta\frac{n}{p\log p}\)</td><td>\(\alpha p\log p+\beta\frac{n}{\log p}\)</td><td>\(n\log n\propto p\log p\). Más escalable que la malla</td></tr>
+<tr><td>Memoria compartida (malla \(n\times n\), \(k\) iter.)</td><td>\(\frac{kn^2}{P}+k\gamma\log P\)</td><td>\(kP\gamma\log P\)</td><td>\(W=\Theta(kP\log P)\) (la mejor)</td></tr>
+<tr><td>Memoria distribuida</td><td>\(\frac{kn^2}{P}+k\alpha\log P+k\beta n\log P\)</td><td>\(kP\alpha\log P+kP\beta n\log P\)</td><td>\(\beta\): \(n\propto P\log P\Rightarrow W=\Theta(kP^2\log^2P)\) (la peor)</td></tr>
+<tr><td>Híbrida (\(P=qm\))</td><td>\(\frac{kn^2}{P}+k\gamma\log m+k\alpha\log q+k\beta n\log q\)</td><td>\(kP(\gamma\log m+\alpha\log q+\beta n\log q)\)</td><td>\(W=\Theta(kP^2\log^2\frac Pm)\) (intermedia)</td></tr>
+<tr><td>Suma/reducción distribuida</td><td>\(\frac np+\log p(\alpha+\beta)\)</td><td>\(p\log p(\alpha+\beta)\)</td><td>\(n=\Theta(p\log p)\)</td></tr>
+<tr><td>Árbol k-ario</td><td>\(\frac np+k\log_kp(\alpha+\beta)\)</td><td>\(kp\log_kp(\alpha+\beta)\)</td><td>\(n=\Theta(kp\log_kp)\)</td></tr>
+<tr><td>Prim/Dijkstra</td><td>\(\frac{n^2}{p}+n\log p\)</td><td>\(pn\log p\)</td><td>\(n=\Theta(p\log p)\), \(W=\Theta(p^2\log^2p)\)</td></tr>
+<tr><td>Stack paralelo</td><td>\(n+p+\frac{T_{comp}}{p}\)</td><td>\(np+p^2\)</td><td>\(T_{comp}(n)=K(np+p^2)\)</td></tr>
+<tr><td>DTS / PWS</td><td>\(\frac Wp+W^{1/2}\) / \(\frac Wp+W^{2/3}\)</td><td>\(pW^{1/2}\) / \(pW^{2/3}\)</td><td>\(\Theta(p^2)\) / \(\Theta(p^3)\)</td></tr>
+</tbody></table>
+<div class="box">
+  <div class="t">Por qué bloques (2D) gana a filas (1D)</div>
+  <p>En bloques cada proceso tiene una submatriz \(\frac{n}{\sqrt p}\times\frac{n}{\sqrt p}\) y solo intercambia \(n/\sqrt p\) elementos de la fila y columna que necesita, en vez de una fila completa de \(n\). El volumen comunicado por proceso baja de \(n^2\) a \(n^2/\sqrt p\): mayor granularidad, menor \(T_0\), y \(n\) solo debe crecer como \(\sqrt p\) en vez de \(p\).</p>
+</div>
+
+<h3><span class="n">3.4</span>Tabla de eficiencia para varios \(p\) (sin calculadora)</h3>
+<div class="tpl">
+  <div class="t">Método</div>
+  <ol>
+    <li>Calcula \(W\) una sola vez (p. ej. \(n=10^4\Rightarrow W=n^3=10^{12}\)).</li>
+    <li>Para cada \(p\), saca \(\log_2p\) y \(\sqrt p\) de la tabla A.1 y calcula cada término de \(T_0\). Normalmente un término domina: los demás se pueden despreciar (dilo).</li>
+    <li>\(E=\dfrac{1}{1+T_0/W}\). Atajos: \(\frac1{1+x}\approx1-x\) si \(x&lt;0.05\); \(x=1\Rightarrow0.5\); \(x=0.25\Rightarrow0.8\); \(x=0.1\Rightarrow0.909\).</li>
+    <li>Describe la tendencia: "la eficiencia de filas cae rápidamente con \(p\), la de bloques se mantiene cerca de 1".</li>
+  </ol>
+  <p class="small">Con \(p=1\) los términos con \(\log p\) se anulan, pero puede quedar uno como \(\beta pn^2\): por eso Floyd filas da 0.9999 y no 1. Usa el modelo tal cual te lo dan.</p>
+</div>
+<div class="grid2">
+<div class="ex">
+  <div class="t">Floyd \(n=10^4\), \(\alpha=\beta=t_c=1\) (2025-II S1)</div>
+  <p>\(W=10^{12}\). Filas \(T_0=pn\log p+pn^2\); bloques \(T_0=pn\log\sqrt p+\sqrt p\,n^2\).</p>
+  <p>\(p=1024\): filas \(T_0=1024\cdot10^4\cdot10+1024\cdot10^8\approx1.025\cdot10^{11}\Rightarrow E=1/1.1025=0.907\). Bloques \(T_0=1024\cdot10^4\cdot5+32\cdot10^8=3.25\cdot10^9\Rightarrow E=0.9967\).</p>
+  <table class="num"><thead><tr><th>p</th><th>filas</th><th>bloques</th></tr></thead><tbody>
+  <tr><td>1</td><td>0.9999</td><td>0.9999</td></tr><tr><td>4</td><td>0.9996</td><td>0.9998</td></tr><tr><td>16</td><td>0.9984</td><td>0.9996</td></tr><tr><td>64</td><td>0.9936</td><td>0.9992</td></tr><tr><td>256</td><td>0.9750</td><td>0.9984</td></tr><tr><td>1024</td><td>0.9071</td><td>0.9967</td></tr><tr><td>4096</td><td>0.7093</td><td>0.9933</td></tr><tr><td>16384</td><td>0.3788</td><td>0.9858</td></tr></tbody></table>
+</div>
+<div class="ex">
+  <div class="t">Matrices \(n=10^3\), \(\alpha=100\), \(\beta=1\) (2025-II S2)</div>
+  <p>\(W=10^9\). Filas \(T_0=100\,p\log p+p\cdot10^6\); bloques \(T_0=100\,p^{3/2}+\sqrt p\cdot10^6\).</p>
+  <p>\(p=1024\): filas \(T_0=1.02\cdot10^6+1.024\cdot10^9\Rightarrow E=0.494\). Bloques \(T_0=3.28\cdot10^6+3.2\cdot10^7=3.53\cdot10^7\Rightarrow E=0.966\).</p>
+  <table class="num"><thead><tr><th>p</th><th>filas</th><th>bloques</th></tr></thead><tbody>
+  <tr><td>1</td><td>1</td><td>1</td></tr><tr><td>4</td><td>0.9960</td><td>0.9980</td></tr><tr><td>16</td><td>0.9842</td><td>0.9960</td></tr><tr><td>64</td><td>0.9398</td><td>0.9920</td></tr><tr><td>256</td><td>0.7960</td><td>0.9839</td></tr><tr><td>1024</td><td>0.4938</td><td>0.9659</td></tr></tbody></table>
+  <p class="small">(El solucionario oficial copió por error la tabla de Floyd; estos son los valores correctos.)</p>
+</div>
+</div>
+
+<h3><span class="n">3.5</span>"¿Cuántos procesos para un problema \(c\) veces mayor manteniendo \(E\)?"</h3>
+<div class="tpl">
+  <ol>
+    <li>Toma la relación de isoeficiencia del término dominante: \(W(n)=K\cdot f(p)\).</li>
+    <li>Divide caso 2 entre caso 1 (\(K\) y \(\alpha\), \(\beta\) se cancelan): \(\dfrac{W(n_2)}{W(n_1)}=\dfrac{f(p_2)}{f(p_1)}\).</li>
+    <li>Despeja \(p_2\). Si \(f(p)=p^a\): \(p_2=p_1\left(\frac{W_2}{W_1}\right)^{1/a}\). Si \(f(p)=p\log p\): calcula \(p_2\log p_2\) y busca \(p_2\) en la tabla A.2 (prueba y error).</li>
+  </ol>
+</div>
+<div class="ex">
+  <div class="t">Quicksort (2025-I): \(n_1=10^6\), \(p_1=64\), \(n_2=10^7\), \(E=0.8\)</div>
+  <p>\(\dfrac{n_2\log n_2}{n_1\log n_1}=\dfrac{10^7\cdot7}{10^6\cdot6}=11.67\) (el cociente de logaritmos no depende de la base).</p>
+  <p><b>Malla</b> (\(f=p^{3/2}\)): \(p_2=64\cdot11.67^{2/3}=64\cdot5.14\approx329\). <b>Hipercubo</b> (\(f=p\log p\)): \(p_2\log_2p_2=64\cdot6\cdot11.67=4480\); \(500\cdot\log_2500=500\cdot8.97\approx4483\Rightarrow p_2\approx500\). El hipercubo admite más procesos para el mismo crecimiento: es más escalable.</p>
+</div>
+
+<div class="say"><div class="t">3.6 Frases listas para las subpreguntas de interpretación</div>
+<table>
+<tbody>
+<tr><td><b>¿Cuál escala mejor?</b></td><td>"El modelo [B] escala mejor porque su función de isoeficiencia \(W=\Theta(\cdot)\) crece más lento con \(p\) que la de [A]: para mantener la eficiencia, el problema necesita crecer menos al agregar procesos."</td></tr>
+<tr><td><b>¿Qué pasa si aumenta \(n\)?</b></td><td>"El cómputo (\(n^3/p\)) crece más rápido que la comunicación (\(n^2\)), así que \(T_0/W\to0\) y la eficiencia de ambos modelos tiende a 1; se acercan entre sí, aunque [B] sigue siendo mejor."</td></tr>
+<tr><td><b>¿Se cumple \(W=C_p\)?</b></td><td>"No: \(C_p=pT_p=W+T_0\) y \(T_0&gt;0\) por la comunicación. Solo sería igual sin overhead. Asintóticamente serían del mismo orden si \(T_0=O(W)\)."</td></tr>
+<tr><td><b>¿\(W\propto p^3\)? ¿Consecuencias?</b></td><td>"Con \(W=n^3\), \(W\propto p^3\) equivale a \(n\propto p\): el tamaño lineal del problema crece igual que el número de procesos. Se considera un modelo altamente escalable (crecimiento lineal). Bloques, con \(n\propto\sqrt p\), es aún mejor."</td></tr>
+<tr><td><b>Granularidad</b></td><td>"\(G=T_{comp}/T_{comm}\): \(G_A=\frac{n^3/p}{\ldots}\), \(G_B=\frac{n^3/p}{\ldots}\). [B] tiene mayor granularidad (más cómputo por unidad de comunicación), por eso \(E=G/(1+G)\) es mayor y escala mejor."</td></tr>
+<tr><td><b>¿Qué término domina?</b></td><td>"Para \(n\) grande domina el término de ancho de banda (\(\beta\)), porque crece con \(n\); la latencia (\(\alpha\)) solo importa para \(p\) muy grande o mensajes pequeños."</td></tr>
+<tr><td><b>Cambiar \(E\)</b></td><td>"Pedir \(E=0.8\) en vez de 0.7 cambia \(K\) de 2.33 a 4: el problema debe ser proporcionalmente más grande, pero la forma de la relación \(W(p)\) no cambia."</td></tr>
+<tr><td><b>Si crece \(\alpha\) o \(\beta\)</b></td><td>"Aumenta \(T_0\) y baja \(E\) para el mismo \(n\); el modelo que comunica menos volumen (bloques/hipercubo) se ve menos afectado."</td></tr>
+<tr><td><b>Escalable vs no escalable</b></td><td>"Un sistema es escalable si puede mantener \(E\) constante al aumentar \(p\) haciendo crecer \(W\); cuanto más lento debe crecer \(W\), más escalable. Si no existe tal \(W\) (p. ej. \(T_0\) crece más rápido que cualquier \(W\) posible), no es escalable."</td></tr>
+</tbody></table>
+</div>
+
+<h3><span class="n">3.7</span>Compartida vs distribuida vs híbrida (2026-I completo)</h3>
+<div class="ex">
+  <div class="t">Malla \(n\times n\), \(k\) iteraciones, \(W=kn^2\), \(b\) bytes por elemento, \(M_{nodo}\) memoria por nodo</div>
+  <table><tbody>
+  <tr><td>2.1 Híbrida (\(q\) nodos × \(m\) hilos, \(P=qm\))</td><td>\(T_P^{(H)}=\dfrac{kn^2}{P}+k\gamma\log m+k\alpha\log q+k\beta n\log q\). Cómputo entre todos los núcleos; sincronización de memoria compartida dentro del nodo (\(\log m\)); MPI entre nodos (\(\log q\)).</td></tr>
+  <tr><td>2.2 Overhead e iso.</td><td><b>Compartida:</b> \(T_0=kP\gamma\log P\Rightarrow kn^2=KkP\gamma\log P\Rightarrow W=\Theta(kP\log P)\).<br><b>Distribuida:</b> \(T_0=kP\alpha\log P+kP\beta n\log P\). Latencia: \(n^2\propto P\log P\). Ancho de banda: \(n^2\propto Pn\log P\Rightarrow n\propto P\log P\Rightarrow W=\Theta(kP^2\log^2P)\) (domina).<br><b>Híbrida:</b> \(T_0=kP\gamma\log m+kP\alpha\log\frac Pm+kP\beta n\log\frac Pm\Rightarrow W=\Theta(kP^2\log^2\frac Pm)\).</td></tr>
+  <tr><td>2.3 ¿Cuál escala mejor?</td><td>Para \(1&lt;m&lt;P\): \(kP\log P&lt;kP^2\log^2\frac Pm&lt;kP^2\log^2P\). Compartida la mejor, distribuida la peor, híbrida intermedia (la comunicación cara solo ocurre entre \(q=P/m\) nodos).</td></tr>
+  <tr><td>2.4 Memoria</td><td>Compartida: \(bn^2\le M_{nodo}\Rightarrow W\le k\frac{M_{nodo}}{b}\) (techo fijo: viable solo si \(CP\log P\le kM_{nodo}/b\)). Distribuida: \(bn^2\le PM_{nodo}\Rightarrow W\le kP\frac{M_{nodo}}{b}\). Híbrida: \(q=P/m\) nodos \(\Rightarrow W\le k\frac{PM_{nodo}}{mb}\).</td></tr>
+  <tr><td>2.5 Decisión práctica</td><td>Compartida: mejor eficiencia, peor capacidad (no resuelve problemas arbitrariamente grandes). Distribuida: mejor capacidad, peor eficiencia. <b>Híbrida</b> (MPI entre nodos + OpenMP dentro): equilibra ambas; es lo que se usa en supercomputadores.</td></tr>
+  </tbody></table>
+</div>
+<div class="box">
+  <div class="t">Híbrido MPI + OpenMP: ventajas y desventajas</div>
+  <p><b>Ventajas:</b> menos procesos MPI ⇒ menos mensajes y menos halo replicado (menos memoria), mayor granularidad, mejor balance dentro del nodo. <b>Desventajas:</b> código más complejo, hilos ociosos mientras uno comunica, efectos NUMA, costo de crear hilos. Halo en 2D: al pasar de \(P\) a \(4P\), cada proceso tiene 1/4 de celdas pero 1/2 del halo (el halo baja más lento que el cómputo). Compilar <code>mpicc -fopenmp</code>.</p>
+</div>
+
+<h3><span class="n">3.8</span>Topologías y costos de comunicación colectiva</h3>
+<table>
+<thead><tr><th>Operación (\(m\) datos)</th><th>Lineal / anillo</th><th>Árbol / hipercubo</th><th>Malla 2D</th></tr></thead>
+<tbody>
+<tr><td>Envío punto a punto</td><td colspan="3">\(\alpha+m\beta\) (\(\alpha\) = latencia/arranque, \(\beta\) = tiempo por dato = 1/ancho de banda)</td></tr>
+<tr><td>Broadcast (one-to-all)</td><td>\((p-1)(\alpha+m\beta)\); anillo \(\lceil p/2\rceil\) pasos</td><td>\(\log p(\alpha+m\beta)\) (binomial, el de MPI)</td><td>\(2(\sqrt p-1)(\alpha+m\beta)\) aprox.</td></tr>
+<tr><td>Reducción (all-to-one)</td><td>\((p-1)(\alpha+m\beta)\)</td><td>\(\log p(\alpha+m\beta)\)</td><td>como broadcast</td></tr>
+<tr><td>Scatter / Gather</td><td>\(O(\alpha p+\beta m)\)</td><td>\(O(\alpha\log p+\beta m)\) (\(m\) = total)</td><td>–</td></tr>
+<tr><td>All-to-all broadcast</td><td>\((p-1)(\alpha+m\beta)\)</td><td>\(\alpha\log p+\beta m(p-1)\)</td><td>\(2\alpha(\sqrt p-1)+\beta m(p-1)\)</td></tr>
+<tr><td>Pipeline (mensajes largos)</td><td colspan="3">\(m\beta+p\alpha+2\sqrt{mp\alpha\beta}\)</td></tr>
+</tbody></table>
+<table>
+<thead><tr><th>Topología</th><th>Diámetro</th><th>Bisección</th><th>Enlaces por nodo</th></tr></thead>
+<tbody>
+<tr><td>Anillo</td><td>\(\lfloor p/2\rfloor\)</td><td>2</td><td>2</td></tr>
+<tr><td>Malla 2D \(\sqrt p\times\sqrt p\) (toro: mitad)</td><td>\(2(\sqrt p-1)\)</td><td>\(\sqrt p\)</td><td>4</td></tr>
+<tr><td>Hipercubo \(p=2^d\)</td><td>\(\log p\)</td><td>\(p/2\)</td><td>\(\log p\)</td></tr>
+<tr><td>Árbol binario</td><td>\(2\log p\)</td><td>1</td><td>3</td></tr>
+<tr><td>Completamente conectada</td><td>1</td><td>\(p^2/4\)</td><td>\(p-1\)</td></tr>
+</tbody></table>
+<p class="small">Menor diámetro ⇒ menos pasos (latencia); mayor bisección ⇒ más ancho de banda global. El hipercubo comunica en \(\log p\) pasos frente a \(\sqrt p\) de la malla, por eso escala mejor.</p>
+
+<h3><span class="n">3.9</span>Multiplicación de matrices y EDP</h3>
+<div class="grid2">
+<table>
+<thead><tr><th>Método</th><th>Comunicación</th><th>Isoeficiencia</th></tr></thead>
+<tbody>
+<tr><td>Filas/columnas con rotación</td><td>\(p(\alpha+\frac{n^2}{p}\beta)\)</td><td>\(W=\Theta(p^3)\)</td></tr>
+<tr><td>Fox (broadcast por filas)</td><td>\(\sqrt p\log\sqrt p(\alpha+\frac{n^2}{p}\beta)\)</td><td>\(n\propto\sqrt p\log\sqrt p\)</td></tr>
+<tr><td>Cannon (desplazamientos)</td><td>\(\sqrt p(\alpha+\frac{n^2}{p}\beta)\)</td><td>\(W=\Theta(p^{3/2})\)</td></tr>
+<tr><td>DNS (3D, \(p=n^3\))</td><td>\(\log p(\alpha+\frac{n^2}{p^{2/3}}\beta)\)</td><td>\(W=\Theta(p\log^3p)\)</td></tr>
+</tbody></table>
+<div>
+<p><b>Laplace / EDP:</b> \(u_{i,j}=\frac14(u_{i+1,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1})\). <b>Jacobi</b> usa solo la iteración anterior (paralelo directo); <b>Gauss-Seidel</b> usa valores nuevos (converge más rápido, se paraleliza con orden rojo-negro). Cada iteración intercambia halos con vecinos y verifica convergencia con <code>MPI_Allreduce</code>.</p>
+<p>Por iteración: franjas \(\frac{n^2}{p}+\alpha+\beta n\); bloques \(\frac{n^2}{p}+\alpha+\beta\frac{n}{\sqrt p}\).</p>
+</div>
+</div>
+
+<h3><span class="n">3.10</span>MPI y OpenMP de referencia (y errores típicos en código)</h3>
+<div class="grid2">
+<div>
+<h4>MPI</h4>
+<pre>MPI_Send(buf, count, type, dest, tag, comm);
+MPI_Recv(buf, count, type, src, tag, comm, &amp;status);
+MPI_Isend(buf, count, type, dest, tag, comm, &amp;req);
+MPI_Irecv(buf, count, type, src, tag, comm, &amp;req);
+MPI_Wait(&amp;req, &amp;status);    // Isend + Wait = Send
+MPI_Sendrecv(sbuf,..,dest,.., rbuf,..,src,.., comm, &amp;st);
+MPI_Bcast(buf, count, type, root, comm);
+MPI_Scatter(sbuf, scnt, stype, rbuf, rcnt, rtype, root, comm);
+MPI_Gather (sbuf, scnt, stype, rbuf, rcnt, rtype, root, comm);
+MPI_Reduce(sbuf, rbuf, count, type, MPI_SUM, root, comm);
+MPI_Allreduce(sbuf, rbuf, count, type, MPI_MAX, comm);
+MPI_Barrier(comm);   MPI_Wtime();</pre>
+<ul class="small">
+  <li><b>Send</b> estándar: con buffer si el mensaje es chico, síncrono si es grande. <b>Ssend</b>: termina cuando el receptor recibió. <b>Bsend</b>: buffer del usuario.</li>
+  <li><b>No bloqueante</b> (Isend/Irecv): retorna enseguida; permite solapar comunicación y cómputo. No tocar el buffer antes de <code>Wait</code>.</li>
+  <li><b>Deadlock en anillo</b>: todos hacen Send síncrono antes de Recv. Solución: orden par/impar, <code>Sendrecv</code> o no bloqueante.</li>
+  <li><b>Tipos derivados</b>: <code>MPI_Type_contiguous</code>, <code>_vector</code> (count, blocklen, stride: columnas), <code>_indexed</code>, <code>_create_struct</code>; luego <code>MPI_Type_commit</code>. Evitan varias latencias.</li>
+</ul>
+</div>
+<div>
+<h4>OpenMP</h4>
+<ul class="small">
+  <li><b>Fork-join</b>: <code>#pragma omp parallel</code> crea el equipo de hilos.</li>
+  <li><b>Datos:</b> <code>shared</code>; <code>private</code> (copia sin inicializar); <code>firstprivate</code> (copia inicializada); <code>lastprivate</code>; <code>reduction(op:var)</code>.</li>
+  <li><b>Bucles:</b> <code>for schedule(static|dynamic|guided, chunk)</code>; static = bloques fijos (carga uniforme), dynamic = a demanda (carga irregular), guided = bloques decrecientes. <code>collapse(n)</code>, <code>nowait</code>.</li>
+  <li><b>Sincronización:</b> <code>critical</code> (bloque, serializa), <code>atomic</code> (una operación simple, más rápido), <code>barrier</code>, <code>ordered</code>, locks.</li>
+  <li><b>Trabajo:</b> <code>single</code> (un hilo, con barrera), <code>master</code> (sin barrera), <code>sections</code>, <code>task</code> + <code>taskwait</code>.</li>
+  <li><b>Data race</b>: dos hilos acceden a la misma variable, al menos uno escribe, sin sincronización.</li>
+</ul>
+<div class="warn"><div class="t">Checklist "encuentre los errores"</div>
+<ol class="small">
+  <li>Variable compartida modificada sin protección (data race) → <code>reduction</code>/<code>critical</code>.</li>
+  <li><code>atomic</code> sobre "if + asignación" (read-check-update): no es atómico en conjunto → <code>critical</code> o <code>reduction(max:)</code>.</li>
+  <li>Variable no inicializada (p. ej. <code>local_max</code>) o inicializada mal para la operación.</li>
+  <li>Variable que debería ser <code>private</code> (temporales dentro del bucle) declarada fuera → compartida.</li>
+  <li>Falta <code>taskwait</code>/<code>barrier</code> antes de usar resultados; tasks sin <code>single</code> (se crean \(p\) veces).</li>
+  <li><code>critical</code> dentro del bucle de \(N\) iteraciones: correcto pero serializa → local + critical al final.</li>
+  <li>MPI: Send/Recv en orden que bloquea, buffer reutilizado antes de <code>Wait</code>, count/tipo/rank no coinciden, falta <code>MPI_Finalize</code>.</li>
+</ol></div>
+</div>
+</div>
+<div class="ex">
+  <div class="t">Caso 2025-I P3: máximo con OpenMP</div>
+  <p>Errores: (1) <code>if (A[i] &gt; local_max) { #pragma omp atomic local_max = A[i]; }</code> es read-check-update: entre el <code>if</code> y la escritura otro hilo puede cambiar el valor; <code>atomic</code> solo vale para <code>x++</code>, <code>x+=e</code>. (2) <code>local_max</code> no está inicializada. Corrección: <code>reduction(max:maximo)</code> o máximo local + <code>critical</code> al final (código en 2.6). Con tasks (<code>parallel</code> + <code>single</code> + <code>task firstprivate(i)</code> + <code>critical</code>) es <b>menos eficiente</b>: crear \(N\) tareas cuesta y <code>critical</code> serializa; mejor tareas por bloques con máximos locales.</p>
+</div>
+</div>
+
+<!-- ============================================================ APENDICE A -->
+<div class="part">
+<h2 class="b0">Apéndice A · Tablas numéricas (para no usar calculadora)</h2>
+<h3><span class="n">A.1</span>Valores para cada \(p\) potencia de 2 (logaritmos en base 2)</h3>
+<table class="num">
+<thead><tr><th>\(p\)</th><th>\(\log p\)</th><th>\(\sqrt p\)</th><th>\(\log\sqrt p\)</th><th>\(p\log p\)</th><th>\(p\sqrt p=p^{3/2}\)</th><th>\(\sqrt p\log\sqrt p\)</th><th>\(p\log^2p\)</th><th>\(\log\log p\)</th><th>\(p^2\)</th></tr></thead>
+<tbody>
+<tr><td>2<sup>0</sup> = 1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>–</td><td>1</td></tr>
+<tr><td>2<sup>1</sup> = 2</td><td>1</td><td>1.41</td><td>0.50</td><td>2</td><td>2.83</td><td>0.71</td><td>2</td><td>0</td><td>4</td></tr>
+<tr><td>2<sup>2</sup> = 4</td><td>2</td><td>2</td><td>1</td><td>8</td><td>8</td><td>2</td><td>16</td><td>1</td><td>16</td></tr>
+<tr><td>2<sup>3</sup> = 8</td><td>3</td><td>2.83</td><td>1.50</td><td>24</td><td>22.63</td><td>4.24</td><td>72</td><td>1.58</td><td>64</td></tr>
+<tr><td>2<sup>4</sup> = 16</td><td>4</td><td>4</td><td>2</td><td>64</td><td>64</td><td>8</td><td>256</td><td>2</td><td>256</td></tr>
+<tr><td>2<sup>5</sup> = 32</td><td>5</td><td>5.66</td><td>2.50</td><td>160</td><td>181.02</td><td>14.14</td><td>800</td><td>2.32</td><td>1 024</td></tr>
+<tr><td>2<sup>6</sup> = 64</td><td>6</td><td>8</td><td>3</td><td>384</td><td>512</td><td>24</td><td>2 304</td><td>2.58</td><td>4 096</td></tr>
+<tr><td>2<sup>7</sup> = 128</td><td>7</td><td>11.31</td><td>3.50</td><td>896</td><td>1448.15</td><td>39.60</td><td>6 272</td><td>2.81</td><td>16 384</td></tr>
+<tr><td>2<sup>8</sup> = 256</td><td>8</td><td>16</td><td>4</td><td>2 048</td><td>4 096</td><td>64</td><td>16 384</td><td>3</td><td>65 536</td></tr>
+<tr><td>2<sup>9</sup> = 512</td><td>9</td><td>22.63</td><td>4.50</td><td>4 608</td><td>11585.24</td><td>101.82</td><td>41 472</td><td>3.17</td><td>2.62·10<sup>5</sup></td></tr>
+<tr><td>2<sup>10</sup> = 1 024</td><td>10</td><td>32</td><td>5</td><td>10 240</td><td>32 768</td><td>160</td><td>1.02·10<sup>5</sup></td><td>3.32</td><td>1.05·10<sup>6</sup></td></tr>
+<tr><td>2<sup>11</sup> = 2 048</td><td>11</td><td>45.25</td><td>5.50</td><td>22 528</td><td>92681.90</td><td>248.90</td><td>2.48·10<sup>5</sup></td><td>3.46</td><td>4.19·10<sup>6</sup></td></tr>
+<tr><td>2<sup>12</sup> = 4 096</td><td>12</td><td>64</td><td>6</td><td>49 152</td><td>2.62·10<sup>5</sup></td><td>384</td><td>5.90·10<sup>5</sup></td><td>3.58</td><td>1.68·10<sup>7</sup></td></tr>
+<tr><td>2<sup>13</sup> = 8 192</td><td>13</td><td>90.51</td><td>6.50</td><td>1.06·10<sup>5</sup></td><td>7.41·10<sup>5</sup></td><td>588.31</td><td>1.38·10<sup>6</sup></td><td>3.70</td><td>6.71·10<sup>7</sup></td></tr>
+<tr><td>2<sup>14</sup> = 16 384</td><td>14</td><td>128</td><td>7</td><td>2.29·10<sup>5</sup></td><td>2.10·10<sup>6</sup></td><td>896</td><td>3.21·10<sup>6</sup></td><td>3.81</td><td>2.68·10<sup>8</sup></td></tr>
+</tbody></table>
+
+<div class="grid2">
+<div>
+<h3><span class="n">A.2</span>\(p\) no potencia de 2 (para despejar \(p_2\))</h3>
+<table class="num">
+<thead><tr><th>\(p\)</th><th>\(\log_2p\)</th><th>\(p\log_2p\)</th><th>\(\sqrt p\)</th><th>\(p^{3/2}\)</th><th>\(p\log^2p\)</th></tr></thead>
+<tbody>
+<tr><td>10</td><td>3.32</td><td>33</td><td>3.16</td><td>32</td><td>110</td></tr>
+<tr><td>20</td><td>4.32</td><td>86</td><td>4.47</td><td>89</td><td>374</td></tr>
+<tr><td>30</td><td>4.91</td><td>147</td><td>5.48</td><td>164</td><td>722</td></tr>
+<tr><td>50</td><td>5.64</td><td>282</td><td>7.07</td><td>354</td><td>1593</td></tr>
+<tr><td>75</td><td>6.23</td><td>467</td><td>8.66</td><td>650</td><td>2910</td></tr>
+<tr><td>100</td><td>6.64</td><td>664</td><td>10.00</td><td>1 000</td><td>4414</td></tr>
+<tr><td>150</td><td>7.23</td><td>1084</td><td>12.25</td><td>1837</td><td>7838</td></tr>
+<tr><td>200</td><td>7.64</td><td>1529</td><td>14.14</td><td>2828</td><td>11686</td></tr>
+<tr><td>250</td><td>7.97</td><td>1991</td><td>15.81</td><td>3953</td><td>15863</td></tr>
+<tr><td>300</td><td>8.23</td><td>2469</td><td>17.32</td><td>5196</td><td>20314</td></tr>
+<tr><td>329</td><td>8.36</td><td>2751</td><td>18.14</td><td>5968</td><td>23004</td></tr>
+<tr><td>400</td><td>8.64</td><td>3458</td><td>20.00</td><td>8 000</td><td>29886</td></tr>
+<tr><td>500</td><td>8.97</td><td>4483</td><td>22.36</td><td>11180</td><td>40193</td></tr>
+<tr><td>600</td><td>9.23</td><td>5537</td><td>24.49</td><td>14697</td><td>51103</td></tr>
+<tr><td>700</td><td>9.45</td><td>6616</td><td>26.46</td><td>18520</td><td>62528</td></tr>
+<tr><td>800</td><td>9.64</td><td>7715</td><td>28.28</td><td>22627</td><td>74403</td></tr>
+<tr><td>1000</td><td>9.97</td><td>9966</td><td>31.62</td><td>31623</td><td>99317</td></tr>
+<tr><td>1500</td><td>10.55</td><td>15826</td><td>38.73</td><td>58095</td><td>2·10<sup>5</sup></td></tr>
+<tr><td>2000</td><td>10.97</td><td>21932</td><td>44.72</td><td>89443</td><td>2·10<sup>5</sup></td></tr>
+<tr><td>3000</td><td>11.55</td><td>34652</td><td>54.77</td><td>2·10<sup>5</sup></td><td>4·10<sup>5</sup></td></tr>
+<tr><td>5000</td><td>12.29</td><td>61439</td><td>70.71</td><td>4·10<sup>5</sup></td><td>8·10<sup>5</sup></td></tr>
+<tr><td>10000</td><td>13.29</td><td>1·10<sup>5</sup></td><td>100.00</td><td>1·10<sup>6</sup></td><td>2·10<sup>6</sup></td></tr>
+</tbody></table>
+</div>
+<div>
+<h3><span class="n">A.3</span>Valores de \(n\)</h3>
+<table class="num">
+<thead><tr><th>\(n\)</th><th>\(\log_2n\)</th><th>\(n\log_2n\)</th><th>\(n^2\)</th><th>\(n^3\)</th><th>\(\sqrt n\)</th></tr></thead>
+<tbody>
+<tr><td>10<sup>2</sup></td><td>6.64</td><td>664.39</td><td>10 000</td><td>1.00·10<sup>6</sup></td><td>10.0</td></tr>
+<tr><td>10<sup>3</sup></td><td>9.97</td><td>9965.78</td><td>1.00·10<sup>6</sup></td><td>1.00·10<sup>9</sup></td><td>31.6</td></tr>
+<tr><td>10<sup>4</sup></td><td>13.29</td><td>1.33·10<sup>5</sup></td><td>1.00·10<sup>8</sup></td><td>1.00·10<sup>12</sup></td><td>100.0</td></tr>
+<tr><td>10<sup>5</sup></td><td>16.61</td><td>1.66·10<sup>6</sup></td><td>1.00·10<sup>10</sup></td><td>1.00·10<sup>15</sup></td><td>316.2</td></tr>
+<tr><td>10<sup>6</sup></td><td>19.93</td><td>1.99·10<sup>7</sup></td><td>1.00·10<sup>12</sup></td><td>1.00·10<sup>18</sup></td><td>1000.0</td></tr>
+<tr><td>10<sup>7</sup></td><td>23.25</td><td>2.33·10<sup>8</sup></td><td>1.00·10<sup>14</sup></td><td>1.00·10<sup>21</sup></td><td>3162.3</td></tr>
+<tr><td>10<sup>8</sup></td><td>26.58</td><td>2.66·10<sup>9</sup></td><td>1.00·10<sup>16</sup></td><td>1.00·10<sup>24</sup></td><td>10000.0</td></tr>
+<tr><td>10<sup>9</sup></td><td>29.90</td><td>2.99·10<sup>10</sup></td><td>1.00·10<sup>18</sup></td><td>1.00·10<sup>27</sup></td><td>31622.8</td></tr>
+</tbody></table>
+<h3><span class="n">A.4</span>Potencias de 2</h3>
+<p class="small">2<sup>1</sup>=2 · 2<sup>2</sup>=4 · 2<sup>3</sup>=8 · 2<sup>4</sup>=16 · 2<sup>5</sup>=32 · 2<sup>6</sup>=64 · 2<sup>7</sup>=128 · 2<sup>8</sup>=256 · 2<sup>9</sup>=512</p><table class="mini"><tbody><tr><td>2<sup>10</sup></td><td>1 024 ≈ 10<sup>3</sup> (1 K)</td></tr><tr><td>2<sup>13</sup></td><td>8 192</td></tr><tr><td>2<sup>16</sup></td><td>65 536</td></tr><tr><td>2<sup>18</sup></td><td>262 144</td></tr><tr><td>2<sup>20</sup></td><td>1 048 576 ≈ 10<sup>6</sup></td></tr><tr><td>2<sup>24</sup></td><td>16 777 216</td></tr><tr><td>2<sup>26</sup></td><td>67 108 864 ≈ 6.7·10<sup>7</sup></td></tr><tr><td>2<sup>30</sup></td><td>1 073 741 824 ≈ 1.07·10<sup>9</sup></td></tr><tr><td>2<sup>31</sup></td><td>2 147 483 648 ≈ 2.15·10<sup>9</sup></td></tr><tr><td>2<sup>33</sup></td><td>8.59·10<sup>9</sup></td></tr><tr><td>2<sup>36</sup></td><td>6.87·10<sup>10</sup></td></tr><tr><td>2<sup>39</sup></td><td>5.50·10<sup>11</sup></td></tr><tr><td>2<sup>40</sup></td><td>1.10·10<sup>12</sup></td></tr><tr><td>2<sup>41</sup></td><td>2.20·10<sup>12</sup></td></tr></tbody></table>
+</div>
+</div>
+
+<h3><span class="n">A.5</span>Raíces, potencias y logaritmos de cocientes (para \(p_2=p_1\cdot x^{1/a}\))</h3>
+<table class="num">
+<thead><tr><th>\(x\)</th><th>\(x^{1/2}\)</th><th>\(x^{1/3}\)</th><th>\(x^{2/3}\)</th><th>\(x^{3/2}\)</th><th>\(\log_2x\)</th><th>\(\ln x\)</th></tr></thead>
+<tbody>
+<tr><td>1.5</td><td>1.225</td><td>1.145</td><td>1.310</td><td>1.84</td><td>0.585</td><td>0.405</td></tr>
+<tr><td>2</td><td>1.414</td><td>1.260</td><td>1.587</td><td>2.83</td><td>1.000</td><td>0.693</td></tr>
+<tr><td>3</td><td>1.732</td><td>1.442</td><td>2.080</td><td>5.20</td><td>1.585</td><td>1.099</td></tr>
+<tr><td>4</td><td>2.000</td><td>1.587</td><td>2.520</td><td>8.00</td><td>2.000</td><td>1.386</td></tr>
+<tr><td>5</td><td>2.236</td><td>1.710</td><td>2.924</td><td>11.18</td><td>2.322</td><td>1.609</td></tr>
+<tr><td>6</td><td>2.449</td><td>1.817</td><td>3.302</td><td>14.70</td><td>2.585</td><td>1.792</td></tr>
+<tr><td>8</td><td>2.828</td><td>2.000</td><td>4.000</td><td>22.63</td><td>3.000</td><td>2.079</td></tr>
+<tr><td>10</td><td>3.162</td><td>2.154</td><td>4.642</td><td>31.62</td><td>3.322</td><td>2.303</td></tr>
+<tr><td>11.67</td><td>3.416</td><td>2.268</td><td>5.145</td><td>39.87</td><td>3.545</td><td>2.457</td></tr>
+<tr><td>12</td><td>3.464</td><td>2.289</td><td>5.241</td><td>41.57</td><td>3.585</td><td>2.485</td></tr>
+<tr><td>15</td><td>3.873</td><td>2.466</td><td>6.082</td><td>58.09</td><td>3.907</td><td>2.708</td></tr>
+<tr><td>16</td><td>4.000</td><td>2.520</td><td>6.350</td><td>64.00</td><td>4.000</td><td>2.773</td></tr>
+<tr><td>20</td><td>4.472</td><td>2.714</td><td>7.368</td><td>89.44</td><td>4.322</td><td>2.996</td></tr>
+<tr><td>25</td><td>5.000</td><td>2.924</td><td>8.550</td><td>125.00</td><td>4.644</td><td>3.219</td></tr>
+<tr><td>27</td><td>5.196</td><td>3.000</td><td>9.000</td><td>140.30</td><td>4.755</td><td>3.296</td></tr>
+<tr><td>32</td><td>5.657</td><td>3.175</td><td>10.079</td><td>181.02</td><td>5.000</td><td>3.466</td></tr>
+<tr><td>50</td><td>7.071</td><td>3.684</td><td>13.572</td><td>353.55</td><td>5.644</td><td>3.912</td></tr>
+<tr><td>64</td><td>8.000</td><td>4.000</td><td>16.000</td><td>512.00</td><td>6.000</td><td>4.159</td></tr>
+<tr><td>100</td><td>10.000</td><td>4.642</td><td>21.544</td><td>1000.00</td><td>6.644</td><td>4.605</td></tr>
+<tr><td>1000</td><td>31.623</td><td>10.000</td><td>100.000</td><td>31622.78</td><td>9.966</td><td>6.908</td></tr>
+</tbody></table>
+
+<!-- ============================================================ APENDICE B -->
+<h2 class="b0" style="margin-top:10px">Apéndice B · Álgebra, logaritmos y derivadas</h2>
+<div class="grid2">
+<div class="f">
+  <div>Logaritmos</div><div>\(\log(ab)=\log a+\log b\); \(\log(a^k)=k\log a\); \(\log\sqrt p=\frac12\log p\)</div>
+  <div>Cambio de base</div><div>\(\log_kp=\dfrac{\ln p}{\ln k}=\dfrac{\log_2p}{\log_2k}\); \(\log_2x=3.32\log_{10}x\); \(\ln x=0.693\log_2x\)</div>
+  <div>Potencias</div><div>\(p\cdot\sqrt p=p^{3/2}\); \(p/\sqrt p=\sqrt p\); \(\sqrt{p}\cdot\sqrt p=p\); \(2^{a}\cdot2^{b}=2^{a+b}\)</div>
+  <div>Doble log</div><div>\(n=2^{2^k}\Rightarrow\log n=2^k\), \(\log\log n=k\)</div>
+  <div>Suma geométrica</div><div>\(n+\frac n2+\frac n4+\dots\le2n\); \(1+k+k^2+\dots+k^h=\frac{k^{h+1}-1}{k-1}\)</div>
+</div>
+<div class="f">
+  <div>Derivadas</div><div>\((x^a)'=ax^{a-1}\); \((\ln x)'=\frac1x\); \(\left(\frac fg\right)'=\frac{f'g-fg'}{g^2}\)</div>
+  <div>Optimizar</div><div>Deriva \(T_p\) respecto al parámetro (\(k\), \(p\), \(r\)…), iguala a 0, despeja, verifica que sea mínimo.</div>
+  <div>\(p\) óptimo (ej.)</div><div>\(T_p=\frac np+\alpha\log p\): \(-\frac n{p^2}+\frac{\alpha}{p\ln2}=0\Rightarrow p=\frac{n\ln2}{\alpha}\)</div>
+  <div>Orden de crecimiento</div><div>\(1&lt;\log^*n&lt;\log\log n&lt;\log n&lt;\log^2n&lt;\sqrt n&lt;n&lt;n\log n&lt;n^{3/2}&lt;n^2&lt;n^2\log^2n&lt;n^3&lt;2^n\)</div>
+</div>
+</div>
+
+<!-- ============================================================ APENDICE C -->
+<h2 class="b0" style="margin-top:10px">Apéndice C · Glosario de teoría (preguntas conceptuales)</h2>
+<table>
+<tbody>
+<tr><td><b>Concurrencia vs paralelismo</b></td><td>Concurrencia: estructurar tareas que progresan intercaladas. Paralelismo: ejecutarlas al mismo tiempo en recursos físicos distintos.</td></tr>
+<tr><td><b>Ley de Moore / power wall / memory wall</b></td><td>Transistores ×2 cada ~2 años; la frecuencia no puede subir porque \(P\propto f^3\) (power wall) → más núcleos; la memoria es más lenta que el cómputo (memory wall) → cachés.</td></tr>
+<tr><td><b>Memoria compartida vs distribuida</b></td><td>Compartida: un espacio de direcciones (UMA o NUMA), comunicación implícita, OpenMP; limitada por la memoria de un nodo. Distribuida: cada proceso su memoria, mensajes explícitos, MPI; escala en capacidad.</td></tr>
+<tr><td><b>UMA / NUMA</b></td><td>UMA: igual tiempo de acceso a toda la memoria. NUMA (ccNUMA): acceso más rápido a la memoria local del socket.</td></tr>
+<tr><td><b>Granularidad</b></td><td>Relación cómputo/comunicación. Grano grueso: poca comunicación relativa (mejor eficiencia); grano fino: mejor balance, más comunicación.</td></tr>
+<tr><td><b>Balance de carga</b></td><td>Estático (reparto fijo, sin overhead, bueno con tareas uniformes) vs dinámico (work pool / work stealing / round robin, bueno con tareas irregulares, con overhead).</td></tr>
+<tr><td><b>Strong vs weak scaling</b></td><td>Strong: \(n\) fijo, aumentar \(p\) (Amdahl). Weak: \(n/p\) fijo, crece el problema con \(p\) (Gustafson). La isoeficiencia dice cuánto debe crecer \(n\).</td></tr>
+<tr><td><b>Speedup superlineal</b></td><td>\(S&gt;p\): por efectos de caché (los datos de cada proceso caben en caché) o búsqueda que encuentra antes la solución.</td></tr>
+<tr><td><b>Latencia vs ancho de banda</b></td><td>\(\alpha\): costo fijo por mensaje (arranque). \(\beta\): costo por dato. Mensajes pocos y grandes amortizan \(\alpha\) (por eso tipos derivados y agrupar envíos).</td></tr>
+<tr><td><b>Overhead (fuentes)</b></td><td>Comunicación, sincronización/espera, ociosidad por desbalance, trabajo redundante, cómputo extra del algoritmo paralelo.</td></tr>
+<tr><td><b>Costo óptimo vs WT-óptimo</b></td><td>Costo óptimo: \(pT_p=\Theta(T_s)\). WT-óptimo: trabajo igual al mejor secuencial y span mínimo.</td></tr>
+<tr><td><b>Monte Carlo vs Las Vegas</b></td><td>MC: tiempo acotado, resultado aproximado. LV: resultado correcto, tiempo aleatorio. Números aleatorios en paralelo: centralizado (lento), replicado (correlación), distribuido (por proceso, con semillas distintas).</td></tr>
+<tr><td><b>BSP vs LogP</b></td><td>BSP: supersteps síncronos (cómputo, comunicación, barrera), costo \(w+gh+L\). LogP: asíncrono, con latencia \(L\), overhead \(o\), gap \(g\) y \(P\) procesadores.</td></tr>
+<tr><td><b>CPU vs GPU</b></td><td>CPU: pocos núcleos complejos, grandes cachés, optimizados para latencia. GPU: miles de núcleos simples, SIMD, optimizados para throughput (bueyes vs gallinas).</td></tr>
+</tbody></table>
+<p class="small" style="margin-top:8px">Basado en las clases U1.1-U6.4 (2026-II), los finales 2025-I, 2025-II S1/S2 y 2026-I, y las PD06 del curso CS4052. Web con exámenes interactivos: cesarpr30.github.io/FinalParalela</p>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});document.documentElement.setAttribute('data-math','ok');}
+});
+</script>
+</body>
+</html>
