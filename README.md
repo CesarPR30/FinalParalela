@@ -9,6 +9,7 @@ Material de repaso para el examen final de **Computación Paralela y Distribuida
 | Recurso | Archivo | Para qué |
 |---|---|---|
 | **Apuntes para imprimir** | [`pdf/Apuntes_Examen_Final.pdf`](pdf/Apuntes_Examen_Final.pdf) · [`apuntes.html`](apuntes.html) | Cuadernillo de 19 páginas para llevar al examen: recetas por pregunta, ejemplos resueltos, plantillas MPI/OpenMP/PRAM y tablas numéricas |
+| Audio de repaso | [`audio/`](audio/) | Guion condensado (13 min) narrado en `.wav`, con su texto en `.txt` |
 | Web de repaso | [`index.html`](index.html) | Los 3 bloques con teoría, fórmulas, preguntas de autoevaluación y checklist |
 | Exámenes resueltos | [`examenes.html`](examenes.html) | Los 4 finales anteriores; cada subpregunta tiene la resolución oculta y una explicación de cómo hacerla |
 | PDFs de repaso | [`pdf/`](pdf/) | Un PDF por bloque (respaldo para imprimir o leer sin conexión) |

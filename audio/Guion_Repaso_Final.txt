@@ -1,0 +1,80 @@
+Repaso final de Computación Paralela y Distribuida. Guion para escuchar en el camino.
+
+Hola. Este es un repaso corto para escuchar antes del examen. No necesitas anotar nada: la idea es que llegues sabiendo qué tipo de preguntas vienen, qué receta usar en cada una y qué frases escribir para justificar. Todo lo que escuches está también en tus apuntes impresos.
+
+Primero, la estructura. Los cuatro finales anteriores tuvieron siempre la misma forma: tres preguntas. La primera, un problema de GPU con CUDA. La segunda, un algoritmo PRAM sobre una estructura de datos o un problema de búsqueda. La tercera, escalabilidad: overhead, isoeficiencia y comparar modelos. Recuerda la regla de oro: en cada subpregunta escribe la fórmula general, reemplaza los números, da el resultado con unidades y termina con una frase que interprete. La mitad del puntaje es la justificación.
+
+Parte uno. La pregunta de GPU.
+
+Siempre te dan una tarjeta NVIDIA con dos a la diez hilos por bloque, es decir mil veinticuatro, y hasta dos a la treinta y uno bloques. Multiplicando, la GPU tiene dos a la cuarenta y uno hilos en total, unos dos coma dos por diez a la doce.
+
+La receta tiene siete pasos.
+Uno, capacidad. Si te preguntan cuántos modelos caben, divide los dos a la cuarenta y uno hilos entre los hilos que usa un modelo. Por ejemplo, en Value at Risk cada modelo tenía dos a la ocho escenarios, así que caben dos a la treinta y tres modelos.
+Dos, configuración. Elige doscientos cincuenta y seis hilos por bloque, porque es múltiplo de treinta y dos, que es el tamaño de un warp. El número de bloques es el total de elementos dividido entre doscientos cincuenta y seis, redondeado hacia arriba. Los hilos inactivos son bloques por hilos por bloque, menos los elementos.
+Tres, cuenta los FLOPs por hilo. Cada suma, resta, producto o división vale uno. Una línea como a más igual b por c vale dos. Los bucles multiplican, de adentro hacia afuera. En el problema de incendios fueron quinientos por, cuatro más cien por cuarenta y tres más uno, que da unos dos millones ciento cincuenta mil FLOPs por hilo.
+Cuatro, tiempo paralelo: FLOPs por hilo por el tiempo de una operación. Es el tiempo de un solo hilo, porque todos corren a la vez.
+Cinco, tiempo secuencial: el tiempo paralelo por el número de hilos que trabajan. Pásalo a días dividiendo entre ochenta y seis mil cuatrocientos.
+Seis, métricas. El speedup es secuencial entre paralelo, y sale igual al número de hilos que trabajan. La eficiencia es speedup entre hilos usados, y sale cerca de uno. La velocidad es FLOPs totales entre tiempo paralelo. Si te dan un pico, la eficiencia de la GPU es velocidad alcanzada entre velocidad pico.
+Siete, comenta. Di si hay hilos ociosos, si la carga por hilo es muy grande y conviene repartirla, y que en la práctica las copias entre CPU y GPU reducen la eficiencia.
+
+Si preguntan por qué el speedup es proporcional a los FLOPs por segundo, la respuesta es: los dos tienen el mismo denominador, el tiempo paralelo, y sus numeradores son proporcionales, porque el tiempo secuencial es FLOPs totales por el tiempo de una operación.
+
+Si te ponen una restricción, como un modelo por bloque, entonces caben tantos modelos como bloques, y si el modelo usa doscientos cincuenta y seis hilos de mil veinticuatro, la eficiencia baja a un cuarto: tres de cada cuatro hilos quedan ociosos.
+
+Sobre memoria compartida: la shared memory solo la ven los hilos de un mismo bloque, es rápida y necesita sincronizar con syncthreads. El halo es la franja de vecinos que el bloque necesita de otros bloques. Un bloque cuadrado minimiza el perímetro, así que tiene menos halo y gasta menos memoria. Para un bloque de B por B, la memoria es B al cuadrado más cuatro B.
+
+Y Foster, en cuatro palabras: partición, comunicación, aglomeración y mapeo. En GPU: cada píxel es una tarea; no hay comunicación entre tareas, solo con memoria global; se aglomeran en bloques de doscientos cincuenta y seis hilos; y el hardware mapea los bloques a los multiprocesadores. La GPU es SIMD: una instrucción sobre muchos datos.
+
+Parte dos. La pregunta de PRAM.
+
+El guion casi siempre es el mismo: escribe el pseudocódigo con for pardo, calcula el span y el trabajo, aplica Brent, agrega las directivas MPI u OpenMP, y termina con overhead e isoeficiencia.
+
+Definiciones. El trabajo es el total de operaciones, el tiempo con un procesador. El span es el camino crítico, el tiempo con procesadores ilimitados. Brent dice que el tiempo paralelo es como máximo el trabajo entre p, más el span. El primer término es el trabajo repartido; el segundo no baja aunque tengas infinitos procesadores. El costo es p por el tiempo paralelo, y es óptimo si es del orden del tiempo secuencial.
+
+Variantes de PRAM: EREW, lectura y escritura exclusivas. CREW, lectura concurrente y escritura exclusiva. CRCW, ambas concurrentes; con ella sacas el máximo en tiempo constante usando n al cuadrado procesadores.
+
+Reglas para el span: un for pardo con cuerpo constante cuesta uno de span y n de trabajo. Un for secuencial suma los spans. Dos llamadas en paralelo toman el máximo. Un bucle que divide el tamaño entre k da logaritmo en base k de n rondas. Y las recurrencias clave: T de n igual a T de n medios más uno da logaritmo de n. Más n da n. Dos T de n medios más n da n logaritmo de n.
+
+Ahora los casos que ya salieron.
+
+El stack paralelo. Cada hilo hace lock, pop, revisa el estado, unlock; luego procesa en paralelo; luego lock, push, revisa, unlock. El acceso al stack se serializa, así que el tiempo es n más p más el cómputo entre p. El overhead es n por p más p al cuadrado. Escala mal, porque domina n por p: solo funciona si el cómputo por elemento es grande. En OpenMP: critical dentro de push, pop y el chequeo.
+
+El árbol dos tres. La búsqueda lanza los hijos en paralelo y tiene span logaritmo de n, que es la altura. Insertar un elemento también es logaritmo de n, porque si un nodo queda con cuatro hijos se parte y eso sube hasta la raíz. Insertar k elementos es k por logaritmo de n, porque van uno tras otro.
+
+El máximo en un árbol k-ario con MPI. Scatter para repartir, máximo local, y luego un árbol donde cada padre recibe de k menos uno hijos. El tiempo es n entre p, más k por logaritmo en base k de p, por alfa más beta. Y el k óptimo: derivas k entre logaritmo natural de k, igualas a cero, y sale k igual a e, aproximadamente tres.
+
+DTS contra PWS. DTS genera la frontera hasta la mitad de la profundidad y explora los subárboles en paralelo. Su span es raíz de W, así que su isoeficiencia es W del orden de p al cuadrado. PWS hace trabajo redundante W a la dos tercios, y su isoeficiencia es p al cubo. Como p al cuadrado crece más lento, DTS escala mejor.
+
+Para pasar a MPI: Scatter para repartir, cómputo local, y Reduce o Send y Receive en árbol para combinar. Para OpenMP: parallel for para el bucle, reduction para sumas y máximos, critical para proteger una estructura compartida, y task con taskwait para la recursión.
+
+Un error clásico: usar atomic con un if para el máximo. Eso es una condición de carrera de leer, comparar y escribir, porque atomic solo protege operaciones simples como x más más. La solución es reduction de max, o un máximo local por hilo y un critical al final.
+
+Parte tres. La pregunta de escalabilidad. Es la que más pesa, siete puntos.
+
+La receta. Uno: identifica W, que es el término de cómputo multiplicado por p. Dos: el overhead T cero es p por el tiempo paralelo menos W, que en la práctica es cada término de comunicación multiplicado por p. Ojo, p por uno sobre raíz de p da raíz de p. Tres: iguala W a K por cada término del overhead, por separado, y despeja n en función de p. K es E entre uno menos E: para E igual a cero coma ocho, K vale cuatro; para cero coma siete, dos coma treinta y tres; para cero coma nueve, nueve. Cuatro: el término que obliga a n a crecer más rápido es el dominante. Cinco: el modelo cuya W crece más lento con p es el más escalable.
+
+La eficiencia es uno sobre, uno más T cero entre W. Y la granularidad es cómputo entre comunicación; a mayor granularidad, mejor eficiencia.
+
+Los casos que ya salieron. Floyd y matrices, filas contra bloques. En filas se comunica una fila completa, n al cuadrado, y la isoeficiencia da n proporcional a p, es decir W proporcional a p al cubo. En bloques cada proceso solo intercambia n entre raíz de p elementos, y da n proporcional a raíz de p. Bloques escala mejor.
+
+Quicksort en malla contra hipercubo. En la malla, n logaritmo de n crece como p a la tres medios. En el hipercubo, como p logaritmo de p. El hipercubo escala mejor porque comunica en logaritmo de p pasos, no en raíz de p.
+
+Memoria compartida, distribuida e híbrida. La compartida da W del orden de p logaritmo de p, la mejor. La distribuida tiene un término beta por n logaritmo de p; como contiene n, al despejar queda n proporcional a p logaritmo de p, y W del orden de p al cuadrado por logaritmo al cuadrado, la peor. La híbrida queda en medio. Pero la compartida tiene un techo de memoria: todo debe caber en un nodo. La conclusión práctica: la híbrida equilibra eficiencia y capacidad.
+
+Para la tabla de eficiencias: calcula W una vez, luego para cada p calcula el término de comunicación que domina, y aplica uno sobre uno más T cero entre W. Usa la tabla de logaritmos y raíces de tus apuntes.
+
+Para el problema diez veces mayor: divide la relación de isoeficiencia del caso dos entre la del caso uno, así se cancelan K y las constantes, y despeja p dos. Si la relación es p a la tres medios, p dos es p uno por el cociente elevado a dos tercios.
+
+Y las frases listas.
+¿Se cumple W igual al costo? No, porque el costo es W más el overhead, y el overhead es mayor que cero por la comunicación.
+¿Qué pasa si crece n? El cómputo crece más rápido que la comunicación, así que la eficiencia de ambos modelos tiende a uno.
+¿Qué implica W proporcional a p al cubo? Que n crece igual que p, crecimiento lineal: se considera altamente escalable.
+¿Cuál escala mejor? El que necesita que el problema crezca menos para mantener la eficiencia, es decir, el de menor función de isoeficiencia.
+
+Cierre.
+
+Cuando te den el examen, lee las tres preguntas y abre tus apuntes en la página uno: ahí está la tabla que te dice a qué sección ir. Copia la estructura del ejemplo resuelto más parecido, cambia los números y termina siempre con una frase de interpretación. Si no te sale un número, escribe la fórmula general: eso también suma puntos.
+
+Tres recetas para llevar en la cabeza. GPU: FLOPs por hilo, por tiempo de operación, es el tiempo paralelo; por número de hilos, es el secuencial. PRAM: span y trabajo, y Brent, trabajo entre p más span. Escalabilidad: overhead igual a p por tiempo paralelo menos W, y W igual a K por overhead.
+
+Mucha suerte. Lo tienes.
