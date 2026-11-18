@@ -14,7 +14,7 @@ Material de repaso para el examen final de **Computación Paralela y Distribuida
 | Exámenes resueltos | [`examenes.html`](examenes.html) | Los 4 finales anteriores; cada subpregunta tiene la resolución oculta y una explicación de cómo hacerla |
 | PDFs de repaso | [`pdf/`](pdf/) | Un PDF por bloque (respaldo para imprimir o leer sin conexión) |
 | Textos para NotebookLM | [`notebooklm/`](notebooklm/) | Un `.md` por bloque, escrito como guion para generar un video explicativo |
-| Videos | [`videos/`](videos/) | Resúmenes en video (NotebookLM): bloque 1 y bloque 2; también se ven dentro de la web |
+| Videos | [`videos/`](videos/) | Resúmenes en video (NotebookLM): bloques 1, 2 y 3; también se ven dentro de la web |
 | Guía PD06 | [`pd06/`](pd06/index.html) · [`pdf/Guia_PD06.pdf`](pdf/Guia_PD06.pdf) | Guía de la práctica dirigida 6 (oral) |
 | Material original | [`material/`](material/) | Clases U1.1–U6.4, finales, PD06 y código de clase |
 
